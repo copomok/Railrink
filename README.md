@@ -45,3 +45,11 @@ node --test --test-concurrency=2 tests/*.test.mjs
 워크플로는 Pages 자동 활성화를 시도합니다. 저장소 정책상 자동 활성화 권한이 부족하면 GitHub의 **Settings → Pages → Build and deployment → Source: GitHub Actions**를 선택하고 Actions의 **Deploy RailLink to GitHub Pages**를 다시 실행하세요. 저장소 관리 권한이 필요한 설정이며 별도 결제나 호스팅 계정은 필요 없습니다. `github-pages` 환경에 승인이 설정되어 있으면 해당 배포의 승인도 필요합니다.
 
 기존 `/NIMBYRAILTABLE/raillink/`와 새 `/Railrink/`는 동일한 도메인이므로 기존 브라우저 예약 저장 공간을 공유합니다.
+
+## 새 홈 및 사양서 반영
+
+최신 홈 시안의 탭형 검색 카드·바로가기·관광 배너·나의 일정·다섯 메뉴를 적용했습니다. `js/home.js`와 `css/home.css`가 홈을, `js/journey.js`가 자정 경계를 포함한 시간표 기반 여정 상태를 담당합니다. 역 검색은 초성/IME/키보드 선택을 지원하며 날짜 선택에서 출발 기준 시각을 지정할 수 있습니다.
+
+정기권은 아직 판매하지 않으며 탭에서 저장 구간을 조회합니다. 관광상품은 공통 시간표의 관광열차로 연결됩니다. 전체 사양의 완료/미완료 범위는 [구현 현황](docs/implementation-status.md)을 확인하세요.
+
+브라우저 회귀 검증은 Python Playwright와 Chromium이 설치된 환경에서 `npm run build` 후 `python tools/verify-home.py`로 실행합니다. 검증 데이터는 임시 브라우저에만 저장됩니다.

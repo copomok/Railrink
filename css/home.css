@@ -1,0 +1,108 @@
+/* Home follows the supplied ticket-app composition, using actual saved journeys. */
+:root { --home-wash:#edf7fc; --home-primary:#066bef; --home-ink:#14263d; --home-muted:#6c7885; --home-line:#edf0f3; }
+body:is([data-screen=home],[data-screen=search]) { background:linear-gradient(158deg,#f5fbff 0%,#e8f4fc 40%,#f7fbfd 78%,#fff 100%); color:var(--home-ink); position:relative; isolation:isolate; }
+body:is([data-screen=home],[data-screen=search]):before { content:''; position:absolute; z-index:-1; top:90px; left:0; right:0; height:255px; background:linear-gradient(150deg,#d4ecf9aa,#acd9f49c); clip-path:polygon(0 47%,19% 37%,38% 44%,60% 31%,79% 8%,88% 6%,100% 17%,100% 100%,0 100%); pointer-events:none; }
+body:is([data-screen=home],[data-screen=search]):after { content:''; position:absolute; z-index:-1; top:157px; left:0; right:0; height:180px; background:#c0e3f78f; clip-path:polygon(0 65%,20% 46%,42% 37%,61% 48%,78% 22%,89% 38%,100% 70%,100% 100%,0 100%); pointer-events:none; }
+body:is([data-screen=home],[data-screen=search]) .top { background:transparent; height:83px; padding:17px 24px 5px; }
+.top .brand b { font-size:20px; letter-spacing:-.045em; white-space:nowrap; }
+.top .brand em { font-size:15px; font-style:normal; color:var(--home-primary); letter-spacing:-.02em; }
+.top .brand>svg { width:34px; height:29px; }
+body:is([data-screen=home],[data-screen=search]) .header-icon { color:#284865; }
+body:is([data-screen=home],[data-screen=search]) .layout { padding:0 20px 95px; }
+.home-greeting h1 { font-size:25px; font-weight:650; line-height:1.5; letter-spacing:-.06em; margin:19px 7px 23px; }
+.home-booking { background:#ffffffed; border-radius:20px; padding:0 13px 13px; box-shadow:0 7px 26px #70a4c008; }
+.home-tabs { display:flex; min-height:51px; border-bottom:1px solid var(--home-line); margin:0 1px; }
+.home-tabs button { flex:1; min-width:0; background:none; border:0; border-radius:0; position:relative; font-size:15px; font-weight:550; color:#4b5563; padding:10px 5px; }
+.home-tabs button[aria-selected=true] { color:var(--home-primary); font-weight:750; }
+.home-tabs button[aria-selected=true]:after { content:''; height:3px; background:var(--home-primary); position:absolute; bottom:-1px; left:0; right:0; border-radius:3px; }
+.home-fields { border:1px solid #f1f3f5; border-radius:16px; padding:0 12px; background:#ffffffa6; }
+.home-booking .search-card { background:none; }
+.home-booking .stations { display:grid; grid-template-columns:1fr 48px 1fr; gap:9px; padding:7px 0; margin:0; background:none; border-radius:0; border-bottom:1px solid var(--home-line); }
+.home-booking .stations:after { display:none; }
+.home-booking .station-control { background:none; min-height:77px; padding:7px 8px; border-radius:8px; }
+.home-booking .station-control b { font-size:23px; line-height:1.4; }
+.home-booking .station-control small { font-size:13px; color:var(--home-muted); font-weight:400; }
+.home-booking .stations .swap { position:static; width:42px; min-height:42px; height:42px; margin:auto; border:1px solid #dfe5eb; box-shadow:none; padding:9px; transform:rotate(90deg); }
+.home-booking .date-control,.home-booking .passenger-control { border-radius:0; background:none; padding:12px 8px; min-height:70px; gap:10px; }
+.home-booking .date-control { border-bottom:1px solid var(--home-line); }
+.home-booking .date-control>span,.home-booking .passenger-control>span { display:flex; flex-direction:column; gap:3px; }
+.home-booking .date-control small,.home-booking .passenger-control small { color:var(--home-muted); font-size:13px; font-weight:400; }
+.home-booking .date-control b,.home-booking .passenger-control b { font-size:17px; color:#141e2b; font-weight:650; line-height:1.45; white-space:normal; }
+.home-booking .passenger-control em { font-size:12px; color:var(--home-muted); font-style:normal; font-weight:400; }
+.home-booking .date-control>svg:last-child,.home-booking .passenger-control>svg:last-child { width:25px; height:25px; margin-left:auto; color:#52667b; }
+.home-booking .search-submit { background:var(--home-primary); border-radius:12px; min-height:51px; margin:0; display:flex; align-items:center; justify-content:center; gap:15px; font-size:18px; font-weight:550; }
+.home-booking .search-submit span { font-size:24px; font-weight:400; }
+.home-options { margin:5px 3px -3px; }
+.home-options summary { font-size:11px; color:#64748b; min-height:28px; padding:7px 5px; cursor:pointer; }
+.home-options .trip-controls { margin:4px 0; }
+.home-options .trip-controls button { padding:10px; min-height:44px; }
+.home-options .return-date { padding:10px; }
+.home-shortcuts { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:11px; margin:15px 0; }
+.home-shortcuts button { display:flex; flex-direction:column; gap:8px; align-items:center; justify-content:center; min-width:0; background:#ffffffeb; border:0; border-radius:19px; min-height:78px; padding:12px 2px; font-size:12px; font-weight:550; color:#1a2b3f; }
+.home-shortcuts svg { color:var(--home-primary); width:27px; height:27px; stroke-width:1.65; }
+.home-travel-banner { display:flex; position:relative; isolation:isolate; overflow:hidden; align-items:center; width:100%; min-height:82px; border:0; border-radius:16px; background:linear-gradient(110deg,#e4f3ff,#dceffd); padding:14px 18px; text-align:left; }
+.home-travel-banner>span { z-index:1; }
+.home-travel-banner small { display:block; color:#304d70; font-size:13px; font-weight:500; }
+.home-travel-banner b { display:flex; align-items:center; gap:18px; margin-top:4px; font-size:16px; color:#064c9e; font-weight:700; }
+.home-travel-banner b svg { width:16px; height:16px; }
+.home-travel-banner .travel-art { position:absolute; right:-6px; bottom:0; width:119px; height:78px; stroke:none; opacity:.75; z-index:0; }
+.home-section-title { display:flex; align-items:center; justify-content:space-between; margin:18px 2px 8px; }
+.home-section-title h2 { font-size:18px; font-weight:700; margin:0; }
+.home-section-title a { display:flex; align-items:center; gap:6px; font-size:11px; color:#626f7f; min-height:34px; }
+.home-section-title a svg { width:14px; height:14px; }
+.home-journey { width:100%; background:#ffffffa8; border:1px solid #e9eff4; border-radius:16px; padding:12px; display:flex; align-items:flex-start; gap:11px; text-align:left; margin-bottom:8px; color:var(--home-ink); }
+.journey-status { font-size:10px; color:#16796d; background:#def6ef; padding:5px 7px; border-radius:6px; white-space:nowrap; margin-top:3px; }
+.journey-status[data-phase=riding],.journey-status[data-phase=arriving],.journey-status[data-phase=boarding] { color:#0751b1; background:#e2eeff; }
+.home-journey-text { display:flex; flex-direction:column; gap:3px; flex:1; min-width:0; }
+.home-journey .grade-name,.home-journey .train-no { font-size:14px; color:var(--grade); font-weight:700; }
+.home-journey-text>b { font-size:14px; font-weight:600; }
+.home-journey-text>small { font-size:11px; font-weight:400; color:#667789; line-height:1.4; }
+.home-journey>svg { align-self:center; width:23px; height:23px; color:#536a86; }
+.home-empty { border:1px solid #e7eef4; border-radius:15px; background:#ffffffad; padding:17px; font-size:14px; line-height:1.65; color:#304c68; }
+.home-empty span { color:var(--home-muted); font-size:12px; }
+.home-tab-body { min-height:270px; padding:19px 5px 10px; }
+.home-tab-body h3 { font-size:20px; margin:0 0 12px; }
+.home-tab-body p { font-size:13px; line-height:1.7; color:#667487; }
+.home-tab-body>.primary { width:100%; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:10px; font-size:15px; }
+.home-saved { width:100%; display:flex; align-items:center; justify-content:space-between; text-align:left; padding:13px; margin:7px 0; background:#f5f9ff; border:1px solid #e5edf5; }
+.home-saved small { display:block; font-size:12px; color:#63748c; margin-top:5px; }
+.home-saved .grade-name { color:var(--grade); font-size:16px; }
+.home-saved .train-no { font-size:15px; }
+.home-recent>button { width:100%; display:flex; align-items:center; gap:12px; min-height:44px; border:0; border-bottom:1px solid #e8eef4; background:none; font-size:13px; text-align:left; }
+.home-recent>button>svg { width:18px; height:18px; color:#6c8098; }
+.home-recent>button>svg:last-child { margin-left:auto; }
+.home-live { background:#e3f0ff; border:1px solid #bedbff; border-radius:16px; padding:13px; margin-bottom:16px; }
+.home-live>span { font-size:11px; display:block; color:#316392; }
+.home-live>b { font-size:18px; display:block; margin:5px 0 10px; }
+.home-live .home-journey { margin:0; }
+.navigation { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); padding-left:10px; padding-right:10px; }
+.navigation a[aria-current]:after { display:none; }
+.navigation a[aria-current] { color:#066bef; font-weight:700; }
+.navigation a[data-nav=home][aria-current] svg { fill:#066bef; stroke:#066bef; }
+.station-options [aria-selected=true] { background:#e8f2ff; color:#1259af; }
+.home-booking button:hover,.home-shortcuts button:hover,.home-journey:hover { filter:brightness(.985); }
+.home-booking button:focus-visible,.home-shortcuts button:focus-visible,.home-travel-banner:focus-visible,.home-journey:focus-visible { outline:3px solid #145ebb; outline-offset:3px; }
+@media(min-width:768px) { body:is([data-screen=home],[data-screen=search]) .layout { padding:0 25px 100px; }.home-greeting h1{font-size:30px;margin-top:25px}.home-tabs{min-height:59px}.home-booking .date-control,.home-booking .passenger-control{min-height:84px}.home-booking .station-control{min-height:95px}.home-shortcuts button{min-height:95px}.home-travel-banner{min-height:100px}.home-travel-banner .travel-art{width:160px;height:98px} }
+@media(max-width:360px) { body:is([data-screen=home],[data-screen=search]) .top{padding-left:18px;padding-right:18px}.top .brand b{font-size:18px}.top .brand em{font-size:13px}body:is([data-screen=home],[data-screen=search]) .layout{padding-left:13px;padding-right:13px}.home-booking{padding-left:9px;padding-right:9px}.home-booking .stations{grid-template-columns:1fr 40px 1fr;gap:3px}.home-booking .station-control{padding:7px 3px}.home-booking .station-control b{font-size:19px}.home-booking .date-control b{font-size:15px}.home-shortcuts{gap:7px}.home-shortcuts button{font-size:11px}.home-travel-banner{padding-left:13px}.home-travel-banner .travel-art{opacity:.35}.home-journey{gap:7px;padding:10px}.home-journey>svg{width:18px}.journey-status{font-size:9px;padding:5px}.home-journey-text>small{font-size:10px} }
+@media(prefers-reduced-motion:reduce) { *{scroll-behavior:auto!important} }
+/* Keep the primary booking card at the reference density; secondary options sit below schedules. */
+.home-greeting h1 { margin-top:8px; margin-bottom:14px; }
+.home-tabs { min-height:47px; }
+.home-booking .stations { padding:3px 0; }
+.home-booking .station-control { min-height:70px; }
+.home-booking .date-control,.home-booking .passenger-control { min-height:65px; padding-top:9px; padding-bottom:9px; }
+.home-booking .search-card>.search-submit { min-height:51px; margin:0; border-radius:12px; font-size:18px; }
+.home-shortcuts button { min-height:73px; }
+.home-travel-banner { min-height:77px; }
+.home-section-title { margin-top:12px; margin-bottom:5px; }
+.home-journey { padding:10px; }
+.home-schedule+.home-options { margin-top:14px; }
+.home-options { margin-top:14px; }
+@media(min-width:768px) { .home-greeting h1{margin-top:25px;margin-bottom:23px} }
+.home-booking .search-card>.search-submit { line-height:1.3; }
+.home-booking .search-submit span { line-height:1; }
+@media(max-width:767px) and (max-height:900px) {
+ body:is([data-screen=home],[data-screen=search]) .top { height:73px; }
+ .home-greeting h1 { font-size:24px; line-height:1.45; margin-bottom:12px; }
+ .home-shortcuts { margin-top:14px; margin-bottom:14px; }
+}
