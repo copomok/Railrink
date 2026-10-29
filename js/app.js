@@ -1,3 +1,4 @@
+import {createGreetingSession,updateHomeGreeting} from './greetings.js';
 import {ensureProductStyles} from './styles.js';
 import {tourismView,tourismGroups,tourSystemsView,tourDirectionView} from './tourism.js';
 import {openBookingStorage} from './booking-storage.js';
@@ -23,6 +24,7 @@ const icon=name=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[n
 const dateLabel=(date,year=false)=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short',...(year?{year:'numeric'}:{})}).format(new Date(date+'T12:00:00+09:00'));
 const clock=displayClock;
 const duration=n=>`${Math.floor(n/60)?Math.floor(n/60)+'시간 ':''}${n%60? n%60+'분':''}`;
+const homeGreetings=createGreetingSession();
 let homeTab='booking',transferResults=[],disposeInventory=()=>{},journeyDrafts=[],journeyIndex=0,bookingType='single',selectingReturn=false,bookingQuery=null,lastTickets=[];
 let roundTrip=false,returnDate='',returnJourney=null;
 let selectedTourGrade='',tourOrigin='travel';
@@ -67,7 +69,7 @@ function passengerPicker(){
  showDialog('인원 및 좌석 등급',`<form id="pax-form"><h3>승객 인원</h3><label>최대 6명<select name="pax">${Array.from({length:6},(_,i)=>`<option value="${i+1}" ${+q.pax===i+1?'selected':''}>${i+1}명</option>`).join('')}</select></label><h3>좌석 등급</h3><div class="class-options">${Object.entries(model.data.classes).filter(([k])=>true).map(([k,v])=>`<label class="class-option"><span>${v.label}</span><input type="radio" name="cls" value="${k}" ${q.cls===k?'checked':''}></label>`).join('')}</div><button class="primary" type="submit">적용</button></form>`);$('#pax-form').onsubmit=e=>{e.preventDefault();q.pax=+e.target.elements.pax.value;q.cls=e.target.elements.cls.value;dialog.close();searchPage();$('#open-passengers').focus({preventScroll:true});};
 }
 function searchPage(){
- main.innerHTML=homeView({q,model,tab:homeTab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent:recent(),journeys:upcomingJourneys(model.read().tickets)});
+ main.innerHTML=homeView({greeting:homeGreetings.get(),q,model,tab:homeTab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent:recent(),journeys:upcomingJourneys(model.read().tickets)});
  const selectTab=(tab,focus=false)=>{homeTab=tab;searchPage();if(focus)$(`#tab-${tab}`).focus();};
  main.querySelectorAll('[data-home-tab]').forEach(b=>{b.onclick=()=>selectTab(b.dataset.homeTab,true);b.onkeydown=e=>{const tabs=['booking','pass','tour'];let index=tabs.indexOf(homeTab);if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();index=e.key==='Home'?0:e.key==='End'?2:(index+(e.key==='ArrowRight'?1:2))%3;selectTab(tabs[index],true);}};});
  main.querySelectorAll('[data-shortcut]').forEach(b=>b.onclick=()=>{const target=b.dataset.shortcut;if(target==='tickets')go('tickets');else if(target==='guide')showDialog('이용 안내','<p>출도착역과 날짜를 선택해 열차를 조회하고 좌석을 선택하거나 바로 예매를 이용하세요. 예약은 이 브라우저에 저장됩니다.</p><p>결제는 가상으로 진행되며 실제 금액은 청구되지 않습니다.</p><a href="/NIMBYRAILTABLE/">NIMBY Rail 철도 정보 ↗</a>');else{selectTab(target);$('#home-tab-panel').scrollIntoView({block:'nearest',behavior:'smooth'});}});
@@ -329,6 +331,7 @@ try {
 // Refresh schedule regions only: station/date inputs and open sheets retain focus and scroll.
 function refreshHomeJourney(){
  try {
+  updateHomeGreeting(main,homeGreetings);
   if(location.hash==='#results'){
    let removed=0;
    for(const el of main.querySelectorAll('[data-inventory],[data-transfer-inventory]')){
@@ -346,7 +349,7 @@ function refreshHomeJourney(){
   }
   if(['home','search',''].includes(location.hash.slice(1))&&!dialog.open){
    const template=document.createElement('template');
-   template.innerHTML=homeView({q,model,tab:homeTab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent:recent(),journeys:upcomingJourneys(model.read().tickets)});
+   template.innerHTML=homeView({greeting:homeGreetings.get(),q,model,tab:homeTab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent:recent(),journeys:upcomingJourneys(model.read().tickets)});
    for(const selector of ['.home-schedule','.home-live']){
     const current=main.querySelector(selector),next=template.content.querySelector(selector);
     if(current?.contains(document.activeElement))continue;
@@ -359,6 +362,8 @@ function refreshHomeJourney(){
  setTimeout(refreshHomeJourney,60000-Date.now()%60000);
 }
 setTimeout(refreshHomeJourney,60000-Date.now()%60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')updateHomeGreeting(main,homeGreetings);});
+window.addEventListener('pageshow',()=>updateHomeGreeting(main,homeGreetings));
 
 function applyTheme(){const selected=localStorage.getItem('raillink.theme')||'light';document.documentElement.dataset.theme=selected==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):selected;}
 try{applyTheme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);}catch{}

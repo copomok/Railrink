@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    assert page.locator('.navigation a').count()==5
    page.screenshot(path=str(out/'01-home-empty.png'),full_page=True)
    page.locator('#tab-booking').focus();page.keyboard.press('ArrowRight');assert page.locator('#tab-pass').get_attribute('aria-selected')=='true'
-   page.locator('#tab-tour').click();assert page.locator('.home-tab-body [data-action=tour]').count()>0
+   page.locator('#tab-tour').click();assert page.locator('.home-tab-body [data-action=tour-grade]').count()>0
    page.locator('#tab-booking').click()
    page.locator('[data-station=from]').click();field=page.locator('#station-query');field.fill('ㅅㅇ');assert page.locator('[data-st="서울"]').count()==1
    field.fill('서울');page.keyboard.press('ArrowDown');page.keyboard.press('Enter');assert not page.locator('dialog').is_visible()
