@@ -91,7 +91,7 @@ body:is([data-screen=home],[data-screen=search]) .layout { padding:0 20px 95px; 
 .home-booking .stations { padding:3px 0; }
 .home-booking .station-control { min-height:70px; }
 .home-booking .date-control,.home-booking .passenger-control { min-height:65px; padding-top:9px; padding-bottom:9px; }
-.home-booking .search-card>.search-submit { min-height:51px; margin:0; border-radius:12px; font-size:18px; }
+.home-booking .search-card>.search-submit { min-height:51px; margin:12px 0 0; border-radius:12px; font-size:18px; }
 .home-shortcuts button { min-height:73px; }
 .home-travel-banner { min-height:77px; }
 .home-section-title { margin-top:12px; margin-bottom:5px; }

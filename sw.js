@@ -1,4 +1,4 @@
-const CACHE='raillink-20261029-journey-1';
+const CACHE='raillink-20261029-operations-2';
 const SHELL=['./','./index.html',/* APP_ASSETS */];
 const allowed=url=>url.origin===self.location.origin&&(url.pathname.startsWith(new URL('./',self.location).pathname)||url.pathname.startsWith('/NIMBYRAILTABLE/'));
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)));});

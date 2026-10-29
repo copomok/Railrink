@@ -1,17 +1,18 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {appRoot,sourceRoot,tokenSource,railDataSource} from './source.mjs';
+import {appRoot,sourceRoot,tokenSource,operationStyleSource,railDataSource} from './source.mjs';
 const standalone=process.argv.includes('--standalone');
 const output=standalone?path.join(appRoot,'dist'):path.join(sourceRoot,'raillink');
 const sharedRoot=standalone?'/NIMBYRAILTABLE/':'../';
 await fs.mkdir(output,{recursive:true});
 for(const dir of ['js','css']) await fs.cp(path.join(appRoot,dir),path.join(output,dir),{recursive:true});
 await fs.writeFile(path.join(output,'tokens.css'),tokenSource());
+await fs.writeFile(path.join(output,'operations-source.css'),operationStyleSource());
 for(const file of ['manifest.webmanifest','icon.svg'])await fs.copyFile(path.join(appRoot,file),path.join(output,file));
-const shell=[...(await fs.readdir(path.join(appRoot,'js'))).map(f=>'./js/'+f),...(await fs.readdir(path.join(appRoot,'css'))).map(f=>'./css/'+f),'./tokens.css','./boot.js','./manifest.webmanifest','./icon.svg'];
+const shell=[...(await fs.readdir(path.join(appRoot,'js'))).map(f=>'./js/'+f),...(await fs.readdir(path.join(appRoot,'css'))).map(f=>'./css/'+f),'./tokens.css','./operations-source.css','./boot.js','./manifest.webmanifest','./icon.svg'];
 await fs.writeFile(path.join(output,'sw.js'),(await fs.readFile(path.join(appRoot,'sw.js'),'utf8')).replace('/* APP_ASSETS */',shell.map(s=>JSON.stringify(s)).join(',')));
 let html=await fs.readFile(path.join(appRoot,'index.html'),'utf8');
-html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('href="/css/app.css"','href="./css/app.css"').replace('href="/NIMBYRAILTABLE/"',`href="${sharedRoot}"`);
+html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('href="/shared/operations.css"','href="./operations-source.css"').replace('href="/css/app.css"','href="./css/app.css"').replace('href="/NIMBYRAILTABLE/"',`href="${sharedRoot}"`);
 html=html.replace(/<script src="\/shared\/runtime\.js"[\s\S]*?<\/script>\s*<script type="module" src="\/js\/app.js"><\/script>/, '<script type="module" src="./boot.js"></script>');
 await fs.writeFile(path.join(output,'index.html'),html);
 await fs.writeFile(path.join(output,'boot.js'),`// Load the same source scripts as the original app, in its declared order.

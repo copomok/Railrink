@@ -1,7 +1,7 @@
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {appRoot, sourceRoot, runtimeSource, tokenSource, sharedFiles} from './source.mjs';
+import {appRoot, sourceRoot, runtimeSource, tokenSource, operationStyleSource, sharedFiles} from './source.mjs';
 const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png'};
 // Validate the configured shared source before accepting requests. No writes to either checkout.
 sharedFiles();
@@ -14,6 +14,7 @@ const server = http.createServer(async (req, res) => {
     let body, type;
     if (pathname === '/shared/runtime.js') {body = runtimeSource(); type=mime['.js'];}
     else if (pathname === '/shared/tokens.css') {body=tokenSource(); type=mime['.css'];}
+    else if (pathname === '/shared/operations.css') {body=operationStyleSource(); type=mime['.css'];}
     else if (pathname === '/shared/source.json') {body=JSON.stringify({repository:'copomok/NIMBYRAILTABLE',files:sharedFiles(),mode:'game-simulation'}); type=mime['.json'];}
     else {
       const original = pathname.startsWith('/NIMBYRAILTABLE/');

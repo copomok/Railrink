@@ -124,12 +124,18 @@ export function createModel(data, storage, now = () => new Date()) {
     const cars=seats(train,q),count=+q.pax;
     const match=(s,c)=>preference==='window'?s.col===c.cols[0]||s.col===c.cols.at(-1):preference==='aisle'?s.col!==c.cols[0]&&s.col!==c.cols.at(-1):preference==='forward'?!s.reverse:preference==='reverse'?s.reverse:true;
     const candidates=cars.flatMap(c=>c.seats.filter(s=>!s.blocked).map(s=>({...s,car:c.car,preferred:match(s,c)})));
+    const groups=[];
     for(const car of cars)for(let row=1;row<=car.rows;row++){
       const same=candidates.filter(s=>s.car===car.car&&s.row===row&&s.preferred);
-      if(same.length>=count)return {seats:same.slice(0,count).map(s=>s.id),split:false,preferenceMet:true};
+      for(let i=0;i<=same.length-count;i++)groups.push(same.slice(i,i+count));
+    }
+    if(groups.length){
+      const group=groups[preference==='random'?Math.floor(Math.random()*groups.length):0];
+      return {seats:group.map(s=>s.id),split:false,preferenceMet:true};
     }
     const sorted=[...candidates].sort((a,b)=>Number(b.preferred)-Number(a.preferred));
     check(sorted.length>=count,'자동 배정할 좌석이 부족합니다.');
+    if(preference==='random')for(let i=sorted.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sorted[i],sorted[j]]=[sorted[j],sorted[i]];}
     const chosen=sorted.slice(0,count);
     return {seats:chosen.map(s=>s.id),split:count>1,preferenceMet:chosen.every(s=>s.preferred)};
   }

@@ -1,0 +1,17 @@
+/* Native dialog adapter; the route sheet and timetable styles come from NIMBY Rail. */
+dialog.operations-dialog{--bg1:var(--product-bg);--bg2:var(--product-surface);--text1:var(--product-text);--text2:var(--product-muted);--text3:#79818b;--border:var(--product-border);--sans:"Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;--red:#c33b37;width:min(860px,100%);max-width:100%;height:min(88dvh,900px);max-height:calc(100dvh - 12px);padding:0;border:0;border-radius:18px 18px 0 0;margin:auto auto 0;overflow:hidden;background:var(--bg1);color:var(--text1)}
+.operations-dialog .dialog-body{padding:0;height:100%;display:flex;min-height:0}
+.operations-dialog .book-route-detail-sheet{width:100%;height:100%;border:0;box-shadow:none;transform:none;transition:none}
+.operations-dialog .brd-view[hidden]{display:none}
+.operations-dialog .brd-view-tabs{margin-bottom:10px}.operations-dialog .brd-view-tab{border-radius:0;padding:8px}
+.operations-dialog #ops-status{padding:0;margin:7px 0 0;background:none;border-radius:0;font-size:13px}
+.operations-dialog .brd-stop-list{position:relative}.operations-dialog .brd-stop{box-sizing:border-box}
+.operations-dialog .brd-stop time small:empty{display:none}
+.operations-dialog .brd-live-marker{transition:top 1s linear}.operations-dialog .brd-map-live-train{transition:transform 1s linear}
+.operations-dialog .operation-map{max-height:none;background:transparent;border-radius:0;stroke:none}
+.operations-dialog .brd-map-live-train rect{fill:none;stroke:white;stroke-width:1.7}
+.operations-dialog .ops-note{flex-shrink:0;margin:0;padding:0 16px 8px;font-size:10px;color:var(--text2);text-align:center}
+[data-theme=dark] .operations-dialog{--text3:#9aadc0;--red:#ff9690}
+@media(min-width:768px){dialog.operations-dialog{height:min(82dvh,820px);margin:auto;border-radius:14px}}
+@media(max-width:520px){dialog.operations-dialog{height:calc(100dvh - env(safe-area-inset-top,0px) - 10px)}}
+@media(prefers-reduced-motion:reduce){.operations-dialog .brd-live-marker,.operations-dialog .brd-map-live-train{transition:none}}

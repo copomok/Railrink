@@ -29,3 +29,5 @@
 [data-theme=dark] .home-booking .stations .swap{background:var(--product-soft);border-color:var(--product-border)}
 .operation-map text{font-size:13px}
 .station-shortcuts{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.station-shortcuts button{font-size:12px;padding:8px 10px}.station-search+#station-shortcuts:empty{display:none}#favorite-station{width:100%;font-size:12px;margin:0 0 12px}
+
+.standing-actions{display:grid;gap:12px;margin-top:18px}.standing-actions button{margin:0}.standing-actions #back-general{justify-self:start}

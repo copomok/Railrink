@@ -52,4 +52,4 @@ node --test --test-concurrency=2 tests/*.test.mjs
 
 계층별 변경 파일, 공유 원본, 남은 세부 사양은 [구현 현황](docs/implementation-status.md)에 기록했습니다.
 
-Python Playwright와 Chromium이 설치된 환경에서 `npm run build` 후 `python tools/verify-home.py`, `python tools/verify-journey.py`로 브라우저 회귀 검증을 실행할 수 있습니다. 검증 예약은 임시 브라우저에만 저장됩니다.
+Python Playwright와 Chromium이 설치된 환경에서 `npm run build` 후 `python tools/verify-home.py`, `python tools/verify-journey.py`, `python tools/verify-refinements.py`로 브라우저 회귀 검증을 실행할 수 있습니다. 검증 예약은 임시 브라우저에만 저장됩니다.
