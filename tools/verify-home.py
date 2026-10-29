@@ -23,7 +23,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    field.fill('서울');page.keyboard.press('ArrowDown');page.keyboard.press('Enter');assert not page.locator('dialog').is_visible()
    page.locator('[data-station=to]').click();field=page.locator('#station-query');field.evaluate("el=>el.dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true}))");field.fill('부산');assert field.evaluate('el=>document.activeElement===el')
    field.evaluate("el=>el.dispatchEvent(new CompositionEvent('compositionend',{bubbles:true}))");page.locator('[data-st="부산"]').click()
-   page.locator('#open-date').click();page.locator('[data-day="1"]').click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click()
+   page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click()
    assert '10:00' in page.locator('#open-date').inner_text()
    page.screenshot(path=str(out/'02-home-search.png'),full_page=True)
    page.locator('#search-form [type=submit]').click();page.wait_for_selector('.train-card');assert page.locator('.journey-line strong').first.inner_text()>='10:00'

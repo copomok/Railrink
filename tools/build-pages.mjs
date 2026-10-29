@@ -1,12 +1,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {appRoot,sourceRoot,tokenSource} from './source.mjs';
+import {appRoot,sourceRoot,tokenSource,railDataSource} from './source.mjs';
 const standalone=process.argv.includes('--standalone');
 const output=standalone?path.join(appRoot,'dist'):path.join(sourceRoot,'raillink');
 const sharedRoot=standalone?'/NIMBYRAILTABLE/':'../';
 await fs.mkdir(output,{recursive:true});
 for(const dir of ['js','css']) await fs.cp(path.join(appRoot,dir),path.join(output,dir),{recursive:true});
 await fs.writeFile(path.join(output,'tokens.css'),tokenSource());
+for(const file of ['manifest.webmanifest','icon.svg'])await fs.copyFile(path.join(appRoot,file),path.join(output,file));
+const shell=[...(await fs.readdir(path.join(appRoot,'js'))).map(f=>'./js/'+f),...(await fs.readdir(path.join(appRoot,'css'))).map(f=>'./css/'+f),'./tokens.css','./boot.js','./manifest.webmanifest','./icon.svg'];
+await fs.writeFile(path.join(output,'sw.js'),(await fs.readFile(path.join(appRoot,'sw.js'),'utf8')).replace('/* APP_ASSETS */',shell.map(s=>JSON.stringify(s)).join(',')));
 let html=await fs.readFile(path.join(appRoot,'index.html'),'utf8');
 html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('href="/css/app.css"','href="./css/app.css"').replace('href="/NIMBYRAILTABLE/"',`href="${sharedRoot}"`);
 html=html.replace(/<script src="\/shared\/runtime\.js"[\s\S]*?<\/script>\s*<script type="module" src="\/js\/app.js"><\/script>/, '<script type="module" src="./boot.js"></script>');
@@ -26,7 +29,7 @@ try {
     if(url.origin!==root.origin||!url.pathname.startsWith(root.pathname))throw new Error('잘못된 데이터 경로');
     await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url.href;s.onload=resolve;s.onerror=()=>reject(new Error('데이터 로딩 실패'));document.body.append(s);});
   }
-  window.RailData=Object.freeze({trains:ALL_TRAINS,grades:GL,colors:GRADE_COLORS,classes:SEAT_CLASSES,discounts:DISCOUNTS,stops:NIMBI_Demand.getStops,fare:calcFare,discount:applyDiscount,formation:getFormationType,cars:getCarComposition,classCars:getCarsForClass,seatId,inventory:getSeatInventoryState,forecast:_delayForecast,platform:_realPlatform,virtualSeats:generateVirtualBookings,bookedSeats:getBookedSeats,invalidate:invalidateCongestion,duration:durMin});
+  ${railDataSource()}
   await import('./js/app.js');
 } catch(error){document.getElementById('main').textContent=error.message+' 새로고침하여 다시 시도하세요.';}
 `);

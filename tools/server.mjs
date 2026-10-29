@@ -2,7 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {appRoot, sourceRoot, runtimeSource, tokenSource, sharedFiles} from './source.mjs';
-const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.png':'image/png'};
+const mime = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.webmanifest':'application/manifest+json','.svg':'image/svg+xml','.png':'image/png'};
 // Validate the configured shared source before accepting requests. No writes to either checkout.
 sharedFiles();
 const server = http.createServer(async (req, res) => {
@@ -19,7 +19,7 @@ const server = http.createServer(async (req, res) => {
       const original = pathname.startsWith('/NIMBYRAILTABLE/');
       let relative = original ? pathname.slice('/NIMBYRAILTABLE/'.length) : pathname.slice(1);
       if (!relative || relative.endsWith('/')) relative += 'index.html';
-      const allowed = original ? /^(index\.html|sw\.js|manifest\.json|(?:assets|data|js|pages)\/[\w/.-]+)$/ : /^(index\.html|(?:css|js)\/[\w.-]+)$/;
+      const allowed = original ? /^(index\.html|sw\.js|manifest\.json|(?:assets|data|js|pages)\/[\w/.-]+)$/ : /^(index\.html|manifest\.webmanifest|icon\.svg|sw\.js|(?:css|js)\/[\w.-]+)$/;
       if (relative.split('/').some(s=>s.startsWith('.')) || !allowed.test(relative)) {res.writeHead(404).end('Not found');return;}
       const root = original ? sourceRoot : appRoot;
       const filename = await fs.realpath(path.join(root, relative));

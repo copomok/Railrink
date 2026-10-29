@@ -73,3 +73,27 @@ test('wait records do not create tickets or imaginary queue positions',()=>{
   reset();const r=candidate();model.watch(r.key,q);model.watch(r.key,q);
   assert.equal(model.read().watches.length,1);assert.equal(model.read().tickets.length,0);assert.equal(model.read().watches[0].queuePosition,undefined);
 });
+test('same-day search excludes departures at or before the Korean current instant',()=>{
+ reset();const r=model.search(q)[0],fixed=new Date(`${q.date}T${r.seg.dep.padStart(5,'0')}:00+09:00`),atDeparture=createModel(context.RailData,storage,()=>fixed);
+ const rows=atDeparture.search(q);assert.ok(rows.length>0);assert.ok(rows.every(x=>atDeparture.departure(x.seg,q.date)>fixed));assert.ok(!rows.some(x=>x.key===r.key));
+ const tomorrow={...q,date:addDays(q.date,1)};assert.ok(atDeparture.search(tomorrow).some(x=>x.key===r.key));
+ const justBefore=createModel(context.RailData,storage,()=>new Date(+fixed-1000));assert.ok(justBefore.search(q).some(x=>x.key===r.key));
+});
+test('multi-leg booking writes once, validates all legs first and cancels as a group',()=>{
+ reset();const a=candidate(),backQ={...q,from:q.to,to:q.from,date:addDays(q.date,1)},b=candidate(backQ),first=draftFor(a),second=draftFor(b,backQ);
+ assert.throws(()=>model.bookMany([first,{...second,seats:['invalid']}],{type:'roundtrip'}),/좌석/);assert.equal(model.read().tickets.length,0);
+ const group=model.bookMany([first,second],{type:'roundtrip'});assert.equal(group.length,2);assert.equal(group[0].groupId,group[1].groupId);assert.equal(group[0].groupType,'roundtrip');assert.ok(group[0].fromStationId.startsWith('nimby:'));assert.equal(group[0].fromStationId,model.stationRecords.find(s=>s.name===q.from).id);assert.ok(group[0].arrival);
+ model.cancel(group[1].id);assert.ok(model.read().tickets.every(t=>t.status==='cancelled'));
+ model.removeHistory(group[0].id);assert.equal(model.read().tickets.length,0);
+});
+test('overlapping legs and readonly storage never leave a partial journey',()=>{
+ reset();const a=candidate(),first=draftFor(a);
+ assert.throws(()=>model.bookMany([first,{...first}]),/겹칩니다/);assert.equal(model.read().tickets.length,0);
+ const broken=createModel(context.RailData,{getItem:()=>null,setItem(){throw Error('Quota');}});assert.throws(()=>broken.bookMany([first]),/저장 공간/);assert.equal(model.read().tickets.length,0);
+});
+test('per-passenger discounts, automatic seats and pass records use canonical rules',()=>{
+ reset();const pairQ={...q,pax:2},a=candidate(pairQ),assignment=model.autoAssign(a.train,pairQ,'window');assert.equal(assignment.seats.length,2);assert.equal(new Set(assignment.seats).size,2);
+ const draft={...draftFor(a,pairQ),seats:assignment.seats,discounts:['none','child']};const [ticket]=model.bookMany([draft],{type:'pass',pass:{name:'주간 일정'}});
+ assert.equal(ticket.totalFare,a.fare+context.RailData.discount(a.fare,'child'));assert.equal(model.read().passes[0].id,ticket.passId);assert.equal(ticket.groupId,undefined);
+ assert.throws(()=>model.removeHistory(ticket.id),/예정된/);
+});

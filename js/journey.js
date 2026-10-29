@@ -8,7 +8,7 @@ export function journeyState(ticket, now = new Date()) {
   if (ticket.status !== 'active') return {phase: ticket.status, label: ticket.status === 'cancelled' ? '취소됨' : '변경됨', eligible: false};
   const dep = Date.parse(ticket.departure), start = minutes(ticket.dep), end = minutes(ticket.arr);
   if (!Number.isFinite(dep) || start === null || end === null) return {phase:'unknown',label:'시간 확인 필요',eligible:false};
-  const arrival = dep + ((end - start + 1440) % 1440) * 60000;
+  const arrival = Number.isFinite(Date.parse(ticket.arrival))?Date.parse(ticket.arrival):dep + ((end - start + 1440) % 1440) * 60000;
   const untilDeparture = Math.ceil((dep - now.getTime()) / 60000);
   const untilArrival = Math.ceil((arrival - now.getTime()) / 60000);
   const phase = now.getTime() >= arrival ? 'completed' : untilDeparture > 10 ? 'upcoming' : untilDeparture > 0 ? 'boarding' : untilArrival <= 5 ? 'arriving' : 'riding';
