@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1168ad"><meta name="description" content="NIMBY Rail 운행 데이터로 여행을 계획하는 독립 예매 시제품, 레일링크">
+<title>레일링크 · RailLink</title>
+<link rel="stylesheet" href="/shared/tokens.css"><link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<a class="skip" href="#main">본문으로 이동</a>
+<header class="top"><a href="#search" class="brand" aria-label="레일링크 홈"><span class="brand-mark" aria-hidden="true">↗</span><span>레일링크<small>RAILLINK</small></span></a><span class="prototype">NIMBY Rail 시제품</span><a class="info-link" href="/NIMBYRAILTABLE/">철도 정보 ↗</a></header>
+<div class="layout"><aside class="intro"><p class="eyebrow">YOUR NEXT JOURNEY</p><h1>철도를 잇다.<br>여행을 잇다.</h1><p>열차를 찾는 순간부터<br>내리는 역까지, 레일링크.</p><div class="rail-art" aria-hidden="true"><i></i><i></i><i></i><span>출발</span><span>새로운 여정</span><span>도착</span></div><div class="source-note">NIMBY Rail과 같은 운행·시설 데이터.<br>예매와 승차 안내는 나만의 공간에서.</div></aside>
+<main id="main" tabindex="-1"><div class="loading" role="status">공통 철도 데이터를 불러오는 중입니다…</div></main></div>
+<nav class="navigation" aria-label="주요 메뉴"><a href="#search" data-nav="search"><span aria-hidden="true">⌕</span>열차 예매</a><a href="#tickets" data-nav="tickets"><span aria-hidden="true">▤</span>내 승차권</a><a href="#travel" data-nav="travel"><span aria-hidden="true">◇</span>여행</a><a href="#my" data-nav="my"><span aria-hidden="true">○</span>마이</a></nav>
+<div id="message" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+<noscript>레일링크를 이용하려면 JavaScript를 활성화해 주세요.</noscript>
+<script src="/shared/runtime.js" onerror="document.getElementById('main').textContent='공통 데이터를 불러오지 못했습니다. 서버의 NIMBY Rail 연결을 확인한 뒤 새로고침하세요.'"></script>
+<script type="module" src="/js/app.js"></script>
+</body></html>
