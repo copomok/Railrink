@@ -35,3 +35,13 @@ node --test --test-concurrency=2 tests/*.test.mjs
 
 ## 모바일 화면 개편
 첨부 시안을 기준으로 메인·열차 목록·좌석 선택·예약 확인·완료 화면을 재구성했습니다. `css/mobile.css`가 해당 화면 표현을 담당합니다. 최근 검색은 `raillink.recent`에 저장하며, 왕복 선택 시 가는 편 예약 완료 후 오는 편을 별도로 조회할 수 있습니다. 자동 결제나 왕복 동시 확정은 하지 않습니다. 좌석 수와 번호는 실제 공통 편성을 따르며 객차 내부를 스크롤할 수 있습니다.
+
+## Railrink 독립 GitHub Pages 배포
+
+`.github/workflows/pages.yml`은 `main` 푸시 또는 수동 실행 시 검사·빌드 후 `github-pages` 환경으로 배포합니다. `npm run build`의 산출물은 `dist/`이며 공개 주소는 `https://copomok.github.io/Railrink/`입니다. 원본 PWA의 하위 경로 배포와 별도로 관리됩니다.
+
+빌드에서는 `copomok/NIMBYRAILTABLE`의 최신 공통 토큰과 인터페이스를 검사합니다. 배포된 앱은 같은 도메인의 `/NIMBYRAILTABLE/`에서 원본 데이터·시설·지연·수요 모듈을 직접 읽습니다. `dist/`에는 철도 DB를 복사하지 않습니다. 원본 Pages가 먼저 정상 배포되어 있어야 합니다.
+
+워크플로는 Pages 자동 활성화를 시도합니다. 저장소 정책상 자동 활성화 권한이 부족하면 GitHub의 **Settings → Pages → Build and deployment → Source: GitHub Actions**를 선택하고 Actions의 **Deploy RailLink to GitHub Pages**를 다시 실행하세요. 저장소 관리 권한이 필요한 설정이며 별도 결제나 호스팅 계정은 필요 없습니다. `github-pages` 환경에 승인이 설정되어 있으면 해당 배포의 승인도 필요합니다.
+
+기존 `/NIMBYRAILTABLE/raillink/`와 새 `/Railrink/`는 동일한 도메인이므로 기존 브라우저 예약 저장 공간을 공유합니다.

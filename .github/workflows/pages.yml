@@ -1,0 +1,62 @@
+name: Deploy RailLink to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: raillink-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout RailLink
+        uses: actions/checkout@v4
+      - name: Checkout canonical railway source
+        uses: actions/checkout@v4
+        with:
+          repository: copomok/NIMBYRAILTABLE
+          ref: main
+          path: .rail-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate and build standalone site
+        env:
+          RAIL_SOURCE: ${{ github.workspace }}/.rail-source
+        run: |
+          npm run check
+          npm test
+          npm run build
+          test -f dist/index.html
+          test -f dist/boot.js
+          test -f dist/css/mobile.css
+      - name: Upload Pages site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure or enable GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Publish RailLink
+        id: deployment
+        uses: actions/deploy-pages@v4

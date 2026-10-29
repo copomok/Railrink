@@ -1,18 +1,20 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {appRoot,sourceRoot,tokenSource} from './source.mjs';
-const output=path.join(sourceRoot,'raillink');
+const standalone=process.argv.includes('--standalone');
+const output=standalone?path.join(appRoot,'dist'):path.join(sourceRoot,'raillink');
+const sharedRoot=standalone?'/NIMBYRAILTABLE/':'../';
 await fs.mkdir(output,{recursive:true});
 for(const dir of ['js','css']) await fs.cp(path.join(appRoot,dir),path.join(output,dir),{recursive:true});
 await fs.writeFile(path.join(output,'tokens.css'),tokenSource());
 let html=await fs.readFile(path.join(appRoot,'index.html'),'utf8');
-html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('href="/css/app.css"','href="./css/app.css"').replace('href="/NIMBYRAILTABLE/"','href="../"');
+html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('href="/css/app.css"','href="./css/app.css"').replace('href="/NIMBYRAILTABLE/"',`href="${sharedRoot}"`);
 html=html.replace(/<script src="\/shared\/runtime\.js"[\s\S]*?<\/script>\s*<script type="module" src="\/js\/app.js"><\/script>/, '<script type="module" src="./boot.js"></script>');
 await fs.writeFile(path.join(output,'index.html'),html);
 await fs.writeFile(path.join(output,'boot.js'),`// Load the same source scripts as the original app, in its declared order.
 try {
   window.NIMBI_DISABLE_WEATHER=true;
-  const root=new URL('../',location.href);
+  const root=new URL(${JSON.stringify(sharedRoot)},location.href);
   const response=await fetch(new URL('index.html',root),{cache:'no-cache'});
   if(!response.ok)throw new Error('공통 데이터 목록을 불러올 수 없습니다.');
   const doc=new DOMParser().parseFromString(await response.text(),'text/html');
@@ -28,4 +30,4 @@ try {
   await import('./js/app.js');
 } catch(error){document.getElementById('main').textContent=error.message+' 새로고침하여 다시 시도하세요.';}
 `);
-console.log('Built RailLink into NIMBYRAILTABLE/raillink (shared railway data remains in the original files).');
+console.log(`Built RailLink into ${output}; shared railway sources: ${sharedRoot}`);
