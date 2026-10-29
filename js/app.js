@@ -1,3 +1,5 @@
+import {tourismView} from './tourism.js';
+import {openBookingStorage} from './booking-storage.js';
 import {queryOptions} from './query-options.js';
 import {initPWA,installApp} from './pwa.js';
 import {resultHeader,trainResult,transferResult,transferDetail} from './search-view.js';
@@ -40,7 +42,7 @@ function shell(route){
    showDialog('여행 알림',next?`<p>${esc(next.ticket.fromStn)} → ${esc(next.ticket.toStn)} · ${next.state.label}</p><p>${dateLabel(next.ticket.travelDate)} ${esc(next.ticket.dep)} 출발 예정</p><p>시간표 기준 안내입니다. 실시간 지연·푸시 알림은 제공하지 않습니다.</p>`:'<p>현재 예정된 여행 알림이 없습니다.</p><p>예약한 여정이 생기면 이곳에서 확인할 수 있습니다.</p>');
  }
 }
-let model, q, results=[], draft=null, selectedCar=0, changing=null, lastTicket=null, visibleCount=12, dialogFocus=null, toastTimer;
+let bookingStorage, model, q, results=[], draft=null, selectedCar=0, changing=null, lastTicket=null, visibleCount=12, dialogFocus=null, toastTimer;
 const main=$('#main'), dialog=$('#dialog');
 function notify(text) {$('#message').textContent=text;$('#message').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#message').hidden=true,4500);}
 function fail(error) {notify(error.message || '작업을 완료하지 못했습니다. 다시 시도하세요.');}
@@ -60,7 +62,7 @@ function stationPicker(which){
  openStationPicker({model,current:q[which],which,recent:recent(),showDialog,dialog,esc,notify,fail,onChoose:st=>{q[which]=st;searchPage();main.querySelector(`[data-station=${which}]`).focus({preventScroll:true});}});
 }
 function passengerPicker(){
- showDialog('인원 및 좌석 등급',`<form id="pax-form"><h3>승객 인원</h3><label>최대 6명<select name="pax">${Array.from({length:6},(_,i)=>`<option value="${i+1}" ${+q.pax===i+1?'selected':''}>${i+1}명</option>`).join('')}</select></label><h3>좌석 등급</h3><div class="class-options">${Object.entries(model.data.classes).filter(([k])=>true).map(([k,v])=>`<label class="class-option"><input type="radio" name="cls" value="${k}" ${q.cls===k?'checked':''}>${v.label}</label>`).join('')}</div><button class="primary" type="submit">적용</button></form>`);$('#pax-form').onsubmit=e=>{e.preventDefault();q.pax=+e.target.elements.pax.value;q.cls=e.target.elements.cls.value;dialog.close();searchPage();$('#open-passengers').focus({preventScroll:true});};
+ showDialog('인원 및 좌석 등급',`<form id="pax-form"><h3>승객 인원</h3><label>최대 6명<select name="pax">${Array.from({length:6},(_,i)=>`<option value="${i+1}" ${+q.pax===i+1?'selected':''}>${i+1}명</option>`).join('')}</select></label><h3>좌석 등급</h3><div class="class-options">${Object.entries(model.data.classes).filter(([k])=>true).map(([k,v])=>`<label class="class-option"><span>${v.label}</span><input type="radio" name="cls" value="${k}" ${q.cls===k?'checked':''}></label>`).join('')}</div><button class="primary" type="submit">적용</button></form>`);$('#pax-form').onsubmit=e=>{e.preventDefault();q.pax=+e.target.elements.pax.value;q.cls=e.target.elements.cls.value;dialog.close();searchPage();$('#open-passengers').focus({preventScroll:true});};
 }
 function searchPage(){
  main.innerHTML=homeView({q,model,tab:homeTab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent:recent(),journeys:upcomingJourneys(model.read().tickets)});
@@ -107,9 +109,9 @@ function bookingOptions(index,transfer=false){
  const r=transfer?transferResults[index]:results[index];if(!r)return;
  const legs=transfer?r.legs:[{key:r.key,train:r.train,q:{...q}}];let cls=legs[0].q.cls;
  const supports=c=>legs.every(l=>model.data.classCars(model.data.cars(model.data.formation(l.train.grade,l.train.no)),c).length);
- const classes=[...['general','special','premium'].filter(supports),'standing','mixed'];let mixedLegs=null;
+ const classes=[...['general','special','premium'].filter(supports),'standing'];let mixedLegs=null;
  const title=transfer?'환승 여정 예매':`${esc(r.train.grade)} ${esc(r.train.no)}`;
- showDialog(title,`<div class="booking-info-actions"><button id="booking-facilities">차내 시설</button><button id="booking-operations">운행 정보</button></div><div class="booking-option-context">${esc(q.from)} → ${esc(q.to)} · 승객 ${q.pax}명${transfer?` · ${legs.length}개 열차`:''}</div><div id="booking-classes" class="booking-class-options" role="group" aria-label="좌석 등급">${classes.map(c=>`<button data-booking-class="${c}" aria-pressed="${cls===c}">${c==='mixed'?'입석+좌석':model.data.classes[c].label}</button>`).join('')}</div><div class="booking-availability" id="booking-availability" role="status"></div><div id="booking-mixed-segments"></div><p class="booking-explanation">좌석을 직접 고르거나, 남은 좌석을 자동 배정받을 수 있습니다.</p><p id="booking-error" role="alert"></p><div class="booking-actions"><button id="choose-seats">좌석 선택</button><button id="quick-book" class="primary">바로 예매</button></div>`);
+ showDialog(title,`<div class="booking-info-actions"><button id="booking-facilities">차내 시설</button><button id="booking-operations">운행 정보</button></div><div class="booking-option-context">${esc(q.from)} → ${esc(q.to)} · 승객 ${q.pax}명${transfer?` · ${legs.length}개 열차`:''}</div><div id="booking-classes" class="booking-class-options" role="group" aria-label="좌석 등급">${classes.map(c=>`<button data-booking-class="${c}" aria-pressed="${cls===c}">${model.data.classes[c].label}</button>`).join('')}</div><div class="booking-availability" id="booking-availability" role="status"></div><div id="booking-mixed-segments"></div><p class="booking-explanation">좌석을 직접 고르거나, 남은 좌석을 자동 배정받을 수 있습니다.</p><p id="booking-error" role="alert"></p><div class="booking-actions"><button id="choose-seats">좌석 선택</button><button id="quick-book" class="primary">바로 예매</button></div>`);
  dialog.classList.add('booking-dialog');
  $('#booking-facilities').onclick=()=>{dialog.close();setTimeout(()=>details(legs[0].train,legs[0].q),0);};
  $('#booking-operations').onclick=()=>{dialog.close();setTimeout(()=>openOperation({model,train:legs[0].train,query:legs[0].q,showDialog,dialog,esc}),0);};
@@ -117,16 +119,17 @@ function bookingOptions(index,transfer=false){
  dialog.addEventListener('close',()=>{dialog.classList.remove('booking-dialog');card?.classList.remove('booking-selected');},{once:true});
  const paint=()=>{
   mixedLegs=null;
-  if(cls==='mixed'){
-   const runs=legs.flatMap(l=>{const query={...l.q,cls:'general'},parts=model.mixed(l.train,query);if(parts.length)return parts.map(p=>({...p,train:model.byKey.get(p.key)}));const state=model.availability(l.train,query);return state.eligible&&state.available>=+query.pax?[{...l,q:query}]:[];});
-   if(runs.length>legs.length&&runs.some(l=>l.q.cls==='standing')&&runs.some(l=>l.q.cls==='general')&&legs.every(l=>runs.some(p=>p.key===l.key)))mixedLegs=runs;
+  if(cls==='standing'){
+   const parts=legs.map(l=>model.flexible(l.train,l.q));
+   if(parts.every(r=>r.length))mixedLegs=parts.flat().map(l=>({...l,train:model.byKey.get(l.key)}));
   }
-  const effective=cls==='mixed'?(mixedLegs||[]):legs.map(l=>({...l,q:{...l.q,cls}}));
+  const effective=cls==='standing'?(mixedLegs||[]):legs.map(l=>({...l,q:{...l.q,cls}}));
   const states=effective.map(l=>model.availability(l.train,l.q)),available=states.length>0&&states.every(s=>s.eligible&&s.available>=+q.pax);
   dialog.querySelectorAll('[data-booking-class]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bookingClass===cls)));
-  $('#booking-availability').innerHTML=`<span>${states.length?states.map((s,i)=>(effective.length>1?`${i+1}구간 `:'')+esc(inventoryLabel(s,+q.pax))).join(' · '):'입석+좌석으로 연결 가능한 구간이 없습니다'}</span>${effective.length?`<strong>${won(effective.reduce((sum,l)=>sum+model.data.fare(l.train,l.q.from,l.q.to,l.q.cls)*+q.pax,0))}</strong>`:''}`;
+  $('#booking-availability').innerHTML=`<span>${states.length?states.map((s,i)=>(effective.length>1?`${i+1}구간 `:'')+esc(inventoryLabel(s,+q.pax))).join(' · '):'입석·자유석 또는 입석+좌석으로 예매할 수 있는 구간이 없습니다'}</span>${effective.length?`<strong>${won(effective.reduce((sum,l)=>sum+model.data.fare(l.train,l.q.from,l.q.to,l.q.cls)*+q.pax,0))}</strong>`:''}`;
   $('#booking-mixed-segments').innerHTML=mixedLegs?mixedLegs.map(l=>`<p>${esc(l.q.from)} → ${esc(l.q.to)} · ${model.data.classes[l.q.cls].label}</p>`).join(''):'';
-  $('#choose-seats').disabled=!available;$('#choose-seats').hidden=cls==='standing';$('#quick-book').disabled=!available;$('.booking-actions').classList.toggle('standing-only',cls==='standing');
+  $('#choose-seats').disabled=!available;const onlyStanding=cls==='standing'&&!effective.some(l=>l.q.cls!=='standing');$('#choose-seats').hidden=onlyStanding;$('#quick-book').disabled=!available;$('.booking-actions').classList.toggle('standing-only',onlyStanding);
+  $('.booking-explanation').textContent=cls==='standing'?'입석·자유석과 입석+좌석을 함께 조회합니다. 좌석이 있는 구간은 좌석을 배정합니다.':'좌석을 직접 고르거나, 남은 좌석을 자동 배정받을 수 있습니다.';
   $('#booking-error').textContent='';$('#quick-book').textContent='바로 예매';$('#quick-book').onclick=()=>proceed(true);
  };
  dialog.querySelectorAll('[data-booking-class]').forEach(b=>b.onclick=()=>{cls=b.dataset.bookingClass;paint();});
@@ -150,7 +153,7 @@ function startBooking(index,transfer=false,{cls=q.cls,quick=false,customLegs=nul
    for(const d of pending){const t=model.byKey.get(d.key),state=model.availability(t,d.q);if(model.departure(model.segment(t,d.q.from,d.q.to),d.q.date)<=new Date())throw Error('이미 출발한 열차입니다.');if(!state.eligible||state.available<+d.q.pax)throw Error('좌석 상태가 변경되었습니다. 다른 등급이나 열차를 선택하세요.');if(quick){const free=new Set(model.seats(t,d.q).flatMap(c=>c.seats).filter(s=>!s.blocked).map(s=>s.id));if(d.seats.some(id=>!free.has(id)))throw Error('자동 배정한 좌석의 상태가 변경되었습니다. 다시 선택하세요.');}}
   }catch(error){$('#booking-error').textContent=error.message;return;}
   dialog.close();
-  if(!selectingReturn){journeyDrafts=[];bookingType=roundTrip?'roundtrip':cls==='mixed'?'mixed':transfer?'transfer':'single';}
+  if(!selectingReturn){journeyDrafts=[];bookingType=roundTrip?'roundtrip':customLegs?.some(l=>l.q.cls==='standing')&&customLegs.some(l=>l.q.cls!=='standing')?'mixed':transfer?'transfer':'single';}
   const offset=journeyDrafts.length;journeyDrafts.push(...pending);journeyIndex=quick?journeyDrafts.length-1:offset;draft=journeyDrafts[journeyIndex];selectedCar=0;
   if(quick)nextJourneySeat();else go('seats');
  };
@@ -197,7 +200,7 @@ function reviewPage(){
  const amounts=journeyDrafts.map(d=>{const t=model.byKey.get(d.key),fare=model.data.fare(t,d.q.from,d.q.to,d.q.cls);return {base:fare*+d.q.pax,total:d.discounts.reduce((sum,discount)=>sum+model.data.discount(fare,discount),0)};}),base=amounts.reduce((s,a)=>s+a.base,0),total=amounts.reduce((s,a)=>s+a.total,0);
  main.innerHTML=`<h2>전체 여정 확인</h2><p class="micro">${journeyDrafts.length}구간을 한 번에 저장합니다. 한 구간이라도 예약할 수 없으면 전체를 저장하지 않습니다.</p>${old?`<section class="panel comparison-old"><h3>기존 승차권</h3><p>${esc(old.grade)} ${esc(old.trainNo)} · ${old.travelDate}</p><b>${old.dep} ${esc(old.fromStn)} → ${old.arr} ${esc(old.toStn)}</b><p>${old.seats.map(esc).join(', ')}</p></section>`:''}${journeyDrafts.map((d,i)=>{const t=model.byKey.get(d.key);return `<section class="review-journey"><div class="card-top"><div>${grade(t)}<p>${dateLabel(d.q.date)} · ${i+1}구간</p></div><button data-edit-leg="${i}">수정</button></div>${routeSummary(t,d.q)}<div class="review-seat">${model.data.classes[d.q.cls].label} · ${d.q.cls==='standing'?'지정 좌석 없음':d.seats.map(esc).join(', ')}</div><p>${won(amounts[i].total)}</p></section>`;}).join('')}<section class="review-section"><h3>승객 정보</h3>${draft.discounts.map((d,i)=>`<p>승객 ${i+1} · ${esc(model.data.discounts[d].label)}</p>`).join('')}</section><section class="review-section"><h3>요금 내역</h3><dl class="summary"><div><dt>운임</dt><dd>${won(base)}</dd></div><div><dt>할인</dt><dd>${won(base-total)}</dd></div>${old?`<div><dt>변경 차액</dt><dd>${won(total-old.totalFare)}</dd></div>`:''}<div class="total"><dt>총 결제 금액</dt><dd>${won(total)}</dd></div></dl></section><form id="confirm-form"><section class="review-section"><h3>예약 방식</h3><p>가상 결제</p><label class="check"><input type="checkbox" required>가상 결제로 발매하며 실제 금액이 청구되지 않음에 동의합니다.</label></section><div class="review-footer"><button class="primary" type="submit">${old?'변경 확정':journeyDrafts.length>1?'전체 여정 승차권 발매':'승차권 발매'}</button></div></form>`;
  main.querySelectorAll('[data-edit-leg]').forEach(b=>b.onclick=()=>{journeyIndex=+b.dataset.editLeg;draft=journeyDrafts[journeyIndex];selectedCar=0;go('seats');});
- $('#confirm-form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('[type=submit]');button.disabled=true;try{const commit=()=>model.bookMany(journeyDrafts,{replaceId:changing,type:bookingType});lastTickets=await(navigator.locks?navigator.locks.request('raillink-booking',commit):commit());lastTicket=lastTickets[0];ticketFilter='active';ticketDate='';roundTrip=false;selectingReturn=false;returnJourney=null;draft=null;journeyDrafts=[];changing=null;go('complete');}catch(error){fail(error);button.disabled=false;}};
+ $('#confirm-form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('[type=submit]');button.disabled=true;try{const commit=async()=>{await bookingStorage.refresh();return model.bookMany(journeyDrafts,{replaceId:changing,type:bookingType});};lastTickets=await(navigator.locks?navigator.locks.request('raillink-booking',commit):commit());lastTicket=lastTickets[0];ticketFilter='active';ticketDate='';roundTrip=false;selectingReturn=false;returnJourney=null;draft=null;journeyDrafts=[];changing=null;go('complete');}catch(error){fail(error);button.disabled=false;}};
 }
 function completePage(){
  if(!lastTicket){go('tickets');return;}
@@ -233,10 +236,9 @@ function details(t,query,ticket=null) {
  showDialog(`${esc(t.grade)} ${esc(t.no)} · 차내 시설`,`<div class="facility-list">${cars.map(c=>`<div><b>${c.car}호차 · ${esc(c.label)}</b><p>${(c.tags||[]).map(esc).join(' · ')}</p>${c.facilities?`<p>앞쪽: ${c.facilities.start.map(f=>esc(f.label)).join(' · ')||'등록 시설 없음'}</p><p>뒤쪽: ${c.facilities.end.map(f=>esc(f.label)).join(' · ')||'등록 시설 없음'}</p>`:`<p>${c.cafe?'카페객차':'세부 시설 위치 미등록'}</p>`}${c.notice?`<small>${esc(c.notice)}</small>`:''}</div>`).join('')}</div>`);
 }
 function travelPage() {
-  const state=model.read(),tourist=model.trains.filter(t=>['남도해양','국악와인'].includes(t.grade));
-  const unique=[...new Map(tourist.map(t=>[t.grade+'|'+t.stops[0].s+'|'+t.dest,t])).values()];
-  main.innerHTML='<div class="button-row"><a href="#board">내 여행 일정</a><a href="#passes">정기 일정 · 반복 예매</a></div>'+heading('TAKE THE SCENIC ROUTE','조금 다른 여행','공통 시간표에 등록된 관광열차를 만나보세요.')+`<div class="travel-list">${unique.length?unique.map(t=>{const stops=model.data.stops(t);return `<article class="panel">${grade(t)}<h3>${esc(stops[0].s)} → ${esc(stops.at(-1).s)}</h3><p>${esc(t.line)} · ${stops.length}개 정차역</p><button data-action="tour" data-value="${esc(model.key(t))}">이 구간 조회 →</button></article>`;}).join(''):'<p class="empty">등록된 관광열차가 없습니다.</p>'}</div><h3>자주 가는 구간</h3><p class="muted">자주 이용하는 구간을 저장해 빠르게 조회하세요. </p><div class="panel"><form id="route-form"><div class="form-row"><label>출발역<input name="from" list="travel-stations" required></label><label>도착역<input name="to" list="travel-stations" required></label></div><datalist id="travel-stations">${model.stations.map(s=>`<option value="${esc(s)}"></option>`).join('')}</datalist><button type="submit">구간 저장 ＋</button></form></div><div>${state.routes.map((r,i)=>`<div class="saved-route"><button data-action="saved-route" data-index="${i}">${esc(r.from)} → ${esc(r.to)} <span>조회 →</span></button><button data-action="remove-route" data-index="${i}" aria-label="${esc(r.from)} ${esc(r.to)} 구간 삭제">×</button></div>`).join('')}</div>`+notice;
-  $('#route-form').onsubmit=e=>{e.preventDefault();try{const r=Object.fromEntries(new FormData(e.target));model.validateQuery({...q,...r,date:kstDate()});const current=model.read();if(!current.routes.some(x=>x.from===r.from&&x.to===r.to))current.routes.push(r);model.save(current);render();notify('구간을 저장했습니다.');}catch(error){fail(error);}};
+  const state=model.read();
+  main.innerHTML='<div class="button-row"><a href="#board">내 여행 일정</a><a href="#passes">정기 일정 · 반복 예매</a></div>'+heading('TAKE THE SCENIC ROUTE','조금 다른 여행','공통 시간표에 등록된 관광열차를 만나보세요.')+`${tourismView({model,esc,date:q.date})}<h3>자주 가는 구간</h3><p class="muted">자주 이용하는 구간을 저장해 빠르게 조회하세요. </p><div class="panel"><form id="route-form"><div class="form-row"><label>출발역<input name="from" list="travel-stations" required></label><label>도착역<input name="to" list="travel-stations" required></label></div><datalist id="travel-stations">${model.stations.map(s=>`<option value="${esc(s)}"></option>`).join('')}</datalist><button type="submit">구간 저장 ＋</button></form></div><div>${state.routes.map((r,i)=>`<div class="saved-route"><button data-action="saved-route" data-index="${i}">${esc(r.from)} → ${esc(r.to)} <span>조회 →</span></button><button data-action="remove-route" data-index="${i}" aria-label="${esc(r.from)} ${esc(r.to)} 구간 삭제">×</button></div>`).join('')}</div>`+notice;
+  $('#route-form').onsubmit=async e=>{e.preventDefault();try{const r=Object.fromEntries(new FormData(e.target));model.validateQuery({...q,...r,date:kstDate()});const current=model.read();if(!current.routes.some(x=>x.from===r.from&&x.to===r.to))current.routes.push(r);await model.save(current);render();notify('구간을 저장했습니다.');}catch(error){fail(error);}};
 }
 function myPage() {
   const state=model.read();
@@ -244,14 +246,14 @@ function myPage() {
   $('#install-app').onclick=()=>installApp(showDialog);
   $('#system-alerts').onclick=async()=>{if(!('Notification' in window)){notify('이 브라우저는 시스템 알림을 지원하지 않습니다.');return;}const permission=await Notification.requestPermission();localStorage.setItem('raillink.systemAlerts',permission==='granted'?'1':'0');notify(permission==='granted'?'앱이 열린 동안 여행 알림을 표시합니다.':'시스템 알림이 허용되지 않았습니다.');};
   $('#theme').value=localStorage.getItem('raillink.theme')||'light';$('#theme').onchange=e=>{localStorage.setItem('raillink.theme',e.target.value);applyTheme();};
-  $('#simulation').onchange=e=>{const s=model.read();s.simulation=e.target.checked;model.save(s);model.data.setSimulation?.(s.simulation);};
-  $('#notifications').onchange=e=>{const s=model.read();s.notifications=e.target.checked;model.save(s);render();};
+  $('#simulation').onchange=async e=>{try{const s=model.read();s.simulation=e.target.checked;await model.save(s);model.data.setSimulation?.(s.simulation);}catch(error){fail(error);e.target.checked=model.read().simulation===true;}};
+  $('#notifications').onchange=async e=>{try{const s=model.read();s.notifications=e.target.checked;await model.save(s);render();}catch(error){fail(error);e.target.checked=model.read().notifications!==false;}};
 }
 function confirmCancel(id){
  const state=model.read(),t=state.tickets.find(t=>t.id===id);if(!t)return;
  const group=t.groupId?state.tickets.filter(x=>x.groupId===t.groupId):[t];
  showDialog('예약을 취소할까요?',`<p>${group.length}구간 · ${esc(group[0].fromStn)} → ${esc(group.at(-1).toStn)}</p><p>가상 환불 금액: <b>${won(group.reduce((sum,t)=>sum+t.totalFare,0))}</b></p><p>실제 금전 거래는 없습니다. 첫 열차가 출발하면 전체 취소할 수 없습니다.</p><button class="danger" id="confirm-cancel">예약 취소 확인</button>`);
- $('#confirm-cancel').onclick=()=>{try{model.cancel(id);dialog.close();render();notify('예약을 취소했습니다.');}catch(error){fail(error);}};
+ $('#confirm-cancel').onclick=async()=>{try{await model.cancel(id);dialog.close();render();notify('예약을 취소했습니다.');}catch(error){fail(error);}};
 }
 function render() {
   const route=location.hash.slice(1)||'home';
@@ -261,7 +263,7 @@ function render() {
   try {({home:searchPage,search:searchPage,results:resultPage,'route-details':routeDetailPage,seats:seatsPage,passengers:passengerPage,review:reviewPage,complete:completePage,tickets:ticketsPage,travel:travelPage,passes:passesPage,board:boardPage,my:myPage}[route]||searchPage)();document.title=`${['home','search'].includes(route)?'레일링크 · 열차 예매':main.querySelector('h2')?.textContent||'레일링크'} · RailLink`;}
   catch(error){main.innerHTML=heading('PLEASE TRY AGAIN','화면을 불러오지 못했습니다')+`<div class="empty"><p>${esc(error.message)}</p><button data-action="nav" data-value="search">검색으로 돌아가기</button><button data-action="export">저장 데이터 내보내기</button></div>`;}
 }
-main.addEventListener('click',e=>{
+main.addEventListener('click',async e=>{
   const b=e.target.closest('[data-action]');if(!b){const card=e.target.closest('.train-card');if(card&&!e.target.closest('button,a,input,select'))card.querySelector('[data-action=book]:enabled')?.click();return;}if(b.disabled)return;
   const {action,value,index}=b.dataset;
   try {
@@ -275,7 +277,7 @@ main.addEventListener('click',e=>{
     if(action==='transfer-operation'){const leg=transferResults[index].legs[+b.dataset.leg];openOperation({model,train:leg.train,query:leg.q,showDialog,dialog,esc});}
     if(action==='transfer-detail'){const leg=transferResults[index].legs[+b.dataset.leg];details(leg.train,leg.q);}
     if(action==='next-leg')nextJourneySeat();
-    if(action==='watch'){model.watch(results[index].key,q);notify('대기 기록을 저장했습니다. 마이에서 확인하세요.');}
+    if(action==='watch'){await model.watch(results[index].key,q);notify('대기 기록을 저장했습니다. 마이에서 확인하세요.');}
     if(action==='more'){visibleCount+=12;resultPage();}
     if(action==='car'){selectedCar=+index;seatsPage();}
     if(action==='seat'){const i=draft.seats.indexOf(value);if(i>=0)draft.seats.splice(i,1);else if(draft.seats.length<+draft.q.pax)draft.seats.push(value);else notify(`${draft.q.pax}명에 맞게 좌석을 선택하세요.`);updateSelected();}
@@ -284,23 +286,25 @@ main.addEventListener('click',e=>{
     if(action==='ticket-facilities'){const t=model.read().tickets.find(t=>t.id===value);details(model.byKey.get(t.key),{from:t.fromStn,to:t.toStn,date:t.travelDate,pax:t.passengerCount,cls:t.seatClass},t);}
     if(action==='cancel')confirmCancel(value);
     if(action==='qr')showTicketQR(value);
-    if(action==='delete-history'){showDialog('여정 기록 삭제','<p>이 여정의 승차권 기록을 브라우저에서 삭제합니다.</p><button id="delete-record" class="danger">기록 삭제</button>');$('#delete-record').onclick=()=>{try{model.removeHistory(value);dialog.close();ticketsPage();}catch(error){fail(error);}};}
+    if(action==='delete-history'){showDialog('여정 기록 삭제','<p>이 여정의 승차권 기록을 브라우저에서 삭제합니다.</p><button id="delete-record" class="danger">기록 삭제</button>');$('#delete-record').onclick=async()=>{try{await model.removeHistory(value);dialog.close();ticketsPage();}catch(error){fail(error);}};}
     if(action==='export-csv'){const blob=new Blob([ticketsCSV(model.read().tickets)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='raillink-tickets.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
     if(action==='change'){roundTrip=false;selectingReturn=false;journeyDrafts=[];homeTab='booking';const t=model.read().tickets.find(t=>t.id===value);changing=t.id;q={...q,from:t.fromStn,to:t.toStn,date:t.travelDate,pax:t.passengerCount,cls:t.seatClass,after:'',grade:'all'};go('search');}
-    if(action==='tour'){const t=model.byKey.get(value),s=model.data.stops(t);q={...q,from:s[0].s,to:s.at(-1).s,date:kstDate(),grade:t.grade,after:'',cls:'general'};go('results');}
+    if(action==='tour'){const t=model.byKey.get(value),s=model.data.stops(t),next={...q,from:s[0].s,to:s.at(-1).s,date:$('#tour-date').value,grade:t.grade,family:'all',transfer:false,after:s[0].dep.padStart(5,'0'),cls:'general'};model.validateQuery(next);q=next;go('results');}
     if(action==='saved-route'){q={...q,...model.read().routes[index],date:kstDate(),grade:'all',after:''};go('results');}
-    if(action==='remove-route'){const s=model.read();s.routes.splice(+index,1);model.save(s);render();}
+    if(action==='remove-route'){const s=model.read();s.routes.splice(+index,1);await model.save(s);render();}
     if(action==='watch-search'){q={...model.read().watches.find(w=>w.id===value).q};if(q.date<kstDate())q.date=kstDate();go('results');}
-    if(action==='remove-watch'){const s=model.read();s.watches=s.watches.filter(w=>w.id!==value);model.save(s);render();}
-    if(action==='export'){const blob=new Blob([localStorage.getItem(STORE_KEY)||'{}'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='raillink-reservations.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-    if(action==='reset'){showDialog('이 브라우저의 기록을 삭제할까요?','<p>예약·대기·저장 구간 기록을 삭제합니다. 필요하면 먼저 내보내기를 이용하세요.</p><button class="danger" id="confirm-reset">내 기록 모두 삭제</button>');$('#confirm-reset').onclick=()=>{localStorage.removeItem(STORE_KEY);localStorage.removeItem(recentKey);model.data.invalidate();model.data.setSimulation?.(false);dialog.close();render();};}
+    if(action==='remove-watch'){const s=model.read();s.watches=s.watches.filter(w=>w.id!==value);await model.save(s);render();}
+    if(action==='export'){const blob=new Blob([JSON.stringify(model.read())],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='raillink-reservations.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+    if(action==='reset'){showDialog('이 브라우저의 기록을 삭제할까요?','<p>예약·대기·저장 구간 기록을 삭제합니다. 필요하면 먼저 내보내기를 이용하세요.</p><button class="danger" id="confirm-reset">내 기록 모두 삭제</button>');$('#confirm-reset').onclick=async()=>{try{await bookingStorage.removeItem();localStorage.removeItem(recentKey);model.data.invalidate();model.data.setSimulation?.(false);dialog.close();render();}catch(error){fail(error);}};}
   } catch(error){fail(error);}
 });
 window.addEventListener('hashchange',()=>{if(location.hash==='#search')homeTab='booking';render();window.scrollTo(0,0);main.focus({preventScroll:true});});
-window.addEventListener('storage',e=>{if(e.key===STORE_KEY){model.data.invalidate();notify('다른 탭에서 예약 정보가 변경되었습니다.');if(!draft)render();}});
+window.addEventListener('storage',async e=>{if(e.key===STORE_KEY){await bookingStorage.refresh();model.data.invalidate();notify('다른 탭에서 예약 정보가 변경되었습니다.');if(!draft)render();}});
 try {
   if(!window.RailData) throw new Error('공통 철도 데이터 연결을 확인하세요.');
-  model=createModel(window.RailData,localStorage);
+  bookingStorage=await openBookingStorage(STORE_KEY);
+  model=createModel(window.RailData,bookingStorage);
+  bookingStorage.onChange(()=>{model.data.invalidate();if(!draft)render();});
   model.data.setSimulation?.(model.read().simulation===true);
   window.loadTickets=()=>model.read().tickets.map(t=>({...t,travelDate:t.serviceDate||t.travelDate}));
   q={from:'',to:'',date:kstDate(),pax:1,cls:'general',grade:'all',sort:'departure',after:''};
@@ -349,7 +353,7 @@ let passPreview=[];
 function passesPage(){
  const s=model.read();main.innerHTML=heading('','정기 일정','향후 4주간 같은 구간을 반복 예매합니다.')+`<form id="pass-form" class="panel"><label>일정 이름<input name="name" maxlength="40" required placeholder="예: 출근길"></label><div class="form-row"><label>출발역<input name="from" list="pass-stations" value="${esc(q.from)}" required></label><label>도착역<input name="to" list="pass-stations" value="${esc(q.to)}" required></label></div><datalist id="pass-stations">${model.stations.map(st=>`<option value="${esc(st)}"></option>`).join('')}</datalist><label>시작일<input type="date" name="start" min="${kstDate()}" max="${addDays(kstDate(),3)}" value="${kstDate()}" required></label><button type="button" id="pass-trains">선호 열차 조회</button><label>선호 열차<select name="trainKey" id="pass-train" required><option value="">먼저 구간을 조회하세요</option></select></label><label>좌석 등급<select name="cls">${Object.entries(model.data.classes).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></label><label>인원<select name="pax">${[1,2,3,4,5,6].map(n=>`<option value="${n}">${n}명</option>`).join('')}</select></label><fieldset><legend>반복 요일</legend><div class="weekday-options">${['일','월','화','수','목','금','토'].map((day,i)=>`<label><input type="checkbox" name="weekday" value="${i}">${day}</label>`).join('')}</div></fieldset><button class="primary" type="submit">4주 일정 미리보기</button></form><div id="pass-preview" aria-live="polite"></div><h3>저장된 정기 일정</h3>${(s.passes||[]).map(p=>`<div class="panel"><b>${esc(p.name)}</b><p>${esc(p.from)} → ${esc(p.to)} · ${p.weekdays.map(d=>['일','월','화','수','목','금','토'][d]).join(', ')}</p><a href="#tickets">발행된 승차권 보기</a></div>`).join('')||'<p>저장된 정기 일정이 없습니다.</p>'}`;
  $('#pass-trains').onclick=()=>{try{const form=$('#pass-form'),data=Object.fromEntries(new FormData(form));const query={from:data.from,to:data.to,date:data.start,cls:data.cls,pax:+data.pax,sort:'departure'};const rows=model.search(query);$('#pass-train').innerHTML=rows.map(r=>`<option value="${esc(r.key)}">${esc(r.train.grade)} ${esc(r.train.no)} · ${clock(r.seg.dep)} 출발</option>`).join('')||'<option value="">조회된 열차 없음</option>';}catch(error){fail(error);}};
- $('#pass-form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('[type=submit]');button.disabled=true;const form=new FormData(e.target),config={...Object.fromEntries(form),pax:+form.get('pax'),weekdays:form.getAll('weekday').map(Number)};$('#pass-preview').textContent='날짜별 시간표와 좌석을 확인하고 있습니다…';try{passPreview=await previewPass(model,config);if(!$('#pass-preview'))return;$('#pass-preview').innerHTML=passPreview.map(p=>`<p>${p.date} · ${p.draft?'예약 가능':esc(p.reason)+' · 제외'}</p>`).join('')+`<p>예약 가능한 ${passPreview.filter(p=>p.draft).length}건만 일괄 저장합니다. 인접 좌석 자동 배정이 적용됩니다.</p><button class="primary" id="commit-pass" ${passPreview.some(p=>p.draft)?'':'disabled'}> 일괄 예약</button>`;$('#commit-pass').onclick=async()=>{const b=$('#commit-pass');b.disabled=true;try{const commit=()=>model.bookMany(passPreview.filter(p=>p.draft).map(p=>p.draft),{type:'pass',pass:config});lastTickets=await(navigator.locks?navigator.locks.request('raillink-booking',commit):commit());lastTicket=lastTickets[0];ticketFilter='active';ticketDate='';go('complete');}catch(error){fail(error);b.disabled=false;}};}catch(error){fail(error);if($('#pass-preview'))$('#pass-preview').textContent='미리보기를 생성하지 못했습니다.';}finally{button.disabled=false;}};
+ $('#pass-form').onsubmit=async e=>{e.preventDefault();const button=e.target.querySelector('[type=submit]');button.disabled=true;const form=new FormData(e.target),config={...Object.fromEntries(form),pax:+form.get('pax'),weekdays:form.getAll('weekday').map(Number)};$('#pass-preview').textContent='날짜별 시간표와 좌석을 확인하고 있습니다…';try{passPreview=await previewPass(model,config);if(!$('#pass-preview'))return;$('#pass-preview').innerHTML=passPreview.map(p=>`<p>${p.date} · ${p.draft?'예약 가능':esc(p.reason)+' · 제외'}</p>`).join('')+`<p>예약 가능한 ${passPreview.filter(p=>p.draft).length}건만 일괄 저장합니다. 인접 좌석 자동 배정이 적용됩니다.</p><button class="primary" id="commit-pass" ${passPreview.some(p=>p.draft)?'':'disabled'}> 일괄 예약</button>`;$('#commit-pass').onclick=async()=>{const b=$('#commit-pass');b.disabled=true;try{const commit=async()=>{await bookingStorage.refresh();return model.bookMany(passPreview.filter(p=>p.draft).map(p=>p.draft),{type:'pass',pass:config});};lastTickets=await(navigator.locks?navigator.locks.request('raillink-booking',commit):commit());lastTicket=lastTickets[0];ticketFilter='active';ticketDate='';go('complete');}catch(error){fail(error);b.disabled=false;}};}catch(error){fail(error);if($('#pass-preview'))$('#pass-preview').textContent='미리보기를 생성하지 못했습니다.';}finally{button.disabled=false;}};
 }
 const sentAlerts=new Set();
 function checkJourneyAlerts(){

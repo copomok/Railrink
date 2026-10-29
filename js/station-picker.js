@@ -41,6 +41,6 @@ export function openStationPicker({model,current,which,recent,showDialog,dialog,
  };
  $('#clear-station-query').onpointerdown=e=>e.preventDefault();
  $('#clear-station-query').onclick=()=>{input.value='';draw();input.focus({preventScroll:true});};
- $('#favorite-station').onclick=()=>{try{const s=model.read(),favorites=s.favoriteStations||[];s.favoriteStations=favorites.includes(current)?favorites.filter(n=>n!==current):[...favorites,current];model.save(s);draw();notify(s.favoriteStations.includes(current)?'즐겨찾기에 추가했습니다.':'즐겨찾기에서 삭제했습니다.');}catch(error){fail(error);}};
+ $('#favorite-station').onclick=async()=>{try{const s=model.read(),favorites=s.favoriteStations||[];s.favoriteStations=favorites.includes(current)?favorites.filter(n=>n!==current):[...favorites,current];await model.save(s);draw();notify(s.favoriteStations.includes(current)?'즐겨찾기에 추가했습니다.':'즐겨찾기에서 삭제했습니다.');}catch(error){fail(error);}};
  draw();if(matchMedia('(pointer:fine)').matches)input.focus({preventScroll:true});
 }

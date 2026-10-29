@@ -24,7 +24,11 @@ export function createModel(data, storage, now = () => new Date()) {
     return value;
   }
   function save(value) {
-    try {storage.setItem(STORE_KEY,JSON.stringify(value));} catch {throw new Error('브라우저 저장 공간을 사용할 수 없습니다. 저장 허용 여부를 확인하세요.');}
+    // Serialization failures are not storage permission errors.
+    const raw=JSON.stringify(value);
+    const failed=error=>{throw new Error(error?.name==='QuotaExceededError'?'예약 저장소의 용량이 부족합니다. 저장 데이터를 내보낸 후 이용 이력을 정리해 주세요.':'예약을 저장하지 못했습니다. 브라우저의 사이트 데이터 저장 설정을 확인하세요.',{cause:error});};
+    let result;try{result=storage.setItem(STORE_KEY,raw);}catch(error){return failed(error);}
+    if(result?.then)return result.then(()=>data.invalidate(),failed);
     data.invalidate();
   }
   function segment(train, from, to) {
@@ -115,22 +119,22 @@ export function createModel(data, storage, now = () => new Date()) {
     }
     if(created.length>1&&options.type!=='pass'){const groupId='J-'+crypto.randomUUID();created.forEach((t,i)=>Object.assign(t,{groupId,groupType:options.type||'journey',groupSequence:i,groupTotal:created.length}));}
     if(options.pass){const id='P-'+crypto.randomUUID();state.passes=[...(state.passes||[]),{...options.pass,id,createdAt:now().toISOString()}];created.forEach(t=>t.passId=id);}
-    save(state);return created;
+    const saved=save(state);return saved?.then?saved.then(()=>created):created;
   }
   function navigatorOnline(){return typeof navigator==='undefined'||navigator.onLine!==false;}
-  function book(draft,replaceId){return bookMany([draft],{replaceId})[0];}
+  function book(draft,replaceId){const result=bookMany([draft],{replaceId});return result?.then?result.then(items=>items[0]):result[0];}
   function cancelGroup(id){
     const state=read(),selected=state.tickets.find(t=>t.id===id);
     check(selected,'예약을 찾을 수 없습니다.');
     const tickets=selected.groupId?state.tickets.filter(t=>t.groupId===selected.groupId):[selected];
     check(tickets.every(t=>t.status==='active'&&Date.parse(t.departure)>+now()),'이미 시작되거나 취소된 여정은 전체 취소할 수 없습니다.');
-    tickets.forEach(t=>Object.assign(t,{status:'cancelled',cancelledAt:now().toISOString(),refund:t.totalFare}));save(state);
+    tickets.forEach(t=>Object.assign(t,{status:'cancelled',cancelledAt:now().toISOString(),refund:t.totalFare}));return save(state);
   }
   function removeHistory(id){
     const state=read(),selected=state.tickets.find(t=>t.id===id);check(selected,'기록을 찾을 수 없습니다.');
     const items=selected.groupId?state.tickets.filter(t=>t.groupId===selected.groupId):[selected];
     check(items.every(t=>t.status!=='active'||Date.parse(t.arrival||new Date(Date.parse(t.departure)+data.duration(t.dep,t.arr)*60000).toISOString())<=+now()),'진행 중이거나 예정된 예약은 기록을 삭제할 수 없습니다.');
-    state.tickets=state.tickets.filter(t=>!items.includes(t));save(state);
+    state.tickets=state.tickets.filter(t=>!items.includes(t));return save(state);
   }
   function autoAssign(train,q,preference='together'){
     const cars=seats(train,q),count=+q.pax;
@@ -167,21 +171,27 @@ export function createModel(data, storage, now = () => new Date()) {
     if(runs.length<2)return [];
     return runs;
   }
+  function flexible(train,query){
+    const q={...query,cls:'general'},runs=mixed(train,q);
+    if(runs.some(l=>l.q.cls==='standing')&&runs.some(l=>l.q.cls!=='standing'))return runs;
+    const standing={...q,cls:'standing'},state=availability(train,standing);
+    return state.eligible&&state.available>=+q.pax?[{key:key(train),q:standing}]:[];
+  }
   function cancel(id) {
     const state=read(), t=state.tickets.find(t=>t.id===id);
     check(t?.status==='active','이미 취소되었거나 변경된 예약입니다.');
     if(t.groupId)return cancelGroup(id);
     check(new Date(t.departure)>now(),'출발한 열차의 승차권은 취소할 수 없습니다.');
-    t.status='cancelled';t.cancelledAt=now().toISOString();t.refund=t.totalFare;save(state);
+    t.status='cancelled';t.cancelledAt=now().toISOString();t.refund=t.totalFare;return save(state);
   }
   function watch(trainKey,q) {
     validateQuery(q);const t=byKey.get(trainKey),seg=t&&segment(t,q.from,q.to);
     check(seg&&departure(seg,q.date)>now(),'출발 전 열차만 대기 목록에 담을 수 있습니다.');
     const state=read();
     if(!state.watches.some(w=>w.key===trainKey&&JSON.stringify(w.q)===JSON.stringify(q))) state.watches.push({id:crypto.randomUUID(),key:trainKey,q:{...q}});
-    save(state);
+    return save(state);
   }
-  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,watch,departure,validateQuery};
+  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,flexible,watch,departure,validateQuery};
   model.transfers=q=>{validateQuery(q);return findTransfers(model,q,now());};
   return model;
 }

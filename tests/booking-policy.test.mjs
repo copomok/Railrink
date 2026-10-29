@@ -43,3 +43,14 @@ test('fixed KTX facing boundary agrees with forward/reverse automatic assignment
  const model=createModel(source,{getItem:()=>null,setItem(){}});
  assert.ok(model.seats(trains[0],{from:'출발',to:'도착',date:'2026-10-30',cls:'general'}).every(c=>c.seats.every(s=>!s.reverse)));
 });
+
+test('async transfer storage waits for commit and failed transactions leave no tickets',async()=>{
+ const {draft}=setup();let raw=null,release,fail=false;
+ const storage={getItem:()=>raw,setItem:(k,value)=>new Promise((resolve,reject)=>{release=()=>{if(fail)reject(new DOMException('full','QuotaExceededError'));else{raw=value;resolve();}};})};
+ const model=createModel(data,storage,()=>new Date('2026-10-29T03:00:00Z'));
+ const pending=model.bookMany([draft(0),draft(3)],{type:'transfer'});
+ assert.equal(model.read().tickets.length,0);release();const tickets=await pending;
+ assert.equal(tickets.length,2);assert.equal(tickets[0].groupId,tickets[1].groupId);assert.equal(model.read().tickets.length,2);
+ fail=true;const old=raw,p=model.bookMany([draft(4),draft(3,'2026-10-31')],{type:'transfer'});
+ release();await assert.rejects(p,/용량이 부족/);assert.equal(raw,old);
+});

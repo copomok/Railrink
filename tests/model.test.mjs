@@ -65,7 +65,7 @@ test('anonymous booking, discounts, read-only storage and corrupted storage fail
   assert.throws(()=>model.book({...draft,discount:'fake'}),/할인/);
   const ticket=model.book({...draft,discount:'child'});assert.equal(ticket.totalFare,context.RailData.discount(r.fare,'child'));
   const broken=createModel(context.RailData,{getItem:()=>null,setItem(){throw Error('Quota exceeded');}});
-  assert.throws(()=>broken.save(broken.read()),/저장 공간/);
+  assert.throws(()=>broken.save(broken.read()),/예약을 저장하지 못했습니다/);
   memory.set(STORE_KEY,'broken');assert.throws(()=>model.read(),/읽을 수/);assert.equal(memory.get(STORE_KEY),'broken');reset();
 });
 test('wait records do not create tickets or imaginary queue positions',()=>{
@@ -88,7 +88,7 @@ test('multi-leg booking writes once, validates all legs first and cancels as a g
 test('overlapping legs and readonly storage never leave a partial journey',()=>{
  reset();const a=candidate(),first=draftFor(a);
  assert.throws(()=>model.bookMany([first,{...first}]),/겹칩니다/);assert.equal(model.read().tickets.length,0);
- const broken=createModel(context.RailData,{getItem:()=>null,setItem(){throw Error('Quota');}});assert.throws(()=>broken.bookMany([first]),/저장 공간/);assert.equal(model.read().tickets.length,0);
+ const broken=createModel(context.RailData,{getItem:()=>null,setItem(){throw Error('Quota');}});assert.throws(()=>broken.bookMany([first]),/예약을 저장하지 못했습니다/);assert.equal(model.read().tickets.length,0);
 });
 test('per-passenger discounts, automatic seats and pass records use canonical rules',()=>{
  reset();const pairQ={...q,pax:2},a=candidate(pairQ),assignment=model.autoAssign(a.train,pairQ,'window');assert.equal(assignment.seats.length,2);assert.equal(new Set(assignment.seats).size,2);

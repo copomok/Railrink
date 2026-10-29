@@ -28,5 +28,6 @@ test('mixed seated/standing runs retain calendar rollover and save with atomic v
  const train={no:'M',grade:'KTX',line:'fixture',dest:'C',stops:[{s:'A',dep:'23:50'},{s:'B',arr:'0:10',dep:'0:12'},{s:'C',arr:'0:30'}]};
  const model=createModel({...data,trains:[train],stops:t=>t.stops,cars:()=>[{car:1,rows:1,cols:['A','B']}],seatId:(c,r,col)=>`${c.car}호차 ${r}${col}`,virtualSeats(){},bookedSeats:()=>new Set(),invalidate(){},discounts:{none:{}},discount:fare=>fare,inventory:(t,from,to,date,cls)=>({eligible:cls==='standing'?from==='B':true,available:from==='A'&&to==='B'&&cls==='general'||from==='B'&&cls==='standing'?2:0})},storage,()=>new Date('2026-10-29T03:00:00Z'));
  const runs=model.mixed(train,{from:'A',to:'C',date:'2026-10-30',pax:1,cls:'general'});assert.equal(runs.length,2);assert.equal(runs[1].q.cls,'standing');assert.equal(runs[1].q.date,'2026-10-31');
+ assert.deepEqual(model.flexible(train,{from:'A',to:'C',date:'2026-10-30',pax:1,cls:'standing'}),runs);
  const drafts=runs.map(r=>({...r,seats:r.q.cls==='standing'?[]:['1호차 1A'],names:['검증'],discount:'none'}));const tickets=model.bookMany(drafts,{type:'mixed'});assert.equal(tickets[0].groupId,tickets[1].groupId);assert.equal(tickets[0].serviceDate,tickets[1].serviceDate);assert.equal(tickets[1].seats.length,0);
 });
