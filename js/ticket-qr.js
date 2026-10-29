@@ -24,4 +24,4 @@ export function ticketMatrix(id){
  for(let right=size-1;right>=1;right-=2){if(right===6)right=5;for(let v=0;v<size;v++){const y=((right+1)&2)===0?size-1-v:v;for(let j=0;j<2;j++){const x=right-j;if(!reserved[y][x])m[y][x]=!!((stream[cursor++]||0)^((x+y)%2===0?1:0));}}}
  return m;
 }
-export function ticketQR(id){const m=ticketMatrix(id);return `<svg class="ticket-qr" viewBox="0 0 37 37" role="img" aria-label="로컬 승차권 ID QR · 시뮬레이션, 실제 탑승 불가" shape-rendering="crispEdges"><rect width="37" height="37" fill="white"/><path fill="black" d="${m.flatMap((row,y)=>row.flatMap((on,x)=>on?[`M${x+4},${y+4}h1v1h-1z`]:[])).join('')}"/></svg>`;}
+export function ticketQR(id){const m=ticketMatrix(id);return `<svg class="ticket-qr" viewBox="0 0 37 37" role="img" aria-label="승차권 확인용 QR" shape-rendering="crispEdges"><rect width="37" height="37" fill="white"/><path fill="black" d="${m.flatMap((row,y)=>row.flatMap((on,x)=>on?[`M${x+4},${y+4}h1v1h-1z`]:[])).join('')}"/></svg>`;}

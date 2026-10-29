@@ -1,1 +1,46 @@
-{"id":"./","name":"레일링크 RailLink","short_name":"레일링크","lang":"ko","start_url":"./#home","scope":"./","display":"standalone","orientation":"portrait-primary","background_color":"#f3f5f7","theme_color":"#1168ad","icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{
+  "id": "./",
+  "name": "레일링크 RailLink",
+  "short_name": "레일링크",
+  "lang": "ko",
+  "start_url": "./#home",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f7",
+  "theme_color": "#1168ad",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "description": "열차 조회, 가상 결제와 모바일 승차권",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "shortcuts": [
+    {
+      "name": "내 승차권",
+      "url": "./#tickets"
+    },
+    {
+      "name": "열차 조회",
+      "url": "./#search"
+    }
+  ]
+}

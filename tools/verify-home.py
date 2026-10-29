@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    assert '10:00' in page.locator('#open-date').inner_text()
    page.screenshot(path=str(out/'02-home-search.png'),full_page=True)
    page.locator('#search-form [type=submit]').click();page.wait_for_selector('.train-card');assert page.locator('.journey-line strong').first.inner_text()>='10:00'
-   page.locator('[data-action=book]:enabled').first.click();page.locator('#choose-seats').click();page.wait_for_selector('.seat');page.locator('.seat:enabled').first.click();page.locator('#next-passengers').click();page.locator('[name=name0]').fill('홈 검증');page.locator('#passenger-form [type=submit]').click();page.locator('#confirm-form [type=checkbox]').check();page.locator('#confirm-form [type=submit]').click();page.wait_for_url('**/#complete')
+   page.locator('[data-action=book]:enabled').first.click();page.locator('#choose-seats').click();page.wait_for_selector('.seat');page.locator('.seat:enabled').first.click();page.locator('#next-passengers').click();page.locator('#passenger-form [type=submit]').click();page.locator('#confirm-form [type=checkbox]').check();page.locator('#confirm-form [type=submit]').click();page.wait_for_url('**/#complete')
    page.locator('[data-nav=home]').click();page.wait_for_selector('.home-journey');assert page.locator('#home-journeys .home-journey').count()==1
    page.screenshot(path=str(out/'03-home-booked.png'),full_page=True)
    page.locator('.home-journey').first.click();page.wait_for_selector('dialog[open]');page.locator('#close-dialog').click()
@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    page.clock.install(time=__import__('datetime').datetime.fromisoformat(departure.replace('Z','+00:00')))
    page.reload();page.wait_for_selector('.home-live');assert '탑승 중' in page.locator('.home-live').inner_text()
    page.locator('[data-station=from]').click();page.locator('#station-query').fill('청량');page.clock.fast_forward(61000);assert page.locator('#station-query').input_value()=='청량';assert page.locator('#station-query').evaluate('el=>document.activeElement===el');page.locator('#close-dialog').click();page.clock.fast_forward(61000);assert page.locator('.home-live').count()==1
-   page.locator('[data-nav=tickets]').click();page.wait_for_selector('#ticket-list .ticket-card');assert '탑승 중' in page.locator('#ticket-list').inner_text()
+   page.locator('[data-nav=tickets]').click();page.wait_for_selector('#ticket-list .ticket-group');page.locator('.ticket-group summary').first.click();assert '탑승 중' in page.locator('#ticket-list').inner_text()
    assert not errors,errors
    assert any('/NIMBYRAILTABLE/data/nimbi_rail_data.js' in r for r in requests)
    assert not any('/Railrink/data/' in r for r in requests)

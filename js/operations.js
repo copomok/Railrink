@@ -9,7 +9,7 @@ export function operationSnapshot(model,train,query,now=new Date()){
  let delay={phase:'none',current:0},error='';
  // The upstream simulation uses local Date getters. Never reinterpret another timezone as KST.
  if(now.getTimezoneOffset()===-540&&model.data.delayState){
-  try{delay=model.data.delayState(train,serviceDate);}catch{error='공통 지연 모형을 읽지 못했습니다.';}
+  try{delay=model.data.delayState(train,serviceDate);}catch{error='운행 지연 정보를 읽지 못했습니다.';}
  }
  let timedIndex=-1;
  const stopping=new Set(model.data.stops(train).map(n=>n.s));
@@ -20,7 +20,7 @@ export function operationSnapshot(model,train,query,now=new Date()){
    try{
     const delta=model.data.delayAt?.(train,timedIndex,serviceDate)||0;
     pair=model.data.delayPair?.(train,timedIndex)||{arr:delta,dep:delta};
-   }catch{error='공통 지연 모형을 읽지 못했습니다.';}
+   }catch{error='운행 지연 정보를 읽지 못했습니다.';}
   }
   return {...s,coord:model.data.coordinate?.(s.geoKey||s.s),
    stop:(s.arrival!==null||s.departure!==null)&&!model.data.isPass?.(train,s.s)&&stopping.has(s.s),
@@ -99,7 +99,7 @@ export function operationMap(snapshot,color,esc){
   const [x,y]=xy(n),endpoint=n.index===snapshot.fromIndex||n.index===snapshot.toIndex;
   return `<g class="${selected(n)?'selected':'muted'}${endpoint?' endpoint':''}"><circle cx="${x}" cy="${y}" r="${endpoint?7:4}"/><text x="${x+(i%2?-11:11)}" y="${y+4}" text-anchor="${i%2?'end':'start'}">${esc(n.s)}</text></g>`;
  }).join('');
- return `<div class="brd-route-map" style="--route-grade:${esc(color)}"><div class="brd-map-key"><span><i class="selected"></i>승차 구간</span><span><i></i>전체 운행 구간</span><span><i class="live"></i>현재 위치</span></div><div class="brd-map-canvas"><svg class="operation-map" viewBox="0 0 620 380" role="img" aria-label="전체 운행 경로, 승차 구간과 시간표 기반 열차 현재 위치">${lines}${stops}<g class="brd-map-live-train" style="${position?'transform:translate('+position[0]+'px,'+position[1]+'px)':'display:none'}"><title>열차 현재 위치</title><circle r="13"/><g transform="translate(-9,-10) scale(.75)">${trainGlyph}</g></g></svg></div><p>시간표·지연 모형 기준 추정 위치 · 등록 좌표를 연결한 운행 개략도</p></div>`;
+ return `<div class="brd-route-map" style="--route-grade:${esc(color)}"><div class="brd-map-key"><span><i class="selected"></i>승차 구간</span><span><i></i>전체 운행 구간</span><span><i class="live"></i>현재 위치</span></div><div class="brd-map-canvas"><svg class="operation-map" viewBox="0 0 620 380" role="img" aria-label="전체 운행 경로, 승차 구간과 시간표 기반 열차 현재 위치">${lines}${stops}<g class="brd-map-live-train" style="${position?'transform:translate('+position[0]+'px,'+position[1]+'px)':'display:none'}"><title>열차 현재 위치</title><circle r="13"/><g transform="translate(-9,-10) scale(.75)">${trainGlyph}</g></g></svg></div><p>시간표 기준 열차 위치 · 운행 경로</p></div>`;
 }
 
 export function openOperation({model,train,query,showDialog,dialog,esc}){
@@ -111,7 +111,7 @@ export function openOperation({model,train,query,showDialog,dialog,esc}){
   const platform=model.data.platform?.(train.no,n.s);
   return `<div class="brd-stop ${inRide?'ride':n.index<initial.fromIndex?'before':'after'}${board?' board':''}${alight?' alight':''}" data-ops-row="${i}" data-station="${esc(n.s)}"><div class="brd-rail"><i></i></div><div class="brd-station">${board||alight?`<span class="brd-stop-badge ${board?'board':'alight'}">${board?'승차':'하차'}</span>`:''}<strong>${esc(n.s)}</strong>${platform!=null?`<span>${esc(platform)}번 승강장</span>`:''}</div><time class="brd-arr"><span>${esc(displayClock(n.arr||'—'))}</span><small></small></time><time class="brd-dep"><span>${esc(displayClock(n.dep||'—'))}</span><small></small></time></div>`;
  }).join('');
- showDialog('열차 운행 정보',`<section class="book-route-detail-sheet open" style="--brd-grade:${esc(color)}"><header class="brd-header"><div class="brd-head-info"><small id="ops-label">운행 정보</small><h2 id="ops-title"><span>${esc(train.grade)}</span><b>${esc(train.no)}</b></h2></div><div class="brd-head-actions"><button type="button" id="ops-close" class="brd-close" aria-label="닫기">✕</button></div></header><div class="brd-summary"><time>${esc(dateLabel)}</time><strong>${esc(query.from)} <span>${esc(displayClock(stops.find(n=>n.index===initial.fromIndex)?.dep||'—'))}</span><i>→</i>${esc(query.to)} <span>${esc(displayClock(stops.find(n=>n.index===initial.toIndex)?.arr||'—'))}</span></strong><small id="ops-status" class="brd-operation-state" role="status"><b></b><span></span></small></div><div class="brd-view-tabs" role="tablist" aria-label="운행 정보 보기"><button class="brd-view-tab active" role="tab" id="ops-time-tab" aria-controls="ops-time" aria-selected="true" data-ops-tab="time">시간표</button><button class="brd-view-tab" role="tab" id="ops-map-tab" aria-controls="ops-map" aria-selected="false" tabindex="-1" data-ops-tab="map">지도</button></div><div id="ops-time" class="brd-view brd-schedule-view active" role="tabpanel" aria-labelledby="ops-time-tab"><div class="brd-columns"><span>역명</span><span>도착</span><span>출발</span></div><div class="brd-stop-list" tabindex="0" aria-label="전체 정차역 시간표">${rows}</div></div><div id="ops-map" class="brd-view brd-map-view" role="tabpanel" aria-labelledby="ops-map-tab" hidden>${operationMap(initial,color,esc)}</div><p class="ops-note">게임 시간표·지연 모형 기준 추정 위치</p></section>`);
+ showDialog('열차 운행 정보',`<section class="book-route-detail-sheet open" style="--brd-grade:${esc(color)}"><header class="brd-header"><div class="brd-head-info"><small id="ops-label">운행 정보</small><h2 id="ops-title"><span>${esc(train.grade)}</span><b>${esc(train.no)}</b></h2></div><div class="brd-head-actions"><button type="button" id="ops-close" class="brd-close" aria-label="닫기">✕</button></div></header><div class="brd-summary"><time>${esc(dateLabel)}</time><strong>${esc(query.from)} <span>${esc(displayClock(stops.find(n=>n.index===initial.fromIndex)?.dep||'—'))}</span><i>→</i>${esc(query.to)} <span>${esc(displayClock(stops.find(n=>n.index===initial.toIndex)?.arr||'—'))}</span></strong><small id="ops-status" class="brd-operation-state" role="status"><b></b><span></span></small></div><div class="brd-view-tabs" role="tablist" aria-label="운행 정보 보기"><button class="brd-view-tab active" role="tab" id="ops-time-tab" aria-controls="ops-time" aria-selected="true" data-ops-tab="time">시간표</button><button class="brd-view-tab" role="tab" id="ops-map-tab" aria-controls="ops-map" aria-selected="false" tabindex="-1" data-ops-tab="map">지도</button></div><div id="ops-time" class="brd-view brd-schedule-view active" role="tabpanel" aria-labelledby="ops-time-tab"><div class="brd-columns"><span>역명</span><span>도착</span><span>출발</span></div><div class="brd-stop-list" tabindex="0" aria-label="전체 정차역 시간표">${rows}</div></div><div id="ops-map" class="brd-view brd-map-view" role="tabpanel" aria-labelledby="ops-map-tab" hidden>${operationMap(initial,color,esc)}</div><p class="ops-note">시간표 기준 열차 위치</p></section>`);
  const q=s=>dialog.querySelector(s);
  dialog.classList.add('operations-dialog');
  q('.dialog-head').remove();

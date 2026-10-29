@@ -47,7 +47,7 @@ test('seat layout preserves missing seats and real numbering',()=>{
 });
 test('booking persists separately, rejects duplicate seats and cancels without money',()=>{
   reset();const r=candidate(),draft=draftFor(r),ticket=model.book(draft);
-  assert.equal(model.read().tickets.length,1);assert.equal(ticket.prototype,true);assert.equal(memory.has('nimbi_tickets'),false);
+  assert.equal(model.read().tickets.length,1);assert.equal(ticket.paymentMode,'virtual');assert.equal('names' in ticket,false);assert.equal(memory.has('nimbi_tickets'),false);
   assert.throws(()=>model.book(draft),/좌석 상태/);
   model.cancel(ticket.id);assert.equal(model.read().tickets[0].status,'cancelled');
   assert.equal(model.read().tickets[0].refund,ticket.totalFare);
@@ -60,9 +60,8 @@ test('change is atomic and keeps the original if replacement validation fails',(
   assert.equal(model.read().tickets[0].status,'active');
   const next=model.book(replacement,ticket.id);assert.equal(model.read().tickets[0].status,'changed');assert.equal(next.replaces,ticket.id);
 });
-test('passenger validation, discounts, read-only storage and corrupted storage fail honestly',()=>{
+test('anonymous booking, discounts, read-only storage and corrupted storage fail honestly',()=>{
   reset();const r=candidate(),draft=draftFor(r);
-  assert.throws(()=>model.book({...draft,names:['  ']}),/승객/);
   assert.throws(()=>model.book({...draft,discount:'fake'}),/할인/);
   const ticket=model.book({...draft,discount:'child'});assert.equal(ticket.totalFare,context.RailData.discount(r.fare,'child'));
   const broken=createModel(context.RailData,{getItem:()=>null,setItem(){throw Error('Quota exceeded');}});

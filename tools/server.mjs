@@ -20,7 +20,7 @@ const server = http.createServer(async (req, res) => {
       const original = pathname.startsWith('/NIMBYRAILTABLE/');
       let relative = original ? pathname.slice('/NIMBYRAILTABLE/'.length) : pathname.slice(1);
       if (!relative || relative.endsWith('/')) relative += 'index.html';
-      const allowed = original ? /^(index\.html|sw\.js|manifest\.json|(?:assets|data|js|pages)\/[\w/.-]+)$/ : /^(index\.html|manifest\.webmanifest|icon\.svg|sw\.js|(?:css|js)\/[\w.-]+)$/;
+      const allowed = original ? /^(index\.html|sw\.js|manifest\.json|(?:assets|data|js|pages)\/[\w/.-]+)$/ : /^(index\.html|manifest\.webmanifest|icon\.svg|sw\.js|(?:css|js|assets)\/[\w.-]+)$/;
       if (relative.split('/').some(s=>s.startsWith('.')) || !allowed.test(relative)) {res.writeHead(404).end('Not found');return;}
       const root = original ? sourceRoot : appRoot;
       const filename = await fs.realpath(path.join(root, relative));

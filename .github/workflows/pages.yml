@@ -38,6 +38,10 @@ jobs:
           test -f dist/index.html
           test -f dist/boot.js
           test -f dist/css/mobile.css
+          test -f dist/css/ticketing.css
+          test -f dist/manifest.webmanifest
+          test -f dist/assets/icon-512.png
+          test -f dist/assets/apple-touch-icon.png
       - name: Upload Pages site
         uses: actions/upload-pages-artifact@v3
         with:

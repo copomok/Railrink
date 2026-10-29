@@ -1,12 +1,13 @@
+import {matchesFamily} from './train-families.js';
 import {midnight,dateAt,minuteOf} from './railway-time.js';
 // Uses the canonical service stops and fare engine. No copied route database.
 export function findTransfers(model,q,now) {
- const min=Number(q.minWait??3),max=Number(q.maxWait??60),limit=Number(q.transferLimit??5);
+ const min=Number(q.minWait??3),max=Number(q.maxWait??60),limit=Number(q.transferLimit??20);
  if(!Number.isInteger(min)||!Number.isInteger(max)||min<3||max<min||max>180||!Number.isInteger(limit)||limit<1||limit>20)throw Error('환승 대기는 3~180분, 결과는 1~20건 범위로 지정하세요.');
  const first=[],byStation=new Map(),base=midnight(q.date),after=minuteOf(q.after)??0;
  for(const train of model.trains){
   if(q.grade&&q.grade!=='all'&&q.grade!==train.grade)continue;
-  if(q.family==='ktx'&&!train.grade.startsWith('KTX')||q.family==='regional'&&(train.grade.startsWith('KTX')||train.grade==='SRT'))continue;
+  if(!matchesFamily(train.grade,q.family))continue;
   if(q.cls!=='standing'&&!model.data.classCars(model.data.cars(model.data.formation(train.grade,train.no)),q.cls).length)continue;
   const stops=model.data.stops(train),origin=stops.findIndex(s=>s.s===q.from&&s.dep),dest=stops.findIndex(s=>s.s===q.to&&s.arr);
   if(origin>=0){

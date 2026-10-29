@@ -1,3 +1,4 @@
+import {matchesFamily} from './train-families.js';
 import {serviceTimeline,minuteOf,stationId} from './railway-time.js';
 import {findTransfers} from './routing.js';
 // Booking state belongs to RailLink; all railway rules are injected from NIMBY Rail.
@@ -46,6 +47,7 @@ export function createModel(data, storage, now = () => new Date()) {
     validateQuery(q);
     return trains.flatMap(t=> {
       const seg=segment(t,q.from,q.to);
+      if(!matchesFamily(t.grade,q.family))return [];
       if(!seg || (q.grade&&q.grade!=='all'&&q.grade!==t.grade))return [];
       const cars=data.classCars(data.cars(data.formation(t.grade,t.no)),q.cls);
       if(!cars.length && q.cls!=='standing') return [];
@@ -65,7 +67,16 @@ export function createModel(data, storage, now = () => new Date()) {
     const cars=data.classCars(data.cars(data.formation(t.grade,t.no)),q.cls);
     data.virtualSeats(t.no,serviceDate(t,q),cars,q.from,q.to,q.cls);
     const blocked=data.bookedSeats(t.no,serviceDate(t,q),q.from,q.to,q.cls);
-    return cars.map(car=>({...car,seats:Array.from({length:car.rows},(_,i)=>i+1).flatMap(row=>(car.cols||[]).filter(col=>!(car.missingSeats||[]).includes(`${row}${col}`)).map(col=>({id:data.seatId(car,row,col),row,col,blocked:blocked.has(data.seatId(car,row,col)),reverse:row<=(car.revRows||0)})))}));
+    // Fixed KTX seating faces forward before the facing boundary, reverse after it.
+    // The shared legacy revRows field supplies that boundary with the opposite orientation.
+    return cars.map(car=>({...car,seats:Array.from({length:car.rows},(_,i)=>i+1).flatMap(row=>(car.cols||[]).filter(col=>!(car.missingSeats||[]).includes(`${row}${col}`)).map(col=>({id:data.seatId(car,row,col),row,col,blocked:blocked.has(data.seatId(car,row,col)),reverse:t.grade==='KTX'&&car.revRows>0?row>car.revRows:row<=(car.revRows||0)})))}));
+  }
+  function conflictingTicket(queryStart,queryEnd,ignoreId=null,tickets=read().tickets){
+    return tickets.find(t=>{
+      if(t.status!=='active'||t.id===ignoreId)return false;
+      const start=Date.parse(t.departure),end=Number.isFinite(Date.parse(t.arrival))?Date.parse(t.arrival):start+((minuteOf(t.arr)-minuteOf(t.dep)+1440)%1440)*60000;
+      return queryStart<end&&start<queryEnd;
+    });
   }
   function prepareTicket(draft, state, replaceId) {
     validateQuery(draft.q);
@@ -76,7 +87,6 @@ export function createModel(data, storage, now = () => new Date()) {
     const old=replaceId?state.tickets.find(t=>t.id===replaceId):null;
     if(replaceId)check(!old?.groupId,'통합 여정은 전체 취소 후 다시 예약하세요.');
     if(replaceId) check(old?.status==='active' && new Date(old.departure)>now(),'변경할 예약을 찾을 수 없거나 이미 출발했습니다.');
-    check(draft.names?.length===+q.pax && draft.names.every(n=>typeof n==='string'&&n.trim().length>0&&n.trim().length<=30),'승객별 별칭을 1~30자로 입력하세요.');
     const discounts=draft.discounts||Array(+q.pax).fill(draft.discount);
     check(discounts.length===+q.pax&&discounts.every(d=>d in data.discounts),'할인 유형을 확인하세요.');
     check(q.cls==='standing'?draft.seats.length===0:new Set(draft.seats).size===+q.pax,'인원수에 맞게 서로 다른 좌석을 선택하세요.');
@@ -84,8 +94,10 @@ export function createModel(data, storage, now = () => new Date()) {
     data.invalidate();
     const free=new Set((q.cls==='standing'?[]:seats(train,q)).flatMap(c=>c.seats).filter(s=>!s.blocked).map(s=>s.id));
     check(draft.seats.every(s=>free.has(s)) && availability(train,q).eligible && availability(train,q).available>=+q.pax,'좌석 상태가 변경되었습니다. 좌석을 다시 선택하세요.');
+    const conflict=conflictingTicket(+departure(seg,q.date),+departure(seg,q.date)+seg.duration*60000,replaceId,state.tickets);
+    check(!conflict,'이미 예매한 승차권과 이용 시간이 겹칩니다. 기존 승차권을 취소하거나 다른 시간을 선택하세요.');
     const baseFare=data.fare(train,q.from,q.to,q.cls),totalFare=discounts.reduce((sum,d)=>sum+data.discount(baseFare,d),0);
-    const ticket={id:'RL-'+crypto.randomUUID(),key:draft.key,trainNo:train.no,grade:train.grade,fromStn:q.from,toStn:q.to,travelDate:q.date,serviceDate:serviceDate(train,q),seatClass:q.cls,seats:[...draft.seats],passengerCount:+q.pax,names:draft.names.map(n=>n.trim()),discount:discounts[0],discounts,totalFare,baseFare,fromStationId:stationIdentity(q.from),toStationId:stationIdentity(q.to),trainId:draft.key,departureServiceMinutes:seg.departureMinutes,arrivalServiceMinutes:seg.arrivalMinutes,arrival:new Date(+departure(seg,q.date)+seg.duration*60000).toISOString(),status:'active',departure:departure(seg,q.date).toISOString(),dep:seg.dep,arr:seg.arr,createdAt:now().toISOString(),prototype:true};
+    const ticket={id:'RL-'+crypto.randomUUID(),key:draft.key,trainNo:train.no,grade:train.grade,fromStn:q.from,toStn:q.to,travelDate:q.date,serviceDate:serviceDate(train,q),seatClass:q.cls,seats:[...draft.seats],passengerCount:+q.pax,discount:discounts[0],discounts,totalFare,baseFare,fromStationId:stationIdentity(q.from),toStationId:stationIdentity(q.to),trainId:draft.key,departureServiceMinutes:seg.departureMinutes,arrivalServiceMinutes:seg.arrivalMinutes,arrival:new Date(+departure(seg,q.date)+seg.duration*60000).toISOString(),status:'active',departure:departure(seg,q.date).toISOString(),dep:seg.dep,arr:seg.arr,createdAt:now().toISOString(),paymentMode:'virtual'};
     if(old) {old.status='changed';old.replacedBy=ticket.id;ticket.replaces=old.id;}
     state.tickets.push(ticket);return ticket;
   }
@@ -159,7 +171,7 @@ export function createModel(data, storage, now = () => new Date()) {
     const state=read(), t=state.tickets.find(t=>t.id===id);
     check(t?.status==='active','이미 취소되었거나 변경된 예약입니다.');
     if(t.groupId)return cancelGroup(id);
-    check(new Date(t.departure)>now(),'출발한 예약은 시제품에서 취소할 수 없습니다.');
+    check(new Date(t.departure)>now(),'출발한 열차의 승차권은 취소할 수 없습니다.');
     t.status='cancelled';t.cancelledAt=now().toISOString();t.refund=t.totalFare;save(state);
   }
   function watch(trainKey,q) {
@@ -169,7 +181,7 @@ export function createModel(data, storage, now = () => new Date()) {
     if(!state.watches.some(w=>w.key===trainKey&&JSON.stringify(w.q)===JSON.stringify(q))) state.watches.push({id:crypto.randomUUID(),key:trainKey,q:{...q}});
     save(state);
   }
-  const model={data,trains,stations,stationRecords,key,byKey,read,save,search,segment,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,watch,departure,validateQuery};
+  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,watch,departure,validateQuery};
   model.transfers=q=>{validateQuery(q);return findTransfers(model,q,now());};
   return model;
 }

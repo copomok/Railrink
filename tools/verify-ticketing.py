@@ -1,0 +1,54 @@
+import subprocess,tempfile,os,datetime,json
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+root=Path(__file__).resolve().parents[1];source=Path(os.environ.get('RAIL_SOURCE',str(root.parent/'NIMBYRAILTABLE')))
+out=root/'artifacts'/'ticketing';out.mkdir(parents=True,exist_ok=True)
+with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
+ os.symlink(root/'dist',directory+'/Railrink');os.symlink(source,directory+'/NIMBYRAILTABLE')
+ server=subprocess.Popen(['python','-m','http.server','4186','--bind','127.0.0.1','--directory',directory],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+ try:
+  with sync_playwright() as p:
+   browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox']);context=browser.new_context(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR');page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+   page.clock.install(time=datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc));page.goto('http://127.0.0.1:4186/Railrink/');page.wait_for_selector('#open-date')
+   tabs=page.locator('.home-tabs').bounding_box();fields=page.locator('.home-fields').bounding_box();assert fields['y']-tabs['y']-tabs['height']>=15;assert page.locator('[data-route-mode]').count()==0
+   page.screenshot(path=str(out/'01-home.png'),full_page=True)
+   for field,station in [('from','서울'),('to','부산')]:
+    page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
+   page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click();page.wait_for_selector('[data-action=book]:enabled');assert page.locator('[data-query-open=route]').count()==1
+   page.screenshot(path=str(out/'02-results.png'),full_page=True)
+   page.locator('[data-query-open=conditions]').first.click();page.locator('[name=after]').fill('10:10');page.locator('[data-query-tab=family]').click();assert page.locator('[name=family]').count()==5;page.locator('[data-query-tab=conditions]').click();assert page.locator('[name=after]').input_value()=='10:10';page.screenshot(path=str(out/'09-query-conditions.png'));page.locator('#close-dialog').click();assert page.url.endswith('#results');assert '10:00' in page.locator('.result-context').inner_text()
+   def query_choice(tab,field,value):
+    page.locator('[data-query-open='+tab+']').first.click();page.locator('[name='+field+'][value='+value+']').check();page.locator('#query-options-form [type=submit]').click()
+   query_choice('family','family','itx');page.wait_for_selector('.train-card');assert all('ITX-새마을' in x or 'ITX-마음' in x for x in page.locator('.train-card .grade-name').all_inner_texts())
+   query_choice('family','family','mugunghwa');page.wait_for_selector('.train-card');assert all('KTX' not in x and 'ITX' not in x for x in page.locator('.train-card .grade-name').all_inner_texts())
+   query_choice('family','family','all');page.wait_for_selector('[data-action=book]:enabled');page.locator('[data-action=book]:enabled').first.click();page.locator('#booking-facilities').click();page.wait_for_selector('.facility-list');assert '차내 시설' in page.locator('#dialog-title').inner_text();assert page.locator('.stops,.brd-summary,.boarding').count()==0;page.locator('#close-dialog').click()
+   page.locator('[data-action=book]:enabled').first.click();page.locator('#booking-operations').click();page.wait_for_selector('.brd-summary');assert page.locator('.facility-list').count()==0;page.locator('#close-dialog').click()
+   page.locator('[data-action=book]:enabled').first.click();assert page.locator('[data-booking-class=standing]').count()==1;assert page.locator('#choose-standing').count()==0
+   page.locator('[data-booking-class=standing]').click();assert page.locator('#choose-seats').is_hidden();assert '조건 보기' not in page.locator('dialog').inner_text();page.locator('[data-booking-class=general]').click();page.locator('#quick-book').click()
+   def confirm():
+    page.wait_for_selector('#passenger-form');assert page.locator('#passenger-form input').count()==0;page.locator('#passenger-form [type=submit]').click();assert '가상 결제' in page.locator('#confirm-form').inner_text();page.locator('#confirm-form [type=checkbox]').check();page.locator('#confirm-form [type=submit]').click()
+   confirm();page.wait_for_url('**/#complete');assert page.evaluate("JSON.parse(localStorage.getItem('raillink.v1')).tickets.every(t=>!('names' in t)&&t.paymentMode==='virtual')")
+   page.locator('[data-nav=tickets]').click();page.wait_for_selector('.ticket-group');page.screenshot(path=str(out/'03-ticket-list.png'));page.locator('.ticket-group summary').first.click();page.locator('[data-action=qr]').first.click();page.wait_for_selector('.mobile-ticket');assert page.locator('.ticket-qr').is_visible();assert page.locator('.mobile-ticket').evaluate("el=>el.classList.contains('ticket-untraveled')&&getComputedStyle(el.querySelector('header')).backgroundColor!== 'rgb(105, 113, 125)'");assert '시제품' not in page.locator('body').inner_text();page.screenshot(path=str(out/'04-ticket.png'));page.locator('#ticket-receipt').click();page.wait_for_selector('#dialog-title');page.get_by_role('heading',name='가상 결제 영수증').wait_for();assert '0원' in page.locator('dialog').inner_text();page.locator('#close-dialog').click()
+   # A second booking in the same time range must fail without saving anything.
+   page.locator('[data-nav=search]').click();page.locator('#search-form [type=submit]').click();page.wait_for_selector('[data-action=book]:enabled');page.locator('[data-action=book]:enabled').first.click();page.locator('#quick-book').click();confirm();page.wait_for_selector('#message:not([hidden])');assert '겹칩니다' in page.locator('#message').inner_text();assert page.evaluate("JSON.parse(localStorage.getItem('raillink.v1')).tickets.length")==1
+   page.evaluate("location.hash='tickets'");page.wait_for_selector('.ticket-group');page.locator('.ticket-group summary').first.click();page.locator('[data-action=cancel]').first.click();page.locator('#confirm-cancel').click();page.locator('[data-ticket-filter=history]').click();assert '환불 완료' in page.locator('#ticket-list').inner_text()
+   page.evaluate("document.documentElement.dataset.theme='dark'");page.screenshot(path=str(out/'05-ticket-history-dark.png'));page.locator('.ticket-group summary').first.click();page.locator('[data-action=qr]').first.click();assert page.locator('.mobile-ticket').evaluate("el=>el.classList.contains('ticket-used')&&getComputedStyle(el.querySelector('header')).backgroundColor==='rgb(105, 113, 125)'");page.screenshot(path=str(out/'06-ticket-dark.png'));page.locator('#close-dialog').click();page.evaluate("document.documentElement.dataset.theme='light'")
+   # Transfer mode is visible and renders routes in place of direct results.
+   page.locator('[data-nav=search]').click();page.locator('#search-form [type=submit]').click();query_choice('route','route','transfer');page.wait_for_selector('.transfer-card');assert page.locator('.train-card').count()==0
+   page.locator('[data-query-open=conditions]').first.click();page.locator('[name=minWait]').fill('10');page.locator('[name=maxWait]').fill('60');page.locator('#query-options-form [type=submit]').click();page.wait_for_selector('.transfer-card');page.screenshot(path=str(out/'07-transfer-results.png'),full_page=True)
+   page.locator('[data-action=transfer-route]').first.click();page.wait_for_selector('.route-detail-summary');assert page.locator('.route-leg').count()==2;page.screenshot(path=str(out/'08-transfer-detail.png'),full_page=True);page.locator('[data-action=transfer-detail]').first.click();page.wait_for_selector('.facility-list');page.locator('#close-dialog').click();page.locator('[data-action=book-transfer]').click();page.locator('#quick-book').click();confirm();page.wait_for_url('**/#complete');assert page.evaluate("JSON.parse(localStorage.getItem('raillink.v1')).tickets.filter(t=>t.status==='active').length")==2
+   # PWA assets, install UI, update notification, standalone layout and offline tickets.
+   manifest=page.evaluate("async()=>await(await fetch('./manifest.webmanifest')).json()");assert manifest['display']=='standalone';assert any(i['purpose']=='maskable' for i in manifest['icons'])
+   for i in manifest['icons']:assert page.request.get('http://127.0.0.1:4186/Railrink/'+i['src'].removeprefix('./')).status==200
+   page.locator('[data-nav=my]').click();page.locator('#install-app').click();page.wait_for_selector('dialog[open]');assert '설치' in page.locator('dialog').inner_text();page.locator('#close-dialog').click();page.locator('#theme').select_option('dark');page.locator('[data-nav=tickets]').click();page.locator('.ticket-group summary').first.click()
+   for width in [320,390,768,1280]:
+    page.set_viewport_size({'width':width,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
+   page.evaluate("""async()=>{const r=await navigator.serviceWorker.ready;const channel=new MessageChannel();const done=new Promise(resolve=>channel.port1.onmessage=resolve);r.active.postMessage({type:'cache-sources',urls:[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).concat(location.origin+'/NIMBYRAILTABLE/index.html')},[channel.port2]);await done;}""")
+   context.set_offline(True);page.reload();page.wait_for_selector('.ticket-group');page.locator('.ticket-group summary').first.click();page.locator('[data-action=qr]').first.click();page.wait_for_selector('.ticket-qr');page.locator('#close-dialog').click();page.locator('[data-nav=search]').click()
+   for field,station in [('from','서울'),('to','부산')]:
+    page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
+   page.locator('#search-form [type=submit]').click();page.get_by_role('heading',name='오프라인에서는 새 열차를 조회할 수 없습니다').wait_for()
+   assert not errors,errors
+   print('PASS: header/card spacing, four families, separated facilities/operations, standing class, anonymous virtual payment, stored-time conflict block, tickets/history/receipt, transfer mode/filter/details/booking, PWA manifest/icons/install/offline, light/dark and responsive widths.')
+   browser.close()
+ finally:server.terminate();server.wait()
