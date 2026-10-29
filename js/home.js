@@ -3,7 +3,7 @@ import {tourismView} from './tourism.js';
 export function homeView({q,model,tab,queryForm,searchOptions,esc,icon,grade,dateLabel,notice,recent,journeys}) {
   const tabs = [['booking','열차예매'],['pass','정기권'],['tour','관광상품']];
   const saved = model.read().routes;
-  const tabBody = tab === 'booking' ? queryForm() : tab === 'pass' ? `<div class="home-tab-body"><h3>자주 가는 길, 한곳에</h3><p>자주 가는 구간과 요일을 지정하고 정기적으로 예매하세요.</p>${saved.map((r,i)=>`<button class="home-saved" data-action="saved-route" data-index="${i}">${esc(r.from)} → ${esc(r.to)}${icon('next')}</button>`).join('')||'<p class="muted">아직 저장한 구간이 없습니다.</p>'}<button class="primary" data-action="nav" data-value="passes">정기 일정 · 반복 예매 ${icon('next')}</button></div>` : `<div class="home-tab-body"><h3>기차로 만나는 다른 풍경</h3><p>열차 종류와 계통을 선택해 상하행 시간표를 확인하세요.</p>${tourismView({model,esc,date:q.date})}</div>`;
+  const tabBody = tab === 'booking' ? queryForm() : tab === 'pass' ? `<div class="home-tab-body"><h3>자주 가는 길, 한곳에</h3><p>자주 가는 구간과 요일을 지정하고 정기적으로 예매하세요.</p>${saved.map((r,i)=>`<button class="home-saved" data-action="saved-route" data-index="${i}">${esc(r.from)} → ${esc(r.to)}${icon('next')}</button>`).join('')||'<p class="muted">아직 저장한 구간이 없습니다.</p>'}<button class="primary" data-action="nav" data-value="passes">정기 일정 · 반복 예매 ${icon('next')}</button></div>` : `<div class="home-tab-body"><h3>기차로 만나는 다른 풍경</h3><p>원하는 관광열차를 선택해 여행을 시작하세요.</p>${tourismView({model,esc,date:q.date})}</div>`;
   const active=journeys.find(j=>['riding','arriving','boarding'].includes(j.state.phase));
   const journeyCard = ({ticket:t,state:s}) => {
     const train=model.byKey.get(t.key);

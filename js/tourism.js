@@ -1,5 +1,5 @@
 import {kstDate,addDays} from './model.js';
-import {displayClock,minuteOf} from './railway-time.js';
+import {minuteOf} from './railway-time.js';
 export function tourismGroups(model){
  const groups=new Map();
  for(const train of model.trains){
@@ -17,7 +17,15 @@ export function tourismGroups(model){
  }
  return [...groups].map(([grade,systems])=>({grade,systems:[...systems.values()].map(system=>({...system,directions:[...system.directions].sort(([a],[b])=>a.localeCompare(b)).map(([id,trains])=>({id,label:id==='up'?'상행':id==='down'?'하행':id,trains:trains.sort((a,b)=>minuteOf(a.dep)-minuteOf(b.dep)||String(a.train.no).localeCompare(String(b.train.no)))}))}))}));
 }
-export function tourismView({model,esc,date}){
- const groups=tourismGroups(model);
- return `<section class="tourism-catalog"><label class="tour-date">여행일<input type="date" id="tour-date" min="${kstDate()}" max="${addDays(kstDate(),30)}" value="${esc(date)}"></label>${groups.map(group=>`<details class="tour-grade" data-tour-grade="${esc(group.grade)}"><summary><strong style="color:${esc(model.data.colors[group.grade])}">${esc(group.grade)}</strong><span>${group.systems.length}개 계통</span></summary><div class="tour-systems">${group.systems.map(system=>`<details class="tour-system"><summary><div><b>${system.endpoints.map(esc).join(' ↔ ')}</b><small>${esc(system.line)}</small></div><span>시간표 ⌄</span></summary>${system.directions.map(direction=>`<section class="tour-direction" data-tour-direction="${esc(direction.id)}"><h4>${esc(direction.label)} <span>${esc(direction.trains[0].from)} → ${esc(direction.trains[0].to)}</span></h4><div class="tour-train-list">${direction.trains.map(t=>`<div class="tour-train" data-tour-train="${esc(t.key)}"><strong>${esc(t.train.no)}</strong><span><b>${displayClock(t.dep)} → ${displayClock(t.arr)}</b></span><button data-action="tour" data-value="${esc(t.key)}" aria-label="${esc(group.grade)} ${esc(t.train.no)} 열차 조회">조회</button></div>`).join('')}</div></section>`).join('')}</details>`).join('')}</div></details>`).join('')||'<p>등록된 관광열차가 없습니다.</p>'}</section>`;
+const railIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-2 7h14M8 14h.01M16 14h.01M8 18l-3 4m11-4 3 4M9 6h6"/></svg>';
+export function tourismView({model,esc}){
+ return `<div class="tour-cards">${tourismGroups(model).map(group=>`<button class="tour-product-card" data-action="tour-grade" data-value="${esc(group.grade)}" style="--tour-color:${esc(model.data.colors[group.grade])}"><span class="tour-product-icon">${railIcon}</span><span class="tour-card-copy"><strong>${esc(group.grade)}</strong><small>${group.systems.length}개 운행 계통 · 계통 선택</small></span><span class="tour-card-arrow" aria-hidden="true">›</span></button>`).join('')||'<p>등록된 관광열차가 없습니다.</p>'}</div>`;
+}
+export function tourSystemsView({model,esc,grade,date}){
+ const group=tourismGroups(model).find(g=>g.grade===grade);
+ if(!group)return tourismView({model,esc});
+ return `<section class="tour-route-page"><div class="page-head"><h2>${esc(grade)}</h2><p>이용할 계통을 선택해 열차를 조회하세요.</p></div><label class="tour-date">여행일<input type="date" id="tour-date" min="${kstDate()}" max="${addDays(kstDate(),30)}" value="${esc(date)}"></label><div class="tour-cards">${group.systems.map(system=>{const direction=system.directions.find(d=>d.id==='down')||system.directions[0],first=direction.trains[0];return `<button class="tour-system-card" data-action="tour-system" data-value="${esc(system.id)}"><span class="tour-card-copy"><strong>${esc(first.from)} ↔ ${esc(first.to)}</strong><small>${esc(system.line)}</small><span class="tour-card-note">상행·하행 열차 조회</span></span><span class="tour-card-arrow" aria-hidden="true">›</span></button>`;}).join('')}</div></section>`;
+}
+export function tourDirectionView({system,q,esc}){
+ return `<section class="tour-result-context"><div><strong>${esc(q.tourGrade)}</strong><button data-action="tour-back">계통 변경 ›</button></div><div class="tour-direction-tabs" role="group" aria-label="관광열차 운행 방향">${system.directions.map(d=>{const t=d.trains[0];return `<button data-tour-direction="${esc(d.id)}" aria-pressed="${q.from===t.from&&q.to===t.to}"><b>${esc(d.label)}</b><span>${esc(t.from)} → ${esc(t.to)}</span></button>`;}).join('')}</div></section>`;
 }
