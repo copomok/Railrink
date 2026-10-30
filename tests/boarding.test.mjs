@@ -10,7 +10,7 @@ const at=(time,date='2026-10-30')=>Date.parse(`${date}T${time}:00+09:00`);
 const t={id:'private-booking-id',key:'train-key',status:'active',grade:'KTX',trainNo:'1',fromStn:'서울',toStn:'부산',dep:'08:00',arr:'10:00',departure:new Date(at('08:00')).toISOString(),arrival:new Date(at('10:00')).toISOString(),travelDate:'2026-10-30',serviceDate:'2026-10-30',seatClass:'general',seats:['5호차 12A']};
 const snapshot={departure:at('08:00'),arrival:at('10:00'),fromIndex:0,toIndex:3,nodes:[
  {index:0,s:'서울',stop:true,arrTime:null,depTime:at('08:00'),platform:3},
- {index:1,s:'통과역',stop:false,arrTime:null,depTime:null},
+ {index:1,s:'통과역',stop:false,arrTime:null,depTime:null,interpolated:at('08:30')},
  {index:2,s:'대전',stop:true,arrTime:at('09:00'),depTime:at('09:10')},
  {index:3,s:'부산',stop:true,arrTime:at('10:00'),depTime:null}]};
 const state=(time,options={},ticket=t,snap=snapshot)=>boardingState(ticket,snap,at(time),options);
@@ -20,13 +20,13 @@ test('time-derived stages never assert actual departure, boarding or arrival',()
  assert.equal(state('09:50').untilArrival,10);assert.equal(state('10:00').stage,'AFTER_ARRIVAL');assert.equal(state('10:00').arrived,false);assert.match(state('10:00').phase,/확인 중/);
  assert.equal(t.status,'active');
 });
-test('stop-aware progress holds at dwell, skips pass points and stays bounded',()=>{
- assert.equal(state('07:00').progress,0);assert.equal(state('09:00').progress,50);assert.equal(state('09:09').progress,50);assert.ok(state('09:30').progress>50);assert.equal(state('10:30').progress,100);
- assert.equal(state('08:20').next.s,'대전');assert.match(state('09:05').location,/대전 정차 예상/);assert.equal(state('09:05').next.s,'부산');
+test('route progress and location include pass points while next-stop guidance skips them',()=>{
+ assert.equal(state('07:00').progress,0);assert.equal(Math.round(state('09:00').progress),67);assert.equal(Math.round(state('09:09').progress),67);assert.ok(state('09:30').progress>67);assert.equal(state('10:30').progress,100);
+ assert.equal(state('08:20').next.s,'대전');assert.match(state('08:20').location,/서울 → 통과역/);assert.match(state('08:40').location,/통과역 → 대전/);assert.match(state('09:05').location,/대전 정차 예상/);assert.equal(state('09:05').next.s,'부산');
 });
 test('endpoint delays preserve booked times while exposing revised times and current position',()=>{
  const delayed={...snapshot,departure:at('08:04'),arrival:at('10:06'),nodes:snapshot.nodes.map(n=>n.s==='서울'?{...n,plannedDeparture:at('08:00'),depTime:at('08:04'),delay:4}:n.s==='대전'?{...n,plannedArrival:at('09:00'),plannedDeparture:at('09:10'),arrTime:at('09:04'),depTime:at('09:14'),arrivalDelay:4,delay:4}:n.s==='부산'?{...n,plannedArrival:at('10:00'),arrTime:at('10:06'),arrivalDelay:6}:n)};
- const s=state('08:30',{},t,delayed);assert.equal(s.plannedDeparture,at('08:00'));assert.equal(s.departure,at('08:04'));assert.equal(s.departureDelay,4);assert.equal(s.arrivalDelay,6);assert.equal(s.delayConfirmed,false);assert.ok(s.position);assert.equal(s.stops.length,3);
+ const s=state('08:30',{},t,delayed);assert.equal(s.plannedDeparture,at('08:00'));assert.equal(s.departure,at('08:04'));assert.equal(s.departureDelay,4);assert.equal(s.arrivalDelay,6);assert.equal(s.delayConfirmed,false);assert.ok(s.position);assert.equal(s.stops.length,3);assert.equal(s.routeNodes.length,4);
  const report={verified:true,trainKey:t.key,serviceDate:t.serviceDate,updatedAt:at('08:29'),status:'running',stops:[{station:'서울',departure:at('08:04')},{station:'부산',arrival:at('10:06')}]};
  assert.equal(state('08:30',{report},t,delayed).delayConfirmed,true);
 });
@@ -35,7 +35,7 @@ test('assistant renders revised red times, every stop and a current-position mar
  const s=state('08:30',{},t,delayed),train={no:'1',grade:'KTX'};
  const model={byKey:new Map([[t.key,train]]),data:{colors:{KTX:'#123'},grades:{KTX:'KTX'},classes:{general:{label:'일반실'}}}};
  const html=boardingView({legs:[s],index:0,preview:null,manualLeg:null,model,esc:String,icon:()=>'<svg></svg>',seatDescription:'5호차 12A',shareSupported:true});
- assert.match(html,/class="delayed">08:04/);assert.match(html,/\(4분 지연 예상\)/);assert.match(html,/전체 정차역/);assert.equal((html.match(/<li /g)||[]).length,s.stops.length);assert.match(html,/boarding-train-position/);
+ assert.match(html,/class="delayed">08:04/);assert.match(html,/\(4분 지연 예상\)/);assert.match(html,/전체 운행역/);assert.equal((html.match(/<li /g)||[]).length,s.routeNodes.length);assert.match(html,/class="[^"]*pass[^"]*"/);assert.match(html,/통과/);assert.match(html,/boarding-train-position/);
 });
 test('ticket list keeps booked times and adds endpoint delay labels',()=>{
  const future={...t,departure:'2099-10-30T00:00:00.000Z',arrival:'2099-10-30T02:00:00.000Z',travelDate:'2099-10-30'};

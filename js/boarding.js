@@ -32,7 +32,9 @@ export function boardingState(ticket,snapshot,now=Date.now(),{report=null,offlin
    arrivalDelay:valid(arrTime)&&valid(n.plannedArrival)?Math.max(0,Math.round((arrTime-n.plannedArrival)/60000)):Math.max(0,n.arrivalDelay||0),
    delay:valid(depTime)&&valid(n.plannedDeparture)?Math.max(0,Math.round((depTime-n.plannedDeparture)/60000)):Math.max(0,n.delay||0)};
  });
- const stops=nodes.filter(n=>n.stop&&n.index>=snapshot.fromIndex&&n.index<=snapshot.toIndex);
+ const fromIndex=snapshot?.fromIndex??0,toIndex=snapshot?.toIndex??nodes.length-1;
+ const routeNodes=nodes.filter(n=>n.index>=fromIndex&&n.index<=toIndex);
+ const stops=routeNodes.filter(n=>n.stop);
  const origin=stops[0],destination=stops.at(-1);
  const departure=origin?.depTime??snapshot?.departure??saved.departure,arrival=destination?.arrTime??snapshot?.arrival??saved.arrival;
  const hasTime=valid(departure)&&valid(arrival)&&arrival>departure;
@@ -45,13 +47,13 @@ export function boardingState(ticket,snapshot,now=Date.now(),{report=null,offlin
  const arrivalDelay=hasTime?Math.max(0,Math.round((arrival-saved.arrival)/60000)):0;
  const delay=Math.max(departureDelay,arrivalDelay);
  const phase=cancelled?'운휴·취소':!hasTime?'운행 정보 확인 불가':arrived?'도착 완료':stage==='AFTER_ARRIVAL'?'도착 확인 중':stage==='ON_BOARD'?'운행 안내':delay?'출발 지연 예상':untilDeparture<=10?'출발 준비':'출발 예정';
- const position=hasTime&&stage==='ON_BOARD'?operationPosition({trainPhase:'running',now,nodes:stops},stops):null;
- const progress=cancelled||!hasTime?0:arrived?100:now<departure?0:now>=arrival?100:position&&stops.length>1?(position.index+position.fraction)/(stops.length-1)*100:0;
- const current=position?stops[position.index]:null,next=cancelled?null:stops.find(n=>(n.arrTime??n.depTime)>now&&n!==origin);
+ const position=hasTime&&stage==='ON_BOARD'?operationPosition({trainPhase:'running',now,nodes:routeNodes},routeNodes):null;
+ const progress=cancelled||!hasTime?0:arrived?100:now<departure?0:now>=arrival?100:position&&routeNodes.length>1?(position.index+position.fraction)/(routeNodes.length-1)*100:0;
+ const current=position?routeNodes[position.index]:null,next=cancelled?null:stops.find(n=>(n.arrTime??n.depTime)>now&&n!==origin);
  const positionVerified=!!fresh&&typeof fresh.positionText==='string'&&!!fresh.positionText.trim();
- const location=positionVerified?fresh.positionText:!current?'위치 확인 중':position.index===position.nextIndex?`${current.s} 정차 예상`:`${current.s} → ${stops[position.nextIndex].s}`;
+ const location=positionVerified?fresh.positionText:!current?'위치 확인 중':position.index===position.nextIndex?`${current.s} ${current.stop?'정차':'통과'} 예상`:`${current.s} → ${routeNodes[position.nextIndex].s}`;
  const confidence=verified?(stale?'최근 확인 정보 · 갱신 필요':'실시간 확인'):snapshot?'운행 정보':'운행 정보 확인 불가';
- return {ticket,stage,phase,departure,arrival,plannedDeparture:saved.departure,plannedArrival:saved.arrival,departureDelay,arrivalDelay,delay,delayConfirmed:!!verified,hasTime,untilDeparture,untilArrival,stops,next,position,progress:Math.min(100,Math.max(0,progress)),location,positionVerified,platform:origin?.platform??null,confidence,offline,stale,arrived,cancelled,updatedAt:verified?.updatedAt??null,calculatedAt:now,error:snapshot?.error||'',verified:!!fresh};
+ return {ticket,stage,phase,departure,arrival,plannedDeparture:saved.departure,plannedArrival:saved.arrival,departureDelay,arrivalDelay,delay,delayConfirmed:!!verified,hasTime,untilDeparture,untilArrival,routeNodes,stops,next,position,progress:Math.min(100,Math.max(0,progress)),location,positionVerified,platform:origin?.platform??null,confidence,offline,stale,arrived,cancelled,updatedAt:verified?.updatedAt??null,calculatedAt:now,error:snapshot?.error||'',verified:!!fresh};
 }
 
 export function transferGuidance(legs,index,now=Date.now()){

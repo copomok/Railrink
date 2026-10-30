@@ -39,7 +39,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    page.locator('[data-boarding-stage=auto]').click()
    with page.expect_download() as download:page.locator('[data-boarding-action=calendar]').click()
    data=Path(download.value.path()).read_text();assert 'BEGIN:VCALENDAR' in data and booked['id'] not in data
-   assistant_stop_count=page.locator('.boarding-stops li').count();page.locator('[data-boarding-action=operation]').first.click();page.wait_for_selector('#ops-status');assert page.locator('.brd-stop.ride').count()==assistant_stop_count;page.locator('#close-dialog').click()
+   assistant_station_count=page.locator('.boarding-stops li').count();page.locator('[data-boarding-action=operation]').first.click();page.wait_for_selector('#ops-status');stopping_station_count=page.locator('.brd-stop.ride').count();assert assistant_station_count>=stopping_station_count;page.locator('#close-dialog').click()
    page.locator('[data-nav=home]').click();page.locator('.home-boarding-entry [data-action=boarding]').click();page.wait_for_selector('.boarding-assistant')
    # The home bell opens the exact ticket and notification handoff never exposes IDs in URLs.
    page.locator('[data-nav=home]').click();page.locator('#home-notifications').click();page.locator('[data-alert-ticket]').first.click();page.wait_for_selector('.boarding-main')
@@ -77,6 +77,6 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    # Return to before departure, cancel through the original grouped refund and reject saved ID.
    set_time(datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc));page.locator('[data-nav=tickets]').click();page.locator('[data-action=cancel]').click();page.locator('#confirm-cancel').click();page.wait_for_selector('.ticket-group',state='detached');page.evaluate("location.hash='boarding'");page.wait_for_selector('.empty');assert page.locator('.boarding-main').count()==0
    assert not errors,errors
-   print('PASS: direct ticket screen, exact leg identity, all booked-route stops, current-position marker, home/ticket assistant entry, reload, preview/read-only state, minute focus, KST stage boundaries, progress, receipt/QR/calendar, no-wrap responsive 320–1280, dark mode, offline cache, missing/cancelled ownership, real transfer auto-advance; zero browser errors.')
+   print('PASS: direct ticket screen, exact leg identity, booked-route stops and pass stations, current-position marker, home/ticket assistant entry, reload, preview/read-only state, minute focus, KST stage boundaries, progress, receipt/QR/calendar, no-wrap responsive 320–1280, dark mode, offline cache, missing/cancelled ownership, real transfer auto-advance; zero browser errors.')
    browser.close()
  finally:server.terminate();server.wait()
