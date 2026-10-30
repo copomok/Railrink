@@ -27,10 +27,10 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    def set_time(value):page.clock.set_system_time(value);page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
    load();search();booked=saved()[0];original=saved()
    page.locator('[data-nav=tickets]').click();page.locator('.ticket-open').click();page.wait_for_selector('.ticket-qr');assert page.locator('details.ticket-group').count()==0
-   assert '타는 곳' in page.locator('#ticket-boarding-place').inner_text();assert page.locator('.ticket-train-heading #qr-formation').is_visible();assert page.locator('.ticket-train-heading #ticket-operation').is_visible()
+   assert '타는 곳' in page.locator('#ticket-boarding-place').inner_text();assert page.locator('.ticket-train-heading #qr-formation').is_visible();assert page.locator('.ticket-train-heading #ticket-operation').is_visible();assert page.locator('.ticket-seat-direction').inner_text() in ['순방향','역방향']
    page.screenshot(path=str(out/'01-ticket-direct.png'),full_page=True)
    page.locator('#ticket-boarding').click();page.wait_for_url('**/#boarding');page.wait_for_selector('.boarding-assistant');assert page.locator('.boarding-main').inner_text().find(booked['trainNo'])>=0
-   assert booked['id'] not in page.url;assert '시간표 기준' not in page.locator('body').inner_text();assert '가상' not in page.locator('body').inner_text();assert page.locator('[data-nav=tickets]').get_attribute('aria-current')=='page'
+   assert booked['id'] not in page.url;assert '시간표 기준' not in page.locator('body').inner_text();assert '가상' not in page.locator('body').inner_text();assert '순방향' not in page.locator('body').inner_text() and '역방향' not in page.locator('body').inner_text();assert page.locator('[data-nav=tickets]').get_attribute('aria-current')=='page'
    page.screenshot(path=str(out/'02-before.png'),full_page=True)
    for stage in ['ON_BOARD','AFTER_ARRIVAL']:
     page.locator('[data-boarding-stage='+stage+']').click();assert page.locator('.boarding-preview').is_visible();assert saved()==original
