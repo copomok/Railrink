@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-storage-') as directory:
    def stored():
     return page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('raillink-bookings',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return await new Promise(resolve=>{const r=db.transaction('state').objectStore('state').get('raillink.v1');r.onsuccess=()=>{db.close();resolve(JSON.parse(r.result));};});}""")
    state=stored();assert len(state['tickets'])==2;assert len({t['groupId'] for t in state['tickets']})==1;assert state['routes']==[{'from':'천안','to':'서울'}];assert state['favoriteStations']==['부산']
-   page.locator('[data-nav=tickets]').click();page.reload();page.wait_for_selector('.ticket-group');assert page.locator('.ticket-group').count()==1;page.locator('.ticket-group summary').click();assert page.locator('.ticket-card').count()==2
+   page.locator('[data-nav=tickets]').click();page.reload();page.wait_for_selector('.ticket-group');assert page.locator('.ticket-group').count()==1;page.locator('.ticket-open').click();assert '1 / 2구간' in page.locator('.ticket-segment-nav').inner_text();page.locator('#close-dialog').click()
    # Reopening and refunding the full journey must use the durable store too.
    page.locator('[data-action=cancel]').click();page.locator('#confirm-cancel').click();page.wait_for_selector('.ticket-group',state='detached');assert all(t['status']=='cancelled' for t in stored()['tickets'])
    page.reload();page.locator('[data-ticket-filter=history]').click();page.wait_for_selector('.ticket-group');assert '환불 완료' in page.locator('.ticket-group').inner_text();assert page.evaluate("localStorage.getItem('quota-fixture').length>1000000")

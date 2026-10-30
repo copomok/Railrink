@@ -1,6 +1,25 @@
 const CACHE='raillink-20261029-booking-storage-4';
 const SHELL=['./','./index.html',/* APP_ASSETS */];
 const allowed=url=>url.origin===self.location.origin&&(url.pathname.startsWith(new URL('./',self.location).pathname)||url.pathname.startsWith('/NIMBYRAILTABLE/'));
+self.addEventListener('notificationclick',event=>{
+ const id=event.notification.data?.boardingId;event.notification.close();if(typeof id!=='string')return;
+ event.waitUntil((async()=>{
+  // Private, one-shot navigation handoff in the existing local database, never in a URL.
+  const saved=await new Promise(resolve=>{
+   const request=indexedDB.open('raillink-bookings',1);
+   request.onerror=()=>resolve(false);
+   request.onsuccess=()=>{const db=request.result;if(!db.objectStoreNames.contains('state')){db.close();resolve(false);return;}
+    const transaction=db.transaction('state','readwrite');transaction.objectStore('state').put({id,at:Date.now()},'raillink.boarding.pending');
+    transaction.oncomplete=()=>{db.close();resolve(true);};transaction.onabort=()=>{db.close();resolve(false);};
+   };
+  });
+  const clients=await self.clients.matchAll({type:'window',includeUncontrolled:true});
+  const client=clients.find(c=>c.url.startsWith(new URL('./',self.location).href));
+  if(client){await client.focus();client.postMessage({type:'open-boarding',id});}
+  // No background scheduling: this only opens a notification already delivered while running.
+  else await self.clients.openWindow(new URL(saved?'./#boarding':'./#tickets',self.location).href);
+ })());
+});
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)));});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('raillink-')&&name!==CACHE)await caches.delete(name);await self.clients.claim();})());});
 self.addEventListener('message',event=>{

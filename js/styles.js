@@ -2,7 +2,7 @@
 // Load the styles for this module release before displaying its new components.
 export async function ensureProductStyles(){
  const version=new URL(import.meta.url).searchParams.get('v');
- const files=['app','mobile','home','product','operations','booking','ticketing','tourism'];
+ const files=['app','mobile','home','product','operations','booking','ticketing','tourism','boarding'];
  await Promise.all(files.map(file=>{
   const url=new URL('../css/'+file+'.css',import.meta.url);if(version)url.searchParams.set('v',version);
   if([...document.querySelectorAll('link[rel=stylesheet]')].some(link=>link.href===url.href&&link.sheet))return;

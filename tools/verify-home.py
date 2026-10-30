@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    page.clock.install(time=__import__('datetime').datetime.fromisoformat(departure.replace('Z','+00:00')))
    page.reload();page.wait_for_selector('.home-live');assert '탑승 중' in page.locator('.home-live').inner_text()
    page.locator('[data-station=from]').click();page.locator('#station-query').fill('청량');page.clock.fast_forward(61000);assert page.locator('#station-query').input_value()=='청량';assert page.locator('#station-query').evaluate('el=>document.activeElement===el');page.locator('#close-dialog').click();page.clock.fast_forward(61000);assert page.locator('.home-live').count()==1
-   page.locator('[data-nav=tickets]').click();page.wait_for_selector('#ticket-list .ticket-group');page.locator('.ticket-group summary').first.click();assert '탑승 중' in page.locator('#ticket-list').inner_text()
+   page.locator('[data-nav=tickets]').click();page.wait_for_selector('#ticket-list .ticket-group');page.locator('.ticket-open').first.click();assert '탑승 중' in page.locator('.ticket-state-banner').inner_text()
    assert not errors,errors
    assert any('/NIMBYRAILTABLE/data/nimbi_rail_data.js' in r for r in requests)
    assert not any('/Railrink/data/' in r for r in requests)
