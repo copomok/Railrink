@@ -31,7 +31,7 @@ export function createBoardingAlerts({service,model,notify,open,storage=globalTh
   for(const event of events){
    if(seen.includes(event.key))continue;seen.push(event.key);seen=seen.slice(-250);
    try{storage.setItem(key,JSON.stringify(seen));}catch{}
-   const body=`${event.title} · ${event.body} (시간표 기준)`;notify(body);
+   const body=`${event.title} · ${event.body}`;notify(body);
    try{
     if(storage.getItem('raillink.systemAlerts')!=='1'||!('Notification' in window)||Notification.permission!=='granted')continue;
     const registration=await navigator.serviceWorker?.getRegistration();
