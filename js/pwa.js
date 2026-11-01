@@ -20,8 +20,8 @@ export function initPWA(notify){
   };
   update();registration.addEventListener('updatefound',()=>registration.installing?.addEventListener('statechange',update));
   const ready=await navigator.serviceWorker.ready;
-  const urls=[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href);urls.push(new URL('/NIMBYRAILTABLE/index.html',location.href).href);
-  ready.active?.postMessage({type:'cache-sources',urls});
+  const urls=new Set([...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href));for(const url of window.RailSourceURLs||[])urls.add(url);urls.add(new URL('/NIMBYRAILTABLE/index.html',location.href).href);
+  ready.active?.postMessage({type:'cache-sources',urls:[...urls]});
  }).catch(()=>notify('앱 설치 준비를 완료하지 못했습니다. 온라인에서 다시 열어 주세요.'));
  window.addEventListener('offline',()=>notify('오프라인 · 저장된 승차권을 확인할 수 있습니다.'));
 }

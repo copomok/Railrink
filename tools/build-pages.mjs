@@ -1,13 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {appRoot,sourceRoot,tokenSource,operationStyleSource,railDataSource} from './source.mjs';
+import {appRoot,sourceRoot,tokenSource,operationStyleSource,railDataSource,ticketExcludedFiles} from './source.mjs';
 const standalone=process.argv.includes('--standalone');
 const output=standalone?path.join(appRoot,'dist'):path.join(sourceRoot,'raillink');
 const sharedRoot=standalone?'/NIMBYRAILTABLE/':'../';
 const hash=createHash('sha256');
 for(const dir of ['js','css','assets'])for(const name of (await fs.readdir(path.join(appRoot,dir))).sort()){hash.update(dir+'/'+name);hash.update(await fs.readFile(path.join(appRoot,dir,name)));}
-for(const file of ['index.html','sw.js','tools/build-pages.mjs'])hash.update(await fs.readFile(path.join(appRoot,file)));
+for(const file of ['index.html','sw.js','tools/build-pages.mjs','tools/source.mjs'])hash.update(await fs.readFile(path.join(appRoot,file)));
 hash.update(tokenSource());hash.update(operationStyleSource());
 const version=hash.digest('hex').slice(0,12),versioned=url=>url+'?v='+version;
 await fs.mkdir(output,{recursive:true});
@@ -28,22 +28,34 @@ html=html.replace('href="/shared/tokens.css"','href="./tokens.css"').replace('hr
 html=html.replace(/<script src="\/shared\/runtime\.js"[\s\S]*?<\/script>\s*<script type="module" src="\/js\/app.js"><\/script>/, '<script type="module" src="./boot.js"></script>');
 html=html.replace(/(href=")([^"]+\.css)(")/g,(_,a,url,b)=>a+versioned(url)+b).replace('src="./boot.js"',`src="${versioned('./boot.js')}"`);
 await fs.writeFile(path.join(output,'index.html'),html);
-await fs.writeFile(path.join(output,'boot.js'),`// Load the same source scripts as the original app, in its declared order.
+await fs.writeFile(path.join(output,'boot.js'),`// Download shared sources together, then execute them in their canonical order.
 try {
   window.NIMBI_DISABLE_WEATHER=true;
+  const loading=document.querySelector('.loading');
+  const progress=text=>{if(loading)loading.textContent=text;};
   const root=new URL(${JSON.stringify(sharedRoot)},location.href);
-  const response=await fetch(new URL('index.html',root),{cache:'no-cache'});
+  const response=await fetch(new URL('index.html',root),{cache:'default'});
   if(!response.ok)throw new Error('공통 데이터 목록을 불러올 수 없습니다.');
   const doc=new DOMParser().parseFromString(await response.text(),'text/html');
   const features=new Set(['nimbi_demand.js','nimbi_booking_dynamics.js','nimbi_inventory.js','nimbi_delay.js','nimbi_congestion.js']);
-  const sources=[...doc.querySelectorAll('script[src]')].map(s=>s.getAttribute('src')).filter(src=>src.startsWith('data/')||src.startsWith('js/core/')||src.startsWith('js/shared/')||features.has(src.split('/').pop().split('?')[0]));
+  const excluded=new Set(${JSON.stringify(ticketExcludedFiles)});
+  const sources=[...doc.querySelectorAll('script[src]')].map(s=>s.getAttribute('src')).filter(src=>{const file=src.split('?')[0];return (file.startsWith('data/')||file.startsWith('js/core/')||file.startsWith('js/shared/')||features.has(file.split('/').pop()))&&!excluded.has(file);});
   if(!sources.some(s=>s.includes('nimbi_rail_domain.js')))throw new Error('공통 모듈이 아직 배포되지 않았습니다.');
-  for(const src of sources){
-    const url=new URL(src,root);
-    if(url.origin!==root.origin||!url.pathname.startsWith(root.pathname))throw new Error('잘못된 데이터 경로');
-    await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url.href;s.onload=resolve;s.onerror=()=>reject(new Error('데이터 로딩 실패'));document.body.append(s);});
+  const urls=sources.map(src=>{const url=new URL(src,root);if(url.origin!==root.origin||!url.pathname.startsWith(root.pathname))throw new Error('잘못된 데이터 경로');return url;});
+  window.RailSourceURLs=Object.freeze(urls.map(url=>url.href));
+  let received=0;progress('공통 철도 데이터를 내려받는 중입니다…');
+  const payloads=await Promise.all(urls.map(async url=>{
+    const source=await fetch(url,{cache:'force-cache'});if(!source.ok)throw new Error('공통 데이터를 불러오지 못했습니다.');
+    const text=await source.text();received++;progress('공통 철도 데이터 '+received+'/'+urls.length);return {url,text};
+  }));
+  progress('열차 정보를 준비하는 중입니다…');
+  for(const payload of payloads){
+    const blob=URL.createObjectURL(new Blob([payload.text+'\\n//# sourceURL='+payload.url.href],{type:'text/javascript'}));
+    try{await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=blob;script.onload=()=>{script.remove();resolve();};script.onerror=()=>{script.remove();reject(new Error('공통 데이터 실행에 실패했습니다.'));};document.body.append(script);});}
+    finally{URL.revokeObjectURL(blob);}
   }
   ${railDataSource()}
+  if(!window.RailData?.trains?.length)throw new Error('공통 열차 데이터를 준비하지 못했습니다.');
   await import('./js/app.js?v=${version}');
 } catch(error){document.getElementById('main').textContent=error.message+' 새로고침하여 다시 시도하세요.';}
 `);

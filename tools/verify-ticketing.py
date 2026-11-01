@@ -9,7 +9,8 @@ with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
  try:
   with sync_playwright() as p:
    browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox']);context=browser.new_context(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR');page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-   page.clock.install(time=datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc));page.goto('http://127.0.0.1:4186/Railrink/');page.wait_for_selector('#open-date')
+   page.clock.install(time=datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc));load_started=time.perf_counter();page.goto('http://127.0.0.1:4186/Railrink/');page.wait_for_selector('#open-date');initial_load_elapsed=time.perf_counter()-load_started
+   source_count=page.evaluate('window.RailSourceURLs.length');assert 20<=source_count<30;assert initial_load_elapsed<3;print(f'LOAD {initial_load_elapsed:.3f}s, {source_count} shared files',flush=True)
    tabs=page.locator('.home-tabs').bounding_box();fields=page.locator('.home-fields').bounding_box();assert fields['y']-tabs['y']-tabs['height']>=15;assert page.locator('[data-route-mode]').count()==0
    page.screenshot(path=str(out/'01-home.png'),full_page=True)
    for field,station in [('from','서울'),('to','부산')]:
@@ -54,12 +55,12 @@ with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
    page.locator('[data-nav=my]').click();page.locator('#install-app').click();page.wait_for_selector('dialog[open]');assert '설치' in page.locator('dialog').inner_text();page.locator('#close-dialog').click();page.locator('#theme').select_option('dark');page.locator('[data-nav=tickets]').click();page.locator('.ticket-open').first.click()
    for width in [320,390,768,1280]:
     page.set_viewport_size({'width':width,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
-   page.evaluate("""async()=>{const r=await navigator.serviceWorker.ready;const channel=new MessageChannel();const done=new Promise(resolve=>channel.port1.onmessage=resolve);r.active.postMessage({type:'cache-sources',urls:[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).concat(location.origin+'/NIMBYRAILTABLE/index.html')},[channel.port2]);await done;}""")
+   page.evaluate("""async()=>{const r=await navigator.serviceWorker.ready;const channel=new MessageChannel();const done=new Promise(resolve=>channel.port1.onmessage=resolve);r.active.postMessage({type:'cache-sources',urls:[...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href).concat(RailSourceURLs,location.origin+'/NIMBYRAILTABLE/index.html')},[channel.port2]);await done;}""")
    context.set_offline(True);page.reload();page.wait_for_selector('.ticket-group');page.locator('.ticket-open').first.click();page.wait_for_selector('.ticket-qr');page.locator('#close-dialog').click();page.locator('[data-nav=search]').click()
    for field,station in [('from','서울'),('to','부산')]:
     page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
    page.locator('#search-form [type=submit]').click();page.get_by_role('heading',name='오프라인에서는 새 열차를 조회할 수 없습니다').wait_for()
    assert not errors,errors
-   print(f'PASS: combined {combined_elapsed:.3f}s, transfer-only {transfer_elapsed:.3f}s, duration sort {duration_elapsed:.3f}s, fare sort {fare_elapsed:.3f}s; separator-only combined groups, no group card for individual modes and zero browser errors.')
+   print(f'PASS: initial data load {initial_load_elapsed:.3f}s, combined {combined_elapsed:.3f}s, transfer-only {transfer_elapsed:.3f}s, duration sort {duration_elapsed:.3f}s, fare sort {fare_elapsed:.3f}s; separator-only combined groups, no group card for individual modes and zero browser errors.')
    browser.close()
  finally:server.terminate();server.wait()

@@ -3,11 +3,28 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 export const appRoot = fileURLToPath(new URL('../', import.meta.url));
 export const sourceRoot = path.resolve(process.env.RAIL_SOURCE || path.join(appRoot, '../NIMBYRAILTABLE'));
+// The ticket app only consumes intercity railway data. Loading the metro timetable,
+// history and notice payloads added more than 4 MiB without contributing to search,
+// fares, tickets or boarding guidance.
+export const ticketExcludedFiles = Object.freeze([
+  'data/nimbi_metro.js',
+  'data/nimbi_metro_sched.js',
+  'data/nimbi_metro_schedule_updates.js',
+  'data/nimbi_metro_service_policy.js',
+  'data/nimbi_metro_geo.js',
+  'data/nimbi_metro_20260924_update.js',
+  'data/nimbi_metro_platform_directions.js',
+  'data/nimbi_metro_station_renames.js',
+  'data/nimbi_metro_20261023_update.js',
+  'data/nimbi_20261027_metro_routes.js',
+  'data/nimbi_station_history.js',
+  'data/nimbi_rail_notices.js'
+]);
 export function sharedFiles() {
   const html = fs.readFileSync(path.join(sourceRoot, 'index.html'), 'utf8');
   const features = new Set(['nimbi_demand.js', 'nimbi_booking_dynamics.js', 'nimbi_inventory.js', 'nimbi_delay.js', 'nimbi_congestion.js']);
   const files = [...html.matchAll(/<script\s+src="([^"?]+)(?:\?[^"]*)?"/g)].map(m => m[1])
-    .filter(f => f.startsWith('data/') || f.startsWith('js/core/') || f === 'js/shared/nimbi_rail_domain.js' || features.has(path.basename(f)));
+    .filter(f => (f.startsWith('data/') || f.startsWith('js/core/') || f === 'js/shared/nimbi_rail_domain.js' || features.has(path.basename(f))) && !ticketExcludedFiles.includes(f));
   if (!files.includes('js/shared/nimbi_rail_domain.js')) throw new Error('NIMBY Rail의 공통 도메인 모듈이 필요합니다. README의 연결 절차를 확인하세요.');
   if (files.some(f => !/^(data|js)\/[\w/.-]+\.js$/.test(f) || f.includes('..'))) throw new Error('Invalid shared file path');
   return files;

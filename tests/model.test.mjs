@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 import path from 'node:path';
-import {runtimeSource,sharedFiles,sourceRoot,tokenSource} from '../tools/source.mjs';
+import {runtimeSource,sharedFiles,sourceRoot,tokenSource,ticketExcludedFiles} from '../tools/source.mjs';
 import {createModel,kstDate,addDays,STORE_KEY} from '../js/model.js';
 const memory=new Map();
 const storage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)};
@@ -21,6 +21,9 @@ test('both apps consume the original files and one shared railway domain',()=>{
   assert.ok(context.RailData.trains.length>1800);
   assert.ok(sharedFiles().includes('js/shared/nimbi_rail_domain.js'));
   assert.ok(sharedFiles().includes('data/nimbi_global_schedule_revision.js'));
+  assert.ok(ticketExcludedFiles.every(file=>!sharedFiles().includes(file)));
+  assert.ok(sharedFiles().length<30);
+  assert.ok(sharedFiles().reduce((bytes,file)=>bytes+fs.statSync(path.join(sourceRoot,file)).size,0)<3*1024*1024);
   const html=fs.readFileSync(path.join(sourceRoot,'index.html'),'utf8');
   assert.match(html,/src="js\/shared\/nimbi_rail_domain.js/);
   const original=fs.readFileSync(path.join(sourceRoot,'js/nimbi_rail.js'),'utf8');
