@@ -51,7 +51,7 @@ export function boardingState(ticket,snapshot,now=Date.now(),{report=null,offlin
  const progress=cancelled||!hasTime?0:arrived?100:now<departure?0:now>=arrival?100:position&&routeNodes.length>1?(position.index+position.fraction)/(routeNodes.length-1)*100:0;
  const current=position?routeNodes[position.index]:null,next=cancelled?null:stops.find(n=>(n.arrTime??n.depTime)>now&&n!==origin);
  const positionVerified=!!fresh&&typeof fresh.positionText==='string'&&!!fresh.positionText.trim();
- const location=positionVerified?fresh.positionText:!current?'위치 확인 중':position.index===position.nextIndex?`${current.s} ${current.stop?'정차':'통과'} 예상`:`${current.s} → ${routeNodes[position.nextIndex].s}`;
+ const location=positionVerified?fresh.positionText:!current?'위치 확인 중':position.index===position.nextIndex?`${current.s} ${current.stop?'정차':'통과'}`:`${current.s} → ${routeNodes[position.nextIndex].s}`;
  const confidence=verified?(stale?'최근 확인 정보 · 갱신 필요':'실시간 확인'):snapshot?'운행 정보':'운행 정보 확인 불가';
  return {ticket,stage,phase,departure,arrival,plannedDeparture:saved.departure,plannedArrival:saved.arrival,departureDelay,arrivalDelay,delay,delayConfirmed:!!verified,hasTime,untilDeparture,untilArrival,routeNodes,stops,next,position,progress:Math.min(100,Math.max(0,progress)),location,positionVerified,platform:origin?.platform??null,confidence,offline,stale,arrived,cancelled,updatedAt:verified?.updatedAt??null,calculatedAt:now,error:snapshot?.error||'',verified:!!fresh};
 }

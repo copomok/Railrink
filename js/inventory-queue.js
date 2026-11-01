@@ -8,7 +8,15 @@ export function observeInventory(elements,compute,onError){
  return ()=>{disposed=true;clearTimeout(handle);queue.length=0;observer?.disconnect();};
 }
 export function inventoryLabel(state,count=1){
- if(!state.eligible)return '판매 전';if(state.available<count)return '매진';
+ return inventoryPresentation(state,count).label;
+}
+export function inventoryPresentation(state,count=1,{standing=false,standingAvailable=false}={}){
+ if(!state?.eligible)return {label:'판매 전',tone:'soldout',soldOut:true};
+ if(state.available<count){
+  if(standingAvailable)return {label:'입석',tone:'standing',soldOut:false};
+  return {label:'매진',tone:'soldout',soldOut:true};
+ }
+ if(standing)return {label:'입석',tone:'standing',soldOut:false};
  const rate=state.booked/Math.max(1,state.capacity);
- return rate<.55?'여유':rate<.8?'보통':'혼잡';
+ return rate<.55?{label:'여유',tone:'relaxed',soldOut:false}:rate<.8?{label:'일반',tone:'normal',soldOut:false}:{label:'혼잡',tone:'crowded',soldOut:false};
 }

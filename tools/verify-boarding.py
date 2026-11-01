@@ -32,11 +32,8 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    page.locator('#ticket-boarding').click();page.wait_for_url('**/#boarding');page.wait_for_selector('.boarding-assistant');assert page.locator('.boarding-main').inner_text().find(booked['trainNo'])>=0
    assert booked['id'] not in page.url;assert '시간표 기준' not in page.locator('body').inner_text();assert '가상' not in page.locator('body').inner_text();assert '순방향' not in page.locator('body').inner_text() and '역방향' not in page.locator('body').inner_text();assert page.locator('[data-nav=tickets]').get_attribute('aria-current')=='page'
    page.screenshot(path=str(out/'02-before.png'),full_page=True)
-   for stage in ['ON_BOARD','AFTER_ARRIVAL']:
-    page.locator('[data-boarding-stage='+stage+']').click();assert page.locator('.boarding-preview').is_visible();assert saved()==original
-    page.screenshot(path=str(out/('03-preview-'+stage+'.png')),full_page=True)
-   page.locator('[data-boarding-stage=BEFORE_BOARDING]').click();page.locator('[data-boarding-stage=BEFORE_BOARDING]').focus();page.keyboard.press('ArrowRight');assert page.locator('[data-boarding-stage=ON_BOARD]').get_attribute('aria-selected')=='true'
-   page.locator('[data-boarding-stage=auto]').click()
+   assert page.locator('[data-boarding-stage]').count()==0;assert page.locator('[data-boarding-leg]').count()==0;assert page.locator('.boarding-preview').count()==0
+   assert page.locator('.boarding-tabs [aria-current=step]').inner_text().strip().endswith('탑승 전');assert saved()==original
    with page.expect_download() as download:page.locator('[data-boarding-action=calendar]').click()
    data=Path(download.value.path()).read_text();assert 'BEGIN:VCALENDAR' in data and booked['id'] not in data
    assistant_station_count=page.locator('.boarding-stops li').count();page.locator('[data-boarding-action=operation]').first.click();page.wait_for_selector('#ops-status');stopping_station_count=page.locator('.brd-stop.ride').count();assert assistant_station_count>=stopping_station_count;page.locator('#close-dialog').click()
@@ -49,7 +46,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    # Minute update, focus preservation and automatic current stage.
    set_time(instant(booked['departure'])-datetime.timedelta(minutes=5));assert '5분' in page.locator('.boarding-countdown').inner_text()
    alert_count=page.evaluate("JSON.parse(localStorage.getItem('raillink.boarding.alerts')||'[]').length");assert alert_count>0;page.locator('[data-boarding-action=refresh]').focus();page.clock.fast_forward(61000);assert page.evaluate("JSON.parse(localStorage.getItem('raillink.boarding.alerts')||'[]').length")==alert_count;assert page.locator('[data-boarding-action=refresh]').evaluate('el=>document.activeElement===el')
-   set_time(instant(booked['departure'])+datetime.timedelta(minutes=3));assert page.locator('[data-boarding-stage=ON_BOARD]').get_attribute('aria-selected')=='true';assert page.locator('.boarding-next').is_visible();assert 0<=float(page.locator('[role=progressbar]').get_attribute('aria-valuenow'))<=100;assert page.locator('.boarding-train-position').count()==1
+   set_time(instant(booked['departure'])+datetime.timedelta(minutes=3));assert page.locator('.boarding-tabs [aria-current=step]').inner_text().strip().endswith('탑승 중');assert page.locator('.boarding-next').is_visible();assert 0<=float(page.locator('[role=progressbar]').get_attribute('aria-valuenow'))<=100;assert page.locator('.boarding-train-position').count()==1
    page.screenshot(path=str(out/'04-during.png'),full_page=True)
    page.locator('[data-boarding-action=ticket]').first.click();assert '다음 정차역' in page.locator('#ticket-boarding-place').inner_text();page.screenshot(path=str(out/'05-ticket-next-stop.png'));page.locator('#close-dialog').click()
    # Stress wrapping without changing any persisted ticket or service data.
@@ -60,8 +57,8 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
     page.set_viewport_size({'width':width,'height':1040});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
     assert page.locator('.boarding-actions').bounding_box()['width']<=width
     if width==320:assert page.locator('.boarding-info-grid b').first.evaluate("el=>getComputedStyle(el).whiteSpace==='nowrap'")
-   page.locator('.boarding-main').evaluate('(el,html)=>el.innerHTML=html',original_markup);page.set_viewport_size({'width':480,'height':1040});page.locator('[data-boarding-action=alerts]').scroll_into_view_if_needed();assert page.locator('[data-boarding-action=alerts]').bounding_box()['y']+page.locator('[data-boarding-action=alerts]').bounding_box()['height']<=page.locator('.navigation').bounding_box()['y'] if page.viewport_size['width']<1024 else True;page.set_viewport_size({'width':480,'height':1040});page.evaluate("document.documentElement.dataset.theme='dark'");assert page.locator('.boarding-tabs [aria-selected=true]').evaluate("el=>getComputedStyle(el).color==='rgb(255, 255, 255)'");page.clock.run_for(100);page.screenshot(path=str(out/'06-dark.png'),full_page=True);page.evaluate("document.documentElement.dataset.theme='light'")
-   set_time(instant(booked['arrival'])+datetime.timedelta(minutes=1));assert page.locator('[data-boarding-stage=AFTER_ARRIVAL]').get_attribute('aria-selected')=='true';assert '도착 확인 중' in page.locator('.boarding-countdown').inner_text();assert saved()==original
+   page.locator('.boarding-main').evaluate('(el,html)=>el.innerHTML=html',original_markup);page.set_viewport_size({'width':480,'height':1040});page.locator('[data-boarding-action=alerts]').scroll_into_view_if_needed();assert page.locator('[data-boarding-action=alerts]').bounding_box()['y']+page.locator('[data-boarding-action=alerts]').bounding_box()['height']<=page.locator('.navigation').bounding_box()['y'] if page.viewport_size['width']<1024 else True;page.set_viewport_size({'width':480,'height':1040});page.evaluate("document.documentElement.dataset.theme='dark'");assert page.locator('.boarding-tabs [aria-current=step]').evaluate("el=>getComputedStyle(el).color==='rgb(255, 255, 255)'");page.clock.run_for(100);page.screenshot(path=str(out/'06-dark.png'),full_page=True);page.evaluate("document.documentElement.dataset.theme='light'")
+   set_time(instant(booked['arrival'])+datetime.timedelta(minutes=1));assert page.locator('.boarding-tabs [aria-current=step]').inner_text().strip().endswith('도착 후');assert '도착 확인 중' in page.locator('.boarding-countdown').inner_text();assert saved()==original
    page.screenshot(path=str(out/'07-after.png'),full_page=True)
    page.locator('[data-boarding-action=receipt]').click();page.get_by_role('heading',name='영수증',exact=True).wait_for();page.locator('#close-dialog').click()
    # Reload offline using the existing PWA cache, retaining the local ticket and schedule.
@@ -71,12 +68,12 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    # A real two-leg booking chooses the corresponding ticket, then advances at transfer.
    context.close();context=browser.new_context(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR');page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.clock.install(time=datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc))
    load();search(True);tickets=saved();assert len(tickets)==2
-   page.locator('[data-nav=tickets]').click();page.locator('.ticket-open').click();page.locator('[data-ticket-segment="1"]').click();assert tickets[1]['trainNo'] in page.locator('.ticket-train-heading h3').inner_text();page.locator('#ticket-boarding').click();assert tickets[1]['trainNo'] in page.locator('.boarding-main h2').inner_text()
-   page.locator('[data-boarding-leg=auto]').click();assert page.locator('.boarding-transfer').is_visible();page.screenshot(path=str(out/'08-transfer.png'),full_page=True)
+   page.locator('[data-nav=tickets]').click();page.locator('.ticket-open').click();page.locator('[data-ticket-segment="1"]').click();assert tickets[1]['trainNo'] in page.locator('.ticket-train-heading h3').inner_text();page.locator('#ticket-boarding').click();assert tickets[0]['trainNo'] in page.locator('.boarding-main h2').inner_text()
+   assert page.locator('[data-boarding-leg]').count()==0;assert page.locator('.boarding-transfer').is_visible();page.screenshot(path=str(out/'08-transfer.png'),full_page=True)
    set_time(instant(tickets[0]['arrival'])+datetime.timedelta(seconds=30));assert tickets[1]['trainNo'] in page.locator('.boarding-main h2').inner_text()
    # Return to before departure, cancel through the original grouped refund and reject saved ID.
    set_time(datetime.datetime(2026,10,29,3,tzinfo=datetime.timezone.utc));page.locator('[data-nav=tickets]').click();page.locator('[data-action=cancel]').click();page.locator('#confirm-cancel').click();page.wait_for_selector('.ticket-group',state='detached');page.evaluate("location.hash='boarding'");page.wait_for_selector('.empty');assert page.locator('.boarding-main').count()==0
    assert not errors,errors
-   print('PASS: direct ticket screen, exact leg identity, booked-route stops and pass stations, current-position marker, home/ticket assistant entry, reload, preview/read-only state, minute focus, KST stage boundaries, progress, receipt/QR/calendar, no-wrap responsive 320–1280, dark mode, offline cache, missing/cancelled ownership, real transfer auto-advance; zero browser errors.')
+   print('PASS: direct ticket screen, actual-stage-only assistant, booked-route stops and pass stations, next-stop emphasis and current-position marker, home/ticket assistant entry, reload, minute focus, KST stage boundaries, progress, receipt/QR/calendar, no-wrap responsive 320–1280, dark mode, offline cache, missing/cancelled ownership, unified transfer auto-advance; zero browser errors.')
    browser.close()
  finally:server.terminate();server.wait()

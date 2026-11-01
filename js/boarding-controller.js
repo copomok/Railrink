@@ -1,14 +1,14 @@
-import {createBoardingService,activeLegIndex,STAGES,ticketQuery,safeJourneyText,calendarFile} from './boarding.js';
+import {createBoardingService,activeLegIndex,ticketQuery,safeJourneyText,calendarFile} from './boarding.js';
 import {boardingView} from './boarding-view.js';
 
 export function createBoardingController({model,main,esc,icon,go,notify,ticket,operation,receipt,rebook,alerts,history}){
  const service=createBoardingService(model),key='raillink.boarding.selected';
- let selected='',preview=null,manualLeg=null,origin='tickets';
+ let selected='',origin='tickets';
  try{selected=sessionStorage.getItem(key)||'';}catch{}
  if(!selected)try{selected=localStorage.getItem(key)||'';}catch{}
  const resolve=()=>{
   const legs=service.journey(selected,Date.now(),!navigator.onLine);
-  const index=manualLeg===null?activeLegIndex(legs):Math.min(manualLeg,Math.max(0,legs.length-1));
+  const index=activeLegIndex(legs);
   return {legs,index,state:legs[index]};
  };
  function render(){
@@ -16,30 +16,21 @@ export function createBoardingController({model,main,esc,icon,go,notify,ticket,o
   if(!legs.length){main.innerHTML='<div class="empty"><h2>이용 가능한 승차권을 확인해 주세요</h2><p>취소·변경·삭제된 예약은 탑승 안내를 열 수 없습니다.</p><a href="#tickets">내 승차권으로</a></div>';return;}
   // Keep focus and scroll while updating the minute-based display.
   const focused=main.contains(document.activeElement)?document.activeElement:null;
-  const selector=focused?.dataset.boardingStage?`[data-boarding-stage="${focused.dataset.boardingStage}"]`:focused?.dataset.boardingAction?`[data-boarding-action="${focused.dataset.boardingAction}"]`:focused?.dataset.boardingLeg?`[data-boarding-leg="${focused.dataset.boardingLeg}"]`:focused?.id==="boarding-panel"?'#boarding-panel':null;
-  main.innerHTML=boardingView({legs,index,preview,manualLeg,model,esc,icon,seatDescription:service.seatDescription(legs[index].ticket),shareSupported:legs[index].hasTime&&(!!navigator.share||!!navigator.clipboard?.writeText)});
+  const selector=focused?.dataset.boardingAction?`[data-boarding-action="${focused.dataset.boardingAction}"]`:focused?.id==="boarding-panel"?'#boarding-panel':null;
+  main.innerHTML=boardingView({legs,index,model,esc,icon,seatDescription:service.seatDescription(legs[index].ticket),shareSupported:legs[index].hasTime&&(!!navigator.share||!!navigator.clipboard?.writeText)});
   if(selector)main.querySelector(selector)?.focus({preventScroll:true});
  }
  function open(id){
   if(!service.journey(id).length){notify('이 브라우저에 저장된 유효한 승차권을 선택하세요.');return;}
-  selected=id;preview=null;
-  const legs=service.journey(id);const chosen=legs.findIndex(l=>l.ticket.id===id),active=activeLegIndex(legs);
-  manualLeg=chosen===active?null:chosen;
+  selected=id;
   origin=['home','search','tickets'].includes(location.hash.slice(1))?location.hash.slice(1):'tickets';
   try{sessionStorage.setItem(key,id);}catch{}
   try{localStorage.setItem(key,id);}catch{}
   go('boarding');
  }
- main.addEventListener('keydown',e=>{
-  const tab=e.target.closest('[data-boarding-stage]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
-  e.preventDefault();const current=STAGES.indexOf(tab.dataset.boardingStage),next=e.key==='Home'?0:e.key==='End'?2:(current+(e.key==='ArrowRight'?1:2))%3;
-  preview=STAGES[next];render();main.querySelector(`[data-boarding-stage="${preview}"]`)?.focus();
- });
  main.addEventListener('click',async e=>{
-  const control=e.target.closest('[data-boarding-stage],[data-boarding-leg],[data-boarding-action]');if(!control||control.disabled)return;
+  const control=e.target.closest('[data-boarding-action]');if(!control||control.disabled)return;
   try{
-   if(control.dataset.boardingStage){preview=control.dataset.boardingStage==='auto'?null:control.dataset.boardingStage;render();return;}
-   if(control.dataset.boardingLeg){manualLeg=control.dataset.boardingLeg==='auto'?null:+control.dataset.boardingLeg;preview=null;render();return;}
    const {state}=resolve();if(!state){render();return;}
    const t=state.ticket,train=model.byKey.get(t.key);
    switch(control.dataset.boardingAction){
