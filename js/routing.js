@@ -8,33 +8,46 @@ export function findTransfers(model,q,now) {
  for(const train of model.trains){
   if(q.grade&&q.grade!=='all'&&q.grade!==train.grade)continue;
   if(!matchesFamily(train.grade,q.family))continue;
-  if(q.cls!=='standing'&&!model.data.classCars(model.data.cars(model.data.formation(train.grade,train.no)),q.cls).length)continue;
-  const stops=model.data.stops(train),origin=stops.findIndex(s=>s.s===q.from&&s.dep),dest=stops.findIndex(s=>s.s===q.to&&s.arr);
+  if(!model.supportsClass(train,q.cls))continue;
+  const {stops,timeline}=model.timetable(train),origin=stops.findIndex(s=>s.s===q.from&&s.dep),dest=stops.findIndex(s=>s.s===q.to&&s.arr);
+  if(origin<0&&dest<0)continue;
+  const segment=(fromIndex,toIndex)=>({from:stops[fromIndex].s,to:stops[toIndex].s,dep:stops[fromIndex].dep,arr:stops[toIndex].arr,fi:fromIndex,ti:toIndex,stops,departureMinutes:timeline[fromIndex].departure,arrivalMinutes:timeline[toIndex].arrival,duration:timeline[toIndex].arrival-timeline[fromIndex].departure});
   if(origin>=0){
-   for(const stop of stops.slice(origin+1)){
+   for(let i=origin+1;i<stops.length;i++){const stop=stops[i];
     if(!stop.arr||stop.s===q.to||stop.s===q.from)continue;
-    const seg=model.segment(train,q.from,stop.s);if(!seg)continue;
+    const seg=segment(origin,i);
     const dep=+model.departure(seg,q.date),depMinute=minuteOf(seg.dep);
     const outside=after!==null&&before!==null?(after<=before?(depMinute<after||depMinute>before):(depMinute<after&&depMinute>before)):after!==null?depMinute<after:before!==null&&depMinute>before;
     if(dep<=+now||outside)continue;
     first.push({train,seg,dep,arr:dep+seg.duration*60000});
    }
   }
-  if(dest>=0)for(const stop of stops.slice(0,dest)){
+  if(dest>=0)for(let i=0;i<dest;i++){const stop=stops[i];
    if(!stop.dep||stop.s===q.from)continue;
-   const seg=model.segment(train,stop.s,q.to);if(!seg)continue;
-   const entries=byStation.get(stop.s)||[];entries.push({train,seg});byStation.set(stop.s,entries);
+   const seg=segment(i,dest);
+   const entries=byStation.get(stop.s)||[];entries.push({train,seg,minute:minuteOf(seg.dep)});byStation.set(stop.s,entries);
   }
  }
- const paths=[],seen=new Set();
- for(const a of first)for(const b of byStation.get(a.seg.to)||[]){
+ first.sort((a,b)=>a.dep-b.dep);for(const entries of byStation.values())entries.sort((a,b)=>a.minute-b.minute);
+ const paths=[],seen=new Set(),lowerBound=(items,value)=>{let low=0,high=items.length;while(low<high){const mid=(low+high)>>1;if(items[mid].minute<value)low=mid+1;else high=mid;}return low;};
+ const compare=(a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='departure'?a.departure-b.departure||a.duration-b.duration:a.duration-b.duration;
+ const addPath=path=>{let low=0,high=paths.length;while(low<high){const mid=(low+high)>>1;if(compare(paths[mid],path)<=0)low=mid+1;else high=mid;}paths.splice(low,0,path);if(paths.length>limit)paths.pop();};
+ for(const a of first){
+  if(q.sort==='departure'&&paths.length===limit&&a.dep>paths.at(-1).departure)break;
+  const entries=byStation.get(a.seg.to)||[],startOfDay=Date.parse(dateAt(a.arr)+'T00:00:00+09:00'),arrivalMinute=(a.arr-startOfDay)/60000,low=arrivalMinute+min,high=arrivalMinute+max;
+  for(const offset of [0,1440]){
+   const rangeStart=Math.max(0,low-offset),rangeEnd=Math.min(1439,high-offset);if(rangeStart>rangeEnd)continue;
+   for(let entryIndex=lowerBound(entries,rangeStart);entryIndex<entries.length&&entries[entryIndex].minute<=rangeEnd;entryIndex++){const b=entries[entryIndex];
   if(a.train===b.train)continue;
-  const startOfDay=Date.parse(dateAt(a.arr)+'T00:00:00+09:00');let dep=startOfDay+minuteOf(b.seg.dep)*60000;
-  if(dep<a.arr+min*60000)dep+=86400000;
+  const dep=startOfDay+(b.minute+offset)*60000;
   const wait=(dep-a.arr)/60000;if(wait<min||wait>max||dateAt(dep)>dateAt(+now+30*86400000))continue;
-  const legs=[{...a,q:{...q,to:a.seg.to,date:dateAt(a.dep)}},{...b,dep,arr:dep+b.seg.duration*60000,q:{...q,from:a.seg.to,date:dateAt(dep)}}].map(l=>({...l,key:model.key(l.train),fare:model.data.fare(l.train,l.q.from,l.q.to,l.q.cls)}));
-  const key=legs.map(l=>l.key+l.q.date+l.q.from+l.q.to).join('|');if(seen.has(key))continue;seen.add(key);
-  paths.push({key,legs,via:a.seg.to,wait,duration:(legs[1].arr-a.dep)/60000,fare:legs.reduce((n,l)=>n+l.fare,0),departure:a.dep,arrival:legs[1].arr});
+  const firstDate=dateAt(a.dep),secondDate=dateAt(dep),firstKey=model.key(a.train),secondKey=model.key(b.train),pathKey=`${firstKey}${firstDate}${q.from}${a.seg.to}|${secondKey}${secondDate}${a.seg.to}${q.to}`;if(seen.has(pathKey))continue;seen.add(pathKey);
+  const arrival=dep+b.seg.duration*60000,duration=(arrival-a.dep)/60000,rank={departure:a.dep,duration,fare:0};
+  if(q.sort!=='fare'&&paths.length===limit&&compare(rank,paths.at(-1))>=0)continue;
+  const legs=[{...a,key:firstKey,q:{...q,to:a.seg.to,date:firstDate},fare:model.quoteFare(a.train,q.from,a.seg.to,q.cls)},{...b,key:secondKey,dep,arr:arrival,q:{...q,from:a.seg.to,date:secondDate},fare:model.quoteFare(b.train,a.seg.to,q.to,q.cls)}];
+  addPath({key:pathKey,legs,via:a.seg.to,wait,duration,fare:legs[0].fare+legs[1].fare,departure:a.dep,arrival});
+   }
+  }
  }
- return paths.sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='departure'?a.departure-b.departure||a.duration-b.duration:a.duration-b.duration).slice(0,limit);
+ return paths;
 }

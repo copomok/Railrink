@@ -14,6 +14,11 @@ test('transfer search crosses midnight with valid wait, both arrival times, and 
  assert.equal(model.transfers({...q,minWait:6,maxWait:60}).length,0);
  assert.throws(()=>model.transfers({...q,minWait:60,maxWait:3}),/환승 대기/);
 });
+test('direct and transfer search reuse each train timetable instead of rebuilding every segment',()=>{
+ let stopReads=0;const counted=createModel({...data,stops:t=>{stopReads++;return t.stops.filter(s=>!s.pass);}}, {getItem:()=>null},()=>new Date('2026-10-29T03:00:00Z'));
+ stopReads=0;counted.search(q);counted.transfers(q);counted.transfers(q);
+ assert.equal(stopReads,0);
+});
 test('cumulative railway time handles arrival-before-midnight/departure-after-midnight dwell',()=>{
  const [a,b]=serviceTimeline([{s:'A',arr:'23:59',dep:'0:02'},{s:'B',arr:'0:15',dep:'0:16'}]);assert.equal(a.arrival,1439);assert.equal(a.departure,1442);assert.equal(b.arrival,1455);
  assert.notEqual(stationId('장흥(교외선)'),stationId('장흥(경전선)'));

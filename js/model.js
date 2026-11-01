@@ -9,11 +9,24 @@ export const addDays = (date, days) => new Date(Date.parse(date+'T12:00:00+09:00
 const check = (ok, message) => {if(!ok) throw new Error(message);};
 export function createModel(data, storage, now = () => new Date()) {
   const trains = data.trains;
-  const stations = [...new Set(trains.flatMap(t=>data.stops(t).map(s=>s.s)))].sort((a,b)=>a.localeCompare(b,'ko'));
+  const stopCache=new WeakMap(),timetableCache=new WeakMap(),classCache=new WeakMap();
+  const stopsFor=train=>{let stops=stopCache.get(train);if(!stops){stops=data.stops(train);stopCache.set(train,stops);}return stops;};
+  function timetable(train){
+    let cached=timetableCache.get(train);if(cached)return cached;
+    const stops=stopsFor(train),timeline=serviceTimeline(stops);cached={stops,timeline};timetableCache.set(train,cached);return cached;
+  }
+  const stations = [...new Set(trains.flatMap(t=>stopsFor(t).map(s=>s.s)))].sort((a,b)=>a.localeCompare(b,'ko'));
   const stationRecords=stations.map(name=>{const meta=data.stationDB?.[name]||data.stationDB?.[name+'역'];return {name,id:meta?.sourceId?'nimby:source:'+meta.sourceId:stationId(name),sourceId:meta?.sourceId||'',region:/\(([^)]+)\)/.exec(name)?.[1]||'',coordinate:data.coordinate?.(name)||null};});
   const stationIdentity=name=>stationRecords.find(s=>s.name===name)?.id||stationId(name);
-  const key = t => JSON.stringify([t.no,t.line,t.stops[0]?.s,t.stops[0]?.dep,t.dest]);
+  const keyCache=new WeakMap(),fareCache=new Map(),key=t=>{let value=keyCache.get(t);if(!value){value=JSON.stringify([t.no,t.line,t.stops[0]?.s,t.stops[0]?.dep,t.dest]);keyCache.set(t,value);}return value;};
+  const quoteFare=(train,from,to,cls)=>{const cacheKey=JSON.stringify([key(train),from,to,cls]);if(!fareCache.has(cacheKey))fareCache.set(cacheKey,data.fare(train,from,to,cls));return fareCache.get(cacheKey);};
   const byKey = new Map(trains.map(t=>[key(t),t]));
+  function supportsClass(train,cls){
+    if(cls==='standing')return true;
+    let cached=classCache.get(train);if(!cached){cached=new Map();classCache.set(train,cached);}
+    if(!cached.has(cls))cached.set(cls,!!data.classCars(data.cars(data.formation(train.grade,train.no)),cls).length);
+    return cached.get(cls);
+  }
   const blank = () => ({version:1,tickets:[],watches:[],routes:[],notifications:true});
   function read() {
     const raw = storage.getItem(STORE_KEY);
@@ -32,7 +45,7 @@ export function createModel(data, storage, now = () => new Date()) {
     data.invalidate();
   }
   function segment(train, from, to) {
-    const stops=data.stops(train),timeline=serviceTimeline(stops);
+    const {stops,timeline}=timetable(train);
     for(let i=0;i<stops.length;i++) if(stops[i].s===from && stops[i].dep) {
       for(let j=i+1;j<stops.length;j++) if(stops[j].s===to && stops[j].arr) return {from,to,dep:stops[i].dep,arr:stops[j].arr,fi:i,ti:j,stops,departureMinutes:timeline[i].departure,arrivalMinutes:timeline[j].arrival,duration:timeline[j].arrival-timeline[i].departure};
     }
@@ -50,18 +63,18 @@ export function createModel(data, storage, now = () => new Date()) {
   function departure(seg,date) {return new Date(`${date}T${seg.dep.padStart(5,'0')}:00+09:00`);}
   function search(q) {
     validateQuery(q);
+    const currentTime=+now();
     return trains.flatMap(t=> {
-      const seg=segment(t,q.from,q.to);
       if(!matchesFamily(t.grade,q.family))return [];
-      if(!seg || (q.grade&&q.grade!=='all'&&q.grade!==t.grade))return [];
-      const cars=data.classCars(data.cars(data.formation(t.grade,t.no)),q.cls);
-      if(!cars.length && q.cls!=='standing') return [];
-      const departed=departure(seg,q.date)<=now();
+      if(q.grade&&q.grade!=='all'&&q.grade!==t.grade)return [];
+      if(!supportsClass(t,q.cls))return [];
+      const seg=segment(t,q.from,q.to);if(!seg)return [];
+      const departureTime=+departure(seg,q.date),departed=departureTime<=currentTime;
       if(departed)return [];
       const depMinute=minuteOf(seg.dep),after=minuteOf(q.after),before=minuteOf(q.before);
       if(after!==null&&before!==null?(after<=before?(depMinute<after||depMinute>before):(depMinute<after&&depMinute>before)):after!==null?depMinute<after:before!==null&&depMinute>before)return [];
-      return [{key:key(t),train:t,seg,departed,fare:data.fare(t,q.from,q.to,q.cls),duration:seg.duration}];
-    }).sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='duration'?a.duration-b.duration:departure(a.seg,q.date)-departure(b.seg,q.date));
+      return [{key:key(t),train:t,seg,departed,departure:departureTime,fare:quoteFare(t,q.from,q.to,q.cls),duration:seg.duration}];
+    }).sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='duration'?a.duration-b.duration:a.departure-b.departure);
   }
   function serviceDate(t,q) {
     const seg=segment(t,q.from,q.to);
@@ -193,7 +206,7 @@ export function createModel(data, storage, now = () => new Date()) {
     if(!state.watches.some(w=>w.key===trainKey&&JSON.stringify(w.q)===JSON.stringify(q))) state.watches.push({id:crypto.randomUUID(),key:trainKey,q:{...q}});
     return save(state);
   }
-  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,flexible,watch,departure,validateQuery};
+  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,timetable,supportsClass,quoteFare,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,flexible,watch,departure,validateQuery};
   model.transfers=q=>{validateQuery(q);return findTransfers(model,q,now());};
   return model;
 }

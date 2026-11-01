@@ -1,4 +1,4 @@
-import subprocess,tempfile,os,datetime,json
+import subprocess,tempfile,os,datetime,json,time
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1];source=Path(os.environ.get('RAIL_SOURCE',str(root.parent/'NIMBYRAILTABLE')))
@@ -14,7 +14,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
    page.screenshot(path=str(out/'01-home.png'),full_page=True)
    for field,station in [('from','서울'),('to','부산')]:
     page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
-   page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click();page.wait_for_selector('[data-action=book]:enabled');assert page.locator('[data-query-open=route]').count()==1
+   page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();search_started=time.perf_counter();page.locator('#search-form [type=submit]').click();page.wait_for_selector('[data-action=book]:enabled');combined_elapsed=time.perf_counter()-search_started;assert combined_elapsed<3;assert page.locator('[data-query-open=route]').count()==1
    assert page.locator('.direct-group').count()==1 and page.locator('.transfer-group').count()==1;assert page.locator('.direct-group').bounding_box()['y']<page.locator('.transfer-group').bounding_box()['y']
    page.wait_for_function("document.querySelector('.train-card')?.dataset.inventoryTone");assert page.locator('.train-card .inventory-status').first.inner_text() in ['여유','일반','혼잡','입석','매진','판매 전']
    page.evaluate("document.documentElement.dataset.theme='dark'");boxes=page.locator('.train-card').evaluate_all("els=>els.map(e=>{const r=e.getBoundingClientRect();return [r.top,r.bottom]})");assert all(boxes[i][1]<=boxes[i+1][0] for i in range(len(boxes)-1));page.evaluate("document.documentElement.dataset.theme='light'")
@@ -37,7 +37,9 @@ with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
    page.evaluate("location.hash='tickets'");page.wait_for_selector('.ticket-group');page.locator('[data-action=cancel]').first.click();page.locator('#confirm-cancel').click();page.locator('[data-ticket-filter=history]').click();assert '환불 완료' in page.locator('#ticket-list').inner_text()
    page.evaluate("document.documentElement.dataset.theme='dark'");page.screenshot(path=str(out/'05-ticket-history-dark.png'));page.locator('.ticket-open').first.click();assert page.locator('.mobile-ticket').evaluate("el=>el.classList.contains('ticket-used')&&getComputedStyle(el.querySelector('header')).backgroundColor==='rgb(105, 113, 125)'");assert page.locator('.ticket-paper .ticket-route b').first.evaluate("el=>getComputedStyle(el).color==='rgb(23, 32, 42)'");page.screenshot(path=str(out/'06-ticket-dark.png'));page.locator('#close-dialog').click();page.evaluate("document.documentElement.dataset.theme='light'")
    # Transfer mode is visible and renders routes in place of direct results.
-   page.locator('[data-nav=search]').click();page.locator('#search-form [type=submit]').click();query_choice('route','route','transfer');page.wait_for_selector('.transfer-card');assert page.locator('.train-card').count()==0
+   page.locator('[data-nav=search]').click();page.locator('#search-form [type=submit]').click();query_choice('route','route','direct');page.wait_for_selector('.train-card');assert page.locator('.result-route-group').count()==0
+   transfer_started=time.perf_counter();query_choice('route','route','transfer');page.wait_for_selector('.transfer-card');transfer_elapsed=time.perf_counter()-transfer_started;assert transfer_elapsed<3;assert page.locator('.train-card').count()==0;assert page.locator('.result-route-group').count()==0
+   duration_started=time.perf_counter();page.locator('#sort').select_option('duration');duration_elapsed=time.perf_counter()-duration_started;fare_started=time.perf_counter();page.locator('#sort').select_option('fare');fare_elapsed=time.perf_counter()-fare_started;assert duration_elapsed<3 and fare_elapsed<3
    page.locator('[data-query-open=conditions]').first.click();page.locator('[name=minWait]').fill('10');page.locator('[name=maxWait]').fill('60');page.locator('#query-options-form [type=submit]').click();page.wait_for_selector('.transfer-card');page.screenshot(path=str(out/'07-transfer-results.png'),full_page=True)
    page.locator('[data-action=transfer-route]').first.click();page.wait_for_selector('.route-detail-summary');assert page.locator('.route-leg').count()==2;page.screenshot(path=str(out/'08-transfer-detail.png'),full_page=True);page.locator('[data-action=transfer-detail]').first.click();page.wait_for_selector('.facility-list');page.locator('#close-dialog').click();page.locator('[data-action=book-transfer]').click();page.locator('#quick-book').click();confirm();page.wait_for_url('**/#complete');assert page.evaluate("JSON.parse(localStorage.getItem('raillink.v1')).tickets.filter(t=>t.status==='active').length")==2
    # Grade card -> service card -> the existing booking results, separated by direction.
@@ -58,6 +60,6 @@ with tempfile.TemporaryDirectory(prefix='raillink-ticketing-') as directory:
     page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
    page.locator('#search-form [type=submit]').click();page.get_by_role('heading',name='오프라인에서는 새 열차를 조회할 수 없습니다').wait_for()
    assert not errors,errors
-   print('PASS: header/card spacing, four families, separated facilities/operations, standing class, anonymous virtual payment, stored-time conflict block, tickets/history/receipt, transfer mode/filter/details/booking, PWA manifest/icons/install/offline, light/dark and responsive widths.')
+   print(f'PASS: combined {combined_elapsed:.3f}s, transfer-only {transfer_elapsed:.3f}s, duration sort {duration_elapsed:.3f}s, fare sort {fare_elapsed:.3f}s; separator-only combined groups, no group card for individual modes and zero browser errors.')
    browser.close()
  finally:server.terminate();server.wait()
