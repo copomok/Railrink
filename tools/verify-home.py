@@ -11,7 +11,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
  try:
   with sync_playwright() as p:
    b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
-   page=b.new_page(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR')
+   context=b.new_context(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR',geolocation={'latitude':37.555033,'longitude':126.970895},permissions=['geolocation']);page=context.new_page()
    errors=[];requests=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url))
    page.goto('http://127.0.0.1:4183/Railrink/');page.wait_for_selector('#open-date')
    assert page.locator('.navigation a').count()==5
@@ -19,7 +19,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    page.locator('#tab-booking').focus();page.keyboard.press('ArrowRight');assert page.locator('#tab-pass').get_attribute('aria-selected')=='true'
    page.locator('#tab-tour').click();assert page.locator('.home-tab-body [data-action=tour-grade]').count()>0
    page.locator('#tab-booking').click()
-   page.locator('[data-station=from]').click();field=page.locator('#station-query');field.fill('ㅅㅇ');assert page.locator('[data-st="서울"]').count()==1
+   page.locator('[data-station=from]').click();page.wait_for_selector('[data-nearby=true]');assert page.locator('[data-nearby=true]').count()==2;assert page.locator('[data-nearby=true]').first.get_attribute('data-st')=='서울';page.screenshot(path=str(out/'04-nearby-stations.png'));field=page.locator('#station-query');field.fill('ㅅㅇ');assert page.locator('[data-nearby=true]').count()==0;assert page.locator('[data-st="서울"]').count()==1
    field.fill('서울');page.keyboard.press('ArrowDown');page.keyboard.press('Enter');assert not page.locator('dialog').is_visible()
    page.locator('[data-station=to]').click();field=page.locator('#station-query');field.evaluate("el=>el.dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true}))");field.fill('부산');assert field.evaluate('el=>document.activeElement===el')
    field.evaluate("el=>el.dispatchEvent(new CompositionEvent('compositionend',{bubbles:true}))");page.locator('[data-st="부산"]').click()
@@ -44,6 +44,6 @@ with tempfile.TemporaryDirectory(prefix='raillink-home-') as directory:
    assert not errors,errors
    assert any('/NIMBYRAILTABLE/data/nimbi_rail_data.js' in r for r in requests)
    assert not any('/Railrink/data/' in r for r in requests)
-   print('PASS: home tabs, keyboard/IME station search, time filter, focus-preserving minute refresh, full booking, stored schedule, notices, in-progress ticket, 320/390/600/1280 widths, canonical data, zero browser errors.')
+   print('PASS: home tabs, two canonical-coordinate nearby stations, keyboard/IME station search without pinned rows, time filter, focus-preserving minute refresh, full booking, stored schedule, notices, in-progress ticket, 320/390/600/1280 widths, canonical data, zero browser errors.')
    b.close()
  finally:server.terminate();server.wait()

@@ -18,5 +18,5 @@ export function inventoryPresentation(state,count=1,{standing=false,standingAvai
  }
  if(standing)return {label:'입석',tone:'standing',soldOut:false};
  const rate=state.booked/Math.max(1,state.capacity);
- return rate<.55?{label:'여유',tone:'relaxed',soldOut:false}:rate<.8?{label:'일반',tone:'normal',soldOut:false}:{label:'혼잡',tone:'crowded',soldOut:false};
+ return rate<.55?{label:'여유',tone:'relaxed',soldOut:false}:rate<.8?{label:'보통',tone:'normal',soldOut:false}:{label:'혼잡',tone:'crowded',soldOut:false};
 }

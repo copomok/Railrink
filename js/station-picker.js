@@ -1,5 +1,20 @@
 import {matchesStation} from './journey.js';
 
+const radians=value=>value*Math.PI/180;
+export function closestStations(records,position,limit=2){
+ const lat=Number(position?.latitude??position?.lat),lon=Number(position?.longitude??position?.lon);
+ if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180||limit<1)return [];
+ return records.flatMap(record=>{const targetLat=Number(record.coordinate?.lat),targetLon=Number(record.coordinate?.lon);if(!Number.isFinite(targetLat)||!Number.isFinite(targetLon))return [];const dLat=radians(targetLat-lat),dLon=radians(targetLon-lon),a=Math.sin(dLat/2)**2+Math.cos(radians(lat))*Math.cos(radians(targetLat))*Math.sin(dLon/2)**2;return [{name:record.name,distance:6371*2*Math.asin(Math.min(1,Math.sqrt(a)))}];}).sort((a,b)=>a.distance-b.distance||a.name.localeCompare(b.name,'ko')).slice(0,limit);
+}
+let positionPromise;
+function currentPosition(){
+ if(positionPromise)return positionPromise;
+ if(!navigator.geolocation)return Promise.resolve(null);
+ positionPromise=new Promise(resolve=>navigator.geolocation.getCurrentPosition(({coords})=>resolve({latitude:coords.latitude,longitude:coords.longitude}),()=>resolve(null),{enableHighAccuracy:false,maximumAge:300000,timeout:5000}));
+ return positionPromise;
+}
+const distanceLabel=distance=>distance<1?Math.max(1,Math.round(distance*1000))+'m':(distance<10?distance.toFixed(1):Math.round(distance))+'km';
+
 export function openStationPicker({model,current,which,recent,showDialog,dialog,esc,onChoose,notify,fail}){
  const magnifier='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg>';
  showDialog(which==='from'?'출발역 선택':'도착역 선택',`<div class="station-search-field">${magnifier}<input id="station-query" role="combobox" aria-label="역 이름 또는 초성 입력" aria-autocomplete="list" aria-expanded="true" aria-controls="station-options" placeholder="역 이름 또는 초성 입력" autocomplete="off" enterkeyhint="search"><button id="clear-station-query" type="button" aria-label="검색어 지우기" hidden>×</button></div><div id="station-shortcuts" class="station-categories" aria-label="역 목록 분류"></div><button id="favorite-station" type="button" ${current?'':'hidden'}>${esc(current)} 즐겨찾기 전환</button><div id="station-options" class="station-options" role="listbox" aria-label="역 검색 결과"></div><p id="station-count" class="station-count" role="status"></p>`);
@@ -9,7 +24,7 @@ export function openStationPicker({model,current,which,recent,showDialog,dialog,
  const size=()=>{dialog.style.setProperty('--station-viewport-height',(viewport?.height||innerHeight)+'px');dialog.style.setProperty('--station-viewport-top',(viewport?.offsetTop||0)+'px');};
  size();viewport?.addEventListener('resize',size);viewport?.addEventListener('scroll',size);window.addEventListener('resize',size);
  dialog.addEventListener('close',()=>{viewport?.removeEventListener('resize',size);viewport?.removeEventListener('scroll',size);window.removeEventListener('resize',size);dialog.classList.remove('station-dialog');dialog.style.removeProperty('--station-viewport-height');dialog.style.removeProperty('--station-viewport-top');},{once:true});
- let composing=false,selected=-1,list=[],category='major';
+ let composing=false,selected=-1,list=[],category='major',nearby=[];
  const major=['서울','용산','수서','청량리','영등포','행신','광명','수원','천안아산','대전','동대구','부산','광주송정','목포','여수엑스포','강릉'];
  const categories=[['major','주요역'],['all','전체'],['recent','최근'],['favorites','즐겨찾기'],...'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ'].map(c=>Array.isArray(c)?c:[c,c]);
  const choose=st=>{input.blur();dialog.close();onChoose(st);};
@@ -20,13 +35,14 @@ export function openStationPicker({model,current,which,recent,showDialog,dialog,
  const draw=()=>{
   const term=input.value.trim(),favorites=model.read().favoriteStations||[];
   if(term)list=model.stationRecords.filter(s=>matchesStation(s.name,term)||(s.sourceId&&String(s.sourceId).includes(term))).map(s=>s.name);
-  else if(category==='major')list=major.filter(s=>model.stations.includes(s));
+  else if(category==='major')list=[...new Set([...nearby.map(item=>item.name),...major.filter(s=>model.stations.includes(s))])];
   else if(category==='recent')list=[...new Set(recent.flatMap(r=>[r.from,r.to]))].filter(s=>model.stations.includes(s));
   else if(category==='favorites')list=favorites.filter(s=>model.stations.includes(s));
   else list=model.stations.filter(s=>category==='all'||matchesStation(s[0],category));
+  const nearbyMap=!term&&category==='major'?new Map(nearby.map(item=>[item.name,item.distance])):new Map();
   selected=-1;input.removeAttribute('aria-activedescendant');
   $('#clear-station-query').hidden=!term;$('#station-shortcuts').hidden=!!term;$('#favorite-station').hidden=!!term||!current;
-  $('#station-options').innerHTML=list.map((st,i)=>`<button type="button" role="option" tabindex="-1" aria-selected="false" id="station-option-${i}" data-st="${esc(st)}">${esc(st)}${favorites.includes(st)?'<span aria-label="즐겨찾는 역">★</span>':''}</button>`).join('');
+  $('#station-options').innerHTML=list.map((st,i)=>{const distance=nearbyMap.get(st),meta=[distance!=null?`가까운 역 · ${distanceLabel(distance)}`:'',favorites.includes(st)?'★':''].filter(Boolean).join(' · ');return `<button type="button" role="option" tabindex="-1" aria-selected="false" id="station-option-${i}" data-st="${esc(st)}"${distance!=null?' data-nearby="true"':''}>${esc(st)}${meta?`<span class="station-option-meta">${esc(meta)}</span>`:''}</button>`;}).join('');
   $('#station-options').scrollTop=0;
   $('#station-count').textContent=list.length?`${list.length}개 역`:'검색 결과가 없습니다.';
   $('#station-options').querySelectorAll('button').forEach(b=>b.onclick=()=>choose(b.dataset.st));
@@ -42,5 +58,5 @@ export function openStationPicker({model,current,which,recent,showDialog,dialog,
  $('#clear-station-query').onpointerdown=e=>e.preventDefault();
  $('#clear-station-query').onclick=()=>{input.value='';draw();input.focus({preventScroll:true});};
  $('#favorite-station').onclick=async()=>{try{const s=model.read(),favorites=s.favoriteStations||[];s.favoriteStations=favorites.includes(current)?favorites.filter(n=>n!==current):[...favorites,current];await model.save(s);draw();notify(s.favoriteStations.includes(current)?'즐겨찾기에 추가했습니다.':'즐겨찾기에서 삭제했습니다.');}catch(error){fail(error);}};
- draw();if(matchMedia('(pointer:fine)').matches)input.focus({preventScroll:true});
+ draw();currentPosition().then(position=>{if(!position||!dialog.open)return;nearby=closestStations(model.stationRecords,position,2);if(!input.value.trim()&&category==='major')draw();});if(matchMedia('(pointer:fine)').matches)input.focus({preventScroll:true});
 }

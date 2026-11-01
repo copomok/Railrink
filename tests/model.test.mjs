@@ -19,6 +19,7 @@ const candidate=(query=q)=>model.search(query).find(r=>!r.departed&&model.availa
 function draftFor(r,query=q) {return {key:r.key,q:{...query},seats:model.seats(r.train,query).flatMap(c=>c.seats).filter(s=>!s.blocked).slice(0,+query.pax).map(s=>s.id),names:Array(+query.pax).fill('테스트'),discount:'none'};}
 test('both apps consume the original files and one shared railway domain',()=>{
   assert.ok(context.RailData.trains.length>1800);
+  assert.deepEqual(model.stationRecords.find(station=>station.name==='서울').coordinate,context.RailData.coordinate('서울'));
   assert.ok(sharedFiles().includes('js/shared/nimbi_rail_domain.js'));
   assert.ok(sharedFiles().includes('data/nimbi_global_schedule_revision.js'));
   assert.ok(ticketExcludedFiles.every(file=>!sharedFiles().includes(file)));
