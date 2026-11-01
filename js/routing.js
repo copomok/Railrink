@@ -1,10 +1,10 @@
 import {matchesFamily} from './train-families.js';
-import {midnight,dateAt,minuteOf} from './railway-time.js';
+import {dateAt,minuteOf} from './railway-time.js';
 // Uses the canonical service stops and fare engine. No copied route database.
 export function findTransfers(model,q,now) {
  const min=Number(q.minWait??3),max=Number(q.maxWait??60),limit=Number(q.transferLimit??20);
  if(!Number.isInteger(min)||!Number.isInteger(max)||min<3||max<min||max>180||!Number.isInteger(limit)||limit<1||limit>20)throw Error('환승 대기는 3~180분, 결과는 1~20건 범위로 지정하세요.');
- const first=[],byStation=new Map(),base=midnight(q.date),after=minuteOf(q.after)??0;
+ const first=[],byStation=new Map(),after=minuteOf(q.after),before=minuteOf(q.before);
  for(const train of model.trains){
   if(q.grade&&q.grade!=='all'&&q.grade!==train.grade)continue;
   if(!matchesFamily(train.grade,q.family))continue;
@@ -14,7 +14,9 @@ export function findTransfers(model,q,now) {
    for(const stop of stops.slice(origin+1)){
     if(!stop.arr||stop.s===q.to||stop.s===q.from)continue;
     const seg=model.segment(train,q.from,stop.s);if(!seg)continue;
-    const dep=+model.departure(seg,q.date);if(dep<=+now||dep<base+after*60000)continue;
+    const dep=+model.departure(seg,q.date),depMinute=minuteOf(seg.dep);
+    const outside=after!==null&&before!==null?(after<=before?(depMinute<after||depMinute>before):(depMinute<after&&depMinute>before)):after!==null?depMinute<after:before!==null&&depMinute>before;
+    if(dep<=+now||outside)continue;
     first.push({train,seg,dep,arr:dep+seg.duration*60000});
    }
   }
@@ -27,7 +29,7 @@ export function findTransfers(model,q,now) {
  const paths=[],seen=new Set();
  for(const a of first)for(const b of byStation.get(a.seg.to)||[]){
   if(a.train===b.train)continue;
-  const startOfDay=midnight(dateAt(a.arr));let dep=startOfDay+minuteOf(b.seg.dep)*60000;
+  const startOfDay=Date.parse(dateAt(a.arr)+'T00:00:00+09:00');let dep=startOfDay+minuteOf(b.seg.dep)*60000;
   if(dep<a.arr+min*60000)dep+=86400000;
   const wait=(dep-a.arr)/60000;if(wait<min||wait>max||dateAt(dep)>dateAt(+now+30*86400000))continue;
   const legs=[{...a,q:{...q,to:a.seg.to,date:dateAt(a.dep)}},{...b,dep,arr:dep+b.seg.duration*60000,q:{...q,from:a.seg.to,date:dateAt(dep)}}].map(l=>({...l,key:model.key(l.train),fare:model.data.fare(l.train,l.q.from,l.q.to,l.q.cls)}));

@@ -41,6 +41,7 @@ export function createModel(data, storage, now = () => new Date()) {
   function validateQuery(q) {
     check(stations.includes(q.from)&&stations.includes(q.to), '목록에 있는 출발역과 도착역을 선택하세요.');
     check(!q.after||minuteOf(q.after)!==null,'출발 기준 시각을 확인하세요.');
+    check(!q.before||minuteOf(q.before)!==null,'출발 종료 시각을 확인하세요.');
     check(q.from!==q.to, '출발역과 도착역을 다르게 선택하세요.');
     check(/^\d{4}-\d{2}-\d{2}$/.test(q.date) && addDays(q.date,0)===q.date && q.date>=kstDate(now()) && q.date<=addDays(kstDate(now()),30), '날짜는 오늘부터 30일 이내로 선택하세요.');
     check(Number.isInteger(+q.pax)&&+q.pax>=1&&+q.pax<=6, '인원은 1명부터 6명까지 선택하세요.');
@@ -57,7 +58,8 @@ export function createModel(data, storage, now = () => new Date()) {
       if(!cars.length && q.cls!=='standing') return [];
       const departed=departure(seg,q.date)<=now();
       if(departed)return [];
-      if(q.after&&minuteOf(seg.dep)<minuteOf(q.after))return [];
+      const depMinute=minuteOf(seg.dep),after=minuteOf(q.after),before=minuteOf(q.before);
+      if(after!==null&&before!==null?(after<=before?(depMinute<after||depMinute>before):(depMinute<after&&depMinute>before)):after!==null?depMinute<after:before!==null&&depMinute>before)return [];
       return [{key:key(t),train:t,seg,departed,fare:data.fare(t,q.from,q.to,q.cls),duration:seg.duration}];
     }).sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='duration'?a.duration-b.duration:departure(a.seg,q.date)-departure(b.seg,q.date));
   }

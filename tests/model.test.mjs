@@ -40,6 +40,10 @@ test('search respects direction, timed service stops, grade and sort',()=>{
   assert.ok(model.search({...q,grade:'SRT'}).every(r=>r.train.grade==='SRT'));
   assert.equal(model.segment({stops:[{s:'A',dep:'08:00'},{s:'B',arr:'08:20',dep:null},{s:'C',arr:'09:00'}]},'A','B'),null);
 });
+test('search applies an inclusive recommended departure window',()=>{
+ const rows=model.search({...q,after:'10:00',before:'12:00'});assert.ok(rows.length>0);assert.ok(rows.every(row=>{const [hour,minute]=row.seg.dep.split(':').map(Number),value=hour*60+minute;return value>=600&&value<=720;}));
+ assert.throws(()=>model.search({...q,before:'25:00'}),/종료 시각/);
+});
 test('seat layout preserves missing seats and real numbering',()=>{
   const cars=context.RailData.cars('itx-sm');assert.equal(cars[0].missingSeats.length,2);
   assert.equal(context.RailData.seatId(context.RailData.cars('mgh')[0],1,'1'),'1호차 3번');
