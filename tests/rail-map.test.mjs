@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createModel} from '../js/model.js';
 import {activeTrainMarkers,buildRailNetwork,estimatedTrainSnapshot,mercatorCoordinate,mercatorPoint,snapshotCoordinate,snapshotTrackCoordinate,stationServices,stationTimetable,trainGeoPath,trainSnapshotAt,trainTrackRoute} from '../js/rail-map.js';
 import {operationSnapshot} from '../js/operations.js';
+import {railMapView} from '../js/rail-map-view.js';
 
 const trains=[
  {no:'101',grade:'KTX',line:'시험선',dest:'다',stops:[{s:'가',dep:'23:50'},{s:'나',geoKey:'나좌표',pass:true},{s:'다',arr:'0:20'}]},
@@ -11,6 +12,10 @@ const trains=[
 const coords={가:{lat:37,lon:127},나좌표:{lat:36.8,lon:127.3},다:{lat:36.5,lon:128},라:{lat:36.6,lon:126.8}};
 const data={trains,stationDB:{가역:{...coords.가,sourceId:'station-a'},다역:coords.다,라역:coords.라},stops:train=>train.stops.filter(stop=>!stop.pass),coordinate:name=>coords[name]||coords[String(name).replace(/역$/,'')],isPass:(train,name)=>train.stops.find(stop=>stop.s===name)?.pass};
 const model=createModel(data,{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00'));
+
+test('map view accepts an older cached mainline payload without display counters',()=>{
+ const html=railMapView({network:{source:{mainlineOnly:true,edgeCount:465,shapedSegments:453},geometry:[],stations:[]},settings:{},grades:[],esc:String});assert.match(html,/전체 선로 465개 표시/);assert.match(html,/열차 경로 확인 453개/);
+});
 
 test('network uses verified timetable order, including coordinate pass points, without claiming exact track geometry',()=>{
  const network=buildRailNetwork(model);assert.equal(network.source.exactTrackGeometry,false);assert.equal(network.source.trainCount,2);
