@@ -24,7 +24,9 @@ test('both apps consume the original files and one shared railway domain',()=>{
   assert.ok(sharedFiles().includes('data/nimbi_global_schedule_revision.js'));
   assert.ok(ticketExcludedFiles.every(file=>!sharedFiles().includes(file)));
   assert.ok(sharedFiles().length<30);
-  assert.ok(sharedFiles().reduce((bytes,file)=>bytes+fs.statSync(path.join(sourceRoot,file)).size,0)<3*1024*1024);
+  assert.ok(sharedFiles().includes('data/nimbi_latest_map.js'));
+  assert.ok(fs.statSync(path.join(sourceRoot,'data/nimbi_latest_map.js')).size<1.5*1024*1024);
+  assert.ok(sharedFiles().reduce((bytes,file)=>bytes+fs.statSync(path.join(sourceRoot,file)).size,0)<4*1024*1024);
   const html=fs.readFileSync(path.join(sourceRoot,'index.html'),'utf8');
   assert.match(html,/src="js\/shared\/nimbi_rail_domain.js/);
   const original=fs.readFileSync(path.join(sourceRoot,'js/nimbi_rail.js'),'utf8');

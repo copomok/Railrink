@@ -19,6 +19,14 @@ test('network uses verified timetable order, including coordinate pass points, w
  assert.equal(trainGeoPath(model,trains[0]).length,3);
 });
 
+test('network prefers exact save-file geometry and exposes map-only stations without inventing timetable service',()=>{
+ const latestMap={source:{exactTrackGeometry:true,saveName:'Mysterious Enterprise.nimbyrails5',parsedStationCount:2,edgeCount:1},tracks:[[[126.9,37.5],[127.1,37.4]]],stations:[{id:'raw-a',name:'가',lat:37.5,lon:126.9},{id:'raw-x',name:'원본전용',lat:37.4,lon:127.1}]};
+ const exactModel=createModel({...data,latestMap},{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00')),network=buildRailNetwork(exactModel),station=network.stations.find(item=>item.name==='가'),mapOnly=network.stations.find(item=>item.name==='원본전용');
+ assert.equal(network.source.exactTrackGeometry,true);assert.equal(network.source.kind,'nimbyrails5-track-geometry');assert.deepEqual(network.geometry,latestMap.tracks);
+ assert.deepEqual(station.coord,{lat:37.5,lon:126.9});assert.equal(station.sourceId,'raw-a');assert.equal(station.mapOnly,false);
+ assert.equal(mapOnly.mapOnly,true);assert.equal(mapOnly.stopping,false);assert.equal(network.source.linkedStationCount,1);
+});
+
 test('timetable estimate follows an overnight train and returns its geographic position',()=>{
  const active=estimatedTrainSnapshot(model,trains[0],new Date('2026-11-02T00:05:00+09:00'));assert.ok(active);assert.equal(active.query.date,'2026-11-01');
  const coord=snapshotCoordinate(active.snapshot);assert.ok(coord.lon>127.3&&coord.lon<128);assert.ok(coord.lat<36.8&&coord.lat>36.5);

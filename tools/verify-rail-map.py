@@ -16,9 +16,10 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    page.clock.install(time=datetime.datetime(2026,11,1,6,17,tzinfo=datetime.timezone.utc))
    page.goto('http://127.0.0.1:4196/Railrink/#my',wait_until='domcontentloaded',timeout=60000)
    page.wait_for_selector('a[href="#rail-map"]',timeout=60000);page.locator('a[href="#rail-map"]').click()
-   page.wait_for_selector('#rail-map-canvas .rail-network-edge',timeout=30000)
-   assert page.locator('#rail-map-canvas .rail-network-edge').count()>100
-   assert '역 좌표를 운행 순서대로 연결한 개략 경로' in page.locator('.rail-map-source').inner_text()
+   page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=30000)
+   assert page.locator('#rail-map-canvas .rail-source-track').count()==1
+   assert '최신 원본 선로 지도' in page.locator('.rail-map-source').inner_text()
+   assert '53,555개 선로 연결' in page.locator('.rail-map-source').inner_text()
    canvas=page.locator('#rail-map-canvas').bounding_box();assert canvas['width']>=360 and canvas['height']>=440
    page.locator('#rail-map-search input').fill('서울역');page.locator('#rail-map-search button').click();page.wait_for_selector('.station-hero')
    assert '서울역' in page.locator('.station-hero').inner_text();assert '역 시간표' in page.locator('.station-actions').inner_text()
@@ -31,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    for width in [320,390,600]:
     page.set_viewport_size({'width':width,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
    assert not errors,errors
-   print('PASS: OSM-backed rail map, verified topology disclosure, station details/timetable, train route estimate, map settings persistence, responsive layout, zero browser errors.')
+   print('PASS: OSM-backed exact save-file tracks, source disclosure, station details/timetable, train route estimate, map settings persistence, responsive layout, zero browser errors.')
    browser.close()
  finally:
   server.terminate();server.wait()
