@@ -50,3 +50,8 @@ test('selected route follows source track intermediate coordinates and never sub
  assert.equal(route.missingSegments,0);assert.equal(route.paths.length,1);assert.ok(route.paths[0].some(point=>point.coord.lat===37.01));
  const snapshot=operationSnapshot(curveModel,curve,{from:'A',to:'B',date:'2026-11-03'},new Date('2026-11-03T08:10:00+09:00')),position=snapshotTrackCoordinate(curveModel,curve,snapshot);assert.ok(position.lat>37.009);assert.ok(position.lon>127.009&&position.lon<127.011);
 });
+
+test('route matching rejects a connected but geographically implausible detour around a broken segment',()=>{
+ const train={no:'D1',grade:'ITX',line:'단절',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coords={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},latestMap={source:{exactTrackGeometry:true,parsedStationCount:2,edgeCount:3},stations:[{id:'a',name:'A',lat:37,lon:127},{id:'b',name:'B',lat:37,lon:127.02}],tracks:[[[127,37],[127,37.1],[127.02,37.1],[127.02,37]]]},detourModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,latestMap},{getItem:()=>null}),route=trainTrackRoute(detourModel,train);
+ assert.equal(route.paths.length,0);assert.equal(route.missingSegments,1);
+});

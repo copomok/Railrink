@@ -38,3 +38,4 @@ body[data-screen="rail-map"] main{height:100%;overflow:hidden}
 .rail-sheet-estimate{display:block;margin-top:2px;color:#7a8798;font-size:9px;font-weight:500}
 .rail-sheet-train-icon svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.rail-sheet-nearby i svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .rail-train-marker circle{fill:var(--marker-color,#176cf4)}.rail-train-marker.selected circle{fill:var(--marker-color,#075fe3)}
+.rail-live-source[hidden]{display:none}

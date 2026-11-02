@@ -33,6 +33,8 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    other=page.locator('#rail-map-canvas .rail-train-marker:not(.selected)').first
    if other.count():
     before=page.locator('.rail-sheet-primary h3').inner_text();other.click(force=True);page.wait_for_timeout(200);assert page.locator('.rail-sheet-primary h3').inner_text()!=before
+   for train_number in ['2038','8039','1142','1198']:
+    page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill(train_number);page.locator('#rail-map-search button[type="submit"]').click();page.wait_for_function("number=>document.querySelector('.rail-sheet-primary h3')?.textContent.includes(number)",arg=train_number);assert page.locator('#rail-map-canvas .rail-selected-path').count()>0
    while page.locator('#rail-train-sheet').get_attribute('data-level')!='compact':page.locator('[data-sheet-level]').click()
    page.screenshot(path=str(out/'01-fullscreen-train-map.png'),full_page=False)
    page.locator('.rail-live-header a[href="#settings-map"]').click();page.wait_for_selector('#settings-map-form');page.locator('[name="background"]').uncheck(force=True);page.locator('#settings-map-form [type="submit"]').click()
