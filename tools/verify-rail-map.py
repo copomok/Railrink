@@ -11,28 +11,37 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
  try:
   with sync_playwright() as p:
    browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
-   context=browser.new_context(viewport={'width':390,'height':844},timezone_id='Asia/Seoul',locale='ko-KR',is_mobile=True,has_touch=True)
+   context=browser.new_context(viewport={'width':480,'height':1040},device_scale_factor=3,timezone_id='Asia/Seoul',locale='ko-KR',is_mobile=True,has_touch=True)
    page=context.new_page();errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
    page.clock.install(time=datetime.datetime(2026,11,1,6,17,tzinfo=datetime.timezone.utc))
    page.goto('http://127.0.0.1:4196/Railrink/#my',wait_until='domcontentloaded',timeout=60000)
    page.wait_for_selector('a[href="#rail-map"]',timeout=60000);page.locator('a[href="#rail-map"]').click()
-   page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=30000)
+   page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=60000)
    assert page.locator('#rail-map-canvas .rail-source-track').count()==1
-   assert '최신 원본 선로 지도' in page.locator('.rail-map-source').inner_text()
-   assert '53,555개 선로 연결' in page.locator('.rail-map-source').inner_text()
-   canvas=page.locator('#rail-map-canvas').bounding_box();assert canvas['width']>=360 and canvas['height']>=440
-   page.locator('#rail-map-search input').fill('서울역');page.locator('#rail-map-search button').click();page.wait_for_selector('.station-hero')
-   assert '서울역' in page.locator('.station-hero').inner_text();assert '역 시간표' in page.locator('.station-actions').inner_text()
-   page.locator('[data-station-action="timetable"]').click();page.wait_for_selector('.station-timetable-list button');assert page.locator('.station-timetable-list button').count()>10
-   page.evaluate("location.hash='rail-map'");page.wait_for_selector('#rail-map-search');page.locator('#rail-map-search input').fill('KTX 1');page.locator('#rail-map-search button').click();page.wait_for_selector('#train-map-canvas .rail-selected-path')
-   assert '실시간 GPS 위치가 아닙니다' in page.locator('.train-map-estimate').inner_text();page.screenshot(path=str(out/'01-train-map-mobile.png'),full_page=True)
-   page.evaluate("location.hash='settings-map'");page.wait_for_selector('#settings-map-form');page.locator('[name="background"]').uncheck(force=True);page.locator('[name="allTrains"]').check(force=True);page.locator('#settings-map-form [type="submit"]').click();page.wait_for_selector('#rail-map-canvas .rail-train-marker',timeout=30000)
-   assert page.locator('.rail-map-tiles').is_hidden();assert page.locator('.rail-train-marker').count()>0;assert page.evaluate("JSON.parse(localStorage.getItem('raillink.settings.v1')).map.background")==False
-   page.screenshot(path=str(out/'02-network-offline-style.png'),full_page=True)
-   for width in [320,390,600]:
-    page.set_viewport_size({'width':width,'height':844});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
+   assert '53,555개' in page.locator('.rail-live-source').inner_text()
+   canvas=page.locator('#rail-map-canvas').bounding_box();assert canvas['width']>=480 and canvas['height']>=950
+   assert not page.locator('.navigation').is_visible();assert page.locator('.rail-live-header').is_visible()
+   page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill('KTX 1');page.locator('#rail-map-search button[type="submit"]').click()
+   page.wait_for_selector('#rail-map-canvas .rail-selected-path',timeout=60000);page.wait_for_selector('.rail-sheet-primary h3')
+   assert 'KTX 1' in page.locator('.rail-sheet-primary h3').inner_text();assert page.url.endswith('#rail-map')
+   point_count=page.locator('#rail-map-canvas .rail-selected-path').first.get_attribute('points').count(' ')+1;assert point_count>50
+   assert '시간표 기준 예상 위치' in page.locator('#rail-train-sheet').inner_text()
+   page.locator('[data-sheet-level]').click();assert page.locator('#rail-train-sheet').get_attribute('data-level')=='middle'
+   page.locator('[data-sheet-close]').click();assert page.locator('#rail-train-sheet').is_hidden();page.locator('[data-selected-reopen]').click();assert page.locator('#rail-train-sheet').is_visible()
+   page.locator('#rail-map-canvas').evaluate("element=>element.dataset.instance='kept'")
+   page.locator('[data-map-mode="all"]').click();assert page.locator('#rail-map-canvas').get_attribute('data-instance')=='kept'
+   other=page.locator('#rail-map-canvas .rail-train-marker:not(.selected)').first
+   if other.count():
+    before=page.locator('.rail-sheet-primary h3').inner_text();other.click(force=True);page.wait_for_timeout(200);assert page.locator('.rail-sheet-primary h3').inner_text()!=before
+   while page.locator('#rail-train-sheet').get_attribute('data-level')!='compact':page.locator('[data-sheet-level]').click()
+   page.screenshot(path=str(out/'01-fullscreen-train-map.png'),full_page=False)
+   page.locator('.rail-live-header a[href="#settings-map"]').click();page.wait_for_selector('#settings-map-form');page.locator('[name="background"]').uncheck(force=True);page.locator('#settings-map-form [type="submit"]').click()
+   page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=60000);assert page.locator('.rail-map-tiles').is_hidden();assert page.evaluate("JSON.parse(localStorage.getItem('raillink.settings.v1')).map.background")==False
+   page.screenshot(path=str(out/'02-fullscreen-map-offline.png'),full_page=False)
+   for width in [320,390,480,600,720]:
+    page.set_viewport_size({'width':width,'height':1040});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
    assert not errors,errors
-   print('PASS: OSM-backed exact save-file tracks, source disclosure, station details/timetable, train route estimate, map settings persistence, responsive layout, zero browser errors.')
+   print('PASS: full-screen map, in-place train selection, source-track route, draggable bottom sheet, persistent map instance/settings, responsive layout, zero browser errors.')
    browser.close()
  finally:
   server.terminate();server.wait()

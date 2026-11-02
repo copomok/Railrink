@@ -8,7 +8,7 @@ export const defaultSettings=()=>({
  transfer:{include:true,directFirst:true,minWait:15,maxWait:60,riskAlerts:true},
  notifications:{enabled:true,system:false,departure:[60,30,10],delay:true,cancel:true,platform:true,arrival:false,transferRisk:true},
  boarding:{countdown:true,nextStop:true,arrivalTime:true,platform:true},
- map:{tracks:true,stationNames:true,allTrains:false,selectedTrain:true,background:true,grades:[]},
+ map:{tracks:true,stationNames:true,allTrains:true,selectedTrain:true,background:true,grades:[]},
  appearance:{theme:'light',fontSize:'medium',highContrast:false,reduceMotion:false,timeFormat:'24',dateFormat:'korean',duration:true,delayHighlight:true}
 });
 

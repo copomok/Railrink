@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createModel} from '../js/model.js';
 import {operationSnapshot,operationPosition,operationMap} from '../js/operations.js';
+import {railServiceDate,serviceTimeline} from '../js/railway-time.js';
 const train={no:'night',grade:'무궁화호',stops:[{s:'시발',dep:'23:40'},{s:'경유',geoKey:'경유좌표',pass:true},{s:'승차',arr:'0:10',dep:'0:12'},{s:'하차',arr:'0:30',dep:'0:32'},{s:'종착',arr:'0:50'}]};
 const data={trains:[train],stops:t=>t.stops.filter(s=>!s.pass),coordinate:s=>({lat:35,lon:{시발:126,경유좌표:126.5,승차:127,하차:128,종착:129}[s]}),isPass:(t,s)=>t.stops.find(n=>n.s===s)?.pass};
 const make=extra=>createModel({...data,...extra},{getItem:()=>null});
@@ -27,4 +28,9 @@ test('upstream arrival and departure delays retain a held train at its station',
  const s=operationSnapshot(model,train,query,now);assert.equal(s.current.s,'승차');assert.equal(s.nodes[2].arrivalDelay,1);assert.equal(s.nodes[2].delay,7);assert.equal(s.departure,Date.parse('2026-10-30T00:19:00+09:00'));
  assert.equal(operationPosition(s,s.nodes.filter(n=>n.stop)).nextIndex,1);
  const stale=operationSnapshot(make({delayState:()=>({phase:'running',serviceDate:'2026-10-30'}),delayPair:()=>({arr:60,dep:60})}),train,query,now);assert.equal(stale.nodes[2].delay,0);
+});
+test('Korean rail service day changes at 04:00 and extended timetable clocks stay on the service instance',()=>{
+ assert.equal(railServiceDate(new Date('2026-11-03T03:59:59+09:00')),'2026-11-02');
+ assert.equal(railServiceDate(new Date('2026-11-03T04:00:00+09:00')),'2026-11-03');
+ assert.deepEqual(serviceTimeline([{s:'A',dep:'23:50'},{s:'B',arr:'24:30',dep:'25:38'},{s:'C',arr:'28:00'}]).map(stop=>[stop.arrival,stop.departure]),[[null,1430],[1470,1538],[1680,null]]);
 });
