@@ -29,7 +29,7 @@ export function buildRailNetwork(model){
   if(record.mapOnly===false)station.mapOnly=false;if(record.mainline)station.mainline=true;return station;
  };
  if(mainline?.routes?.length){
-  for(const route of mainline.routes){let previous=null;for(const raw of route.stations||[]){const station=ensure(raw.name,{lat:raw.lat,lon:raw.lon},{mainline:true});if(!station)continue;station.lines.add(route.line);if(previous&&previous!==station){const key=edgeKey(previous.name,station.name);let edge=edges.get(key);if(!edge){edge={a:previous,b:station,lines:new Set(),grades:new Set(),services:0,geometry:[previous.coord,station.coord]};edges.set(key,edge);}edge.lines.add(route.line);}previous=station;}}
+  for(const route of mainline.routes){let previous=null;for(const [index,raw] of (route.stations||[]).entries()){const station=ensure(raw.name,{lat:raw.lat,lon:raw.lon},{mainline:true});if(!station)continue;station.lines.add(route.line);if(previous&&previous!==station){const key=edgeKey(previous.name,station.name),segment=(route.segments?.[index-1]||[]).map(([lon,lat])=>({lat:+lat,lon:+lon})).filter(validCoord),geometry=segment.length>1?segment:[previous.coord,station.coord];let edge=edges.get(key);if(!edge){edge={a:previous,b:station,lines:new Set(),grades:new Set(),services:0,geometry};edges.set(key,edge);}else if(edge.geometry.length<geometry.length)edge.geometry=geometry;edge.lines.add(route.line);}previous=station;}}
  }else{
   for(const record of model.stationRecords||[])ensure(record.name,record.coordinate,{...record,mapOnly:false});
  }
@@ -41,7 +41,7 @@ export function buildRailNetwork(model){
    if(!mainline&&previous&&previous!==station){const key=edgeKey(previous.name,station.name);let edge=edges.get(key);if(!edge){edge={a:previous,b:station,lines:new Set(),grades:new Set(),services:0,geometry:[previous.coord,station.coord]};edges.set(key,edge);}edge.lines.add(line);edge.grades.add(grade);edge.services++;}previous=station;
   }
  }
- const geometry=mainline?.routes?.map(route=>route.stations.map(station=>[+station.lon,+station.lat]).filter(([lon,lat])=>Number.isFinite(lon)&&Number.isFinite(lat))).filter(path=>path.length>1)||[];
+ const geometry=mainline?.routes?.map(route=>route.segments?.length?route.segments.reduce((path,segment)=>path.concat(path.length?segment.slice(1):segment),[]):route.stations.map(station=>[+station.lon,+station.lat])).map(path=>path.filter(([lon,lat])=>Number.isFinite(+lon)&&Number.isFinite(+lat))).filter(path=>path.length>1)||[];
  const result={stations:[...stations.values()],edges:[...edges.values()],geometry,stationByName:stations,
   lines:[...lineCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ko')).map(([name,services])=>({name,services})),
   source:mainline?.source?{...mainline.source,kind:'nimby-map-lines',mainlineOnly:true,exactTrackGeometry:false,trainCount:model.trains.length,renderedStationCount:stations.size,linkedStationCount:[...stations.values()].filter(station=>!station.mapOnly).length}:{kind:'timetable-coordinate-topology',mainlineOnly:false,exactTrackGeometry:false,trainCount:model.trains.length,stationCount:stations.size,linkedStationCount:[...stations.values()].filter(station=>!station.mapOnly).length}
