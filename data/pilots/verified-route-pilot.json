@@ -1,2877 +1,2054 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "purpose": "development-pilot-only",
   "source": {
     "saveName": "Mysterious Enterprise.nimbyrails5",
-    "company": "Mysterious Enterprise",
     "sha256": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
     "format": "nimbyrails5",
-    "exactTrackGeometry": true,
     "declaredTrackCount": 70351,
     "parsedTrackPointCount": 70281,
-    "geometryPointCount": 70281,
-    "edgeCount": 58927,
     "declaredStationCount": 1375,
     "parsedStationCount": 1334,
     "declaredTrainCount": 1645,
     "declaredLineCount": 360,
-    "auxiliaryCount": 17656,
-    "simplifyToleranceMeters": 0,
-    "dataFormat": "nimbyrails5-extracted-track-reference-graph"
+    "parsedLineCount": 358,
+    "lineSectionOffset": 13982590,
+    "dataFormat": "nimbyrails5-line-entity-and-explicit-track-reference-graph"
   },
-  "rejectedCandidate": {
-    "stations": [
-      "서울",
-      "수원",
-      "천안"
-    ],
-    "reason": "서울-수원 및 수원-평택 구간은 현재 저장 파일 참조 그래프에서 단일 연결요소를 확정할 수 없음"
+  "lineEntity": {
+    "entityId": "2251799824039938",
+    "name": "서울-대전 무궁화호",
+    "code": "L-10900400",
+    "stationCount": 15
   },
-  "pilot": {
+  "rejectedCandidates": [
+    {
+      "stations": [
+        "서울",
+        "수원",
+        "천안"
+      ],
+      "reason": "서울-수원, 수원-오산, 오산-평택, 평택-천안은 노선 엔티티의 실제 승강장 인접 선로 ID 사이에서 명시적 연결 경로가 확인되지 않음"
+    },
+    {
+      "stations": [
+        "평택",
+        "천안"
+      ],
+      "reason": "이전 시범 경로는 노선 엔티티의 실제 선로 ID가 아니라 역 주변의 일반 연결요소를 사용했으므로 검증 완료 판정을 철회함"
+    }
+  ],
+  "pilotCandidate": {
     "stations": [
-      "평택",
-      "천안"
+      "신탄진",
+      "회덕역 / 대전차량기지"
     ],
-    "reason": "동일 경부선에서 원본 참조 간선의 단일 연속 경로가 확인된 가장 가까운 후보"
+    "reason": "게임 노선 엔티티의 역 순서와 선로 ID, 명시적 참조 간선으로 연속 경로를 찾았지만 시작부에 선택 근거가 없는 분기 노드가 하나 있어 보류함"
   },
   "segments": [
     {
-      "id": "pilot:gyeongbu:pyeongtaek-cheonan",
-      "fromStationId": "1125899999117314",
-      "toStationId": "1125899989155842",
+      "id": "pilot:gyeongbu:sintanjin-hoedeok-depot",
+      "fromStationId": "1125899909070850",
+      "toStationId": "1125899908939778",
       "geometry": {
         "type": "LineString",
         "coordinates": [
           [
-            127.085585,
-            36.990816
+            127.428121,
+            36.448273
           ],
           [
-            127.085283,
-            36.991128
+            127.428518,
+            36.447511
           ],
           [
-            127.087688,
-            36.988553
+            127.428846,
+            36.446464
           ],
           [
-            127.088091,
-            36.988121
+            127.429047,
+            36.444482
           ],
           [
-            127.089887,
-            36.986099
+            127.429048,
+            36.437632
           ],
           [
-            127.092109,
-            36.983604
+            127.427924,
+            36.427712
           ],
           [
-            127.094912,
-            36.980648
+            127.425415,
+            36.412665
           ],
           [
-            127.099491,
-            36.975869
+            127.425528,
+            36.401075
           ],
           [
-            127.104014,
-            36.970592
+            127.425859,
+            36.390518
           ],
           [
-            127.106313,
-            36.968612
+            127.425561,
+            36.384437
           ],
           [
-            127.10742,
-            36.96767
+            127.425187,
+            36.381237
           ],
           [
-            127.108216,
-            36.966845
+            127.425045,
+            36.38053
           ],
           [
-            127.109402,
-            36.96564
+            127.42437,
+            36.37889
           ],
           [
-            127.111693,
-            36.963199
+            127.423984,
+            36.373589
           ],
           [
-            127.113754,
-            36.96101
-          ],
-          [
-            127.116809,
-            36.95783
-          ],
-          [
-            127.11846,
-            36.955978
-          ],
-          [
-            127.118991,
-            36.954116
-          ],
-          [
-            127.119182,
-            36.951517
-          ],
-          [
-            127.119181,
-            36.948579
-          ],
-          [
-            127.119236,
-            36.94742
-          ],
-          [
-            127.119594,
-            36.943929
-          ],
-          [
-            127.119881,
-            36.939206
-          ],
-          [
-            127.122618,
-            36.933508
-          ],
-          [
-            127.125333,
-            36.929744
-          ],
-          [
-            127.126616,
-            36.922497
-          ],
-          [
-            127.126828,
-            36.917773
-          ],
-          [
-            127.127001,
-            36.91407
-          ],
-          [
-            127.127071,
-            36.912993
-          ],
-          [
-            127.127277,
-            36.909813
-          ],
-          [
-            127.128646,
-            36.905486
-          ],
-          [
-            127.130604,
-            36.902467
-          ],
-          [
-            127.132286,
-            36.900742
-          ],
-          [
-            127.13526,
-            36.896507
-          ],
-          [
-            127.137247,
-            36.893601
-          ],
-          [
-            127.139188,
-            36.891572
-          ],
-          [
-            127.141152,
-            36.888933
-          ],
-          [
-            127.145055,
-            36.883861
-          ],
-          [
-            127.14657,
-            36.880773
-          ],
-          [
-            127.146886,
-            36.879112
-          ],
-          [
-            127.147556,
-            36.875665
-          ],
-          [
-            127.147835,
-            36.874609
-          ],
-          [
-            127.149276,
-            36.869163
-          ],
-          [
-            127.151348,
-            36.861224
-          ],
-          [
-            127.153475,
-            36.8564
-          ],
-          [
-            127.154829,
-            36.853821
-          ],
-          [
-            127.155111,
-            36.851898
-          ],
-          [
-            127.155298,
-            36.849219
-          ],
-          [
-            127.15533,
-            36.848141
-          ],
-          [
-            127.155177,
-            36.841154
-          ],
-          [
-            127.156723,
-            36.831277
-          ],
-          [
-            127.158024,
-            36.823914
-          ],
-          [
-            127.158213,
-            36.822847
-          ],
-          [
-            127.157397,
-            36.820619
-          ],
-          [
-            127.155667,
-            36.818933
-          ],
-          [
-            127.152172,
-            36.818509
-          ],
-          [
-            127.14877,
-            36.8164
-          ],
-          [
-            127.146543,
-            36.813161
-          ],
-          [
-            127.146106,
-            36.812177
-          ],
-          [
-            127.145803,
-            36.810922
-          ],
-          [
-            127.145634,
-            36.810459
+            127.42192,
+            36.364935
           ]
         ]
       },
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationMethod": "game-topology",
-      "verificationStatus": "verified",
-      "trackVariantId": "gyeongbu-conventional-pilot",
+      "verificationMethod": "game-route",
+      "verificationStatus": "pending",
+      "trackVariantId": "line:2251799824039938",
       "originalTrackIds": [
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 70,
-          "coordinateHash": "7bce00f6ab71813f"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4817,
-          "coordinateHash": "6a11a8d6f1fce51a"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4819,
-          "coordinateHash": "6128a173416dd9fd"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4822,
-          "coordinateHash": "59f493518ba30602"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4826,
-          "coordinateHash": "9f403179faafc50f"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4829,
-          "coordinateHash": "d81479a80299c7b2"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 4842,
-          "coordinateHash": "3ffe643ec0ae0355"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 5916,
-          "coordinateHash": "c14f92adf924cacc"
-        },
-        {
-          "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-          "featureIndex": 0,
-          "lineIndex": 5918,
-          "coordinateHash": "4057d4aa80be467b"
-        }
+        "562950040715266",
+        "562950049628162",
+        "562953165209602",
+        "562950875643906",
+        "562950875906050",
+        "562950875381762",
+        "562950875119618",
+        "562950874857474",
+        "562950874595330",
+        "562950874333186",
+        "562950040322050",
+        "562950040059906",
+        "562950039797762",
+        "562950039535618",
+        "562950036127746"
       ]
     }
   ],
-  "trainRoutes": [
+  "trainRoutes": [],
+  "candidateTrainRoutes": [
     {
-      "trainServiceId": "ITX-새마을:1001:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "KTX:111:경부고속선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:112:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:113:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:114:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:115:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:116:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:117:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:118:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:119:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:120:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:121:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:122:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:123:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "KTX:124:경부고속선·경부선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "ITX-새마을:1001:경부선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1002:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1003:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1004:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1005:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1006:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1007:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1008:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1009:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1010:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1011:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1012:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1013:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1014:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1015:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1016:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1017:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1018:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1019:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1020:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1021:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1022:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1023:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1024:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1025:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1026:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1027:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1028:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1029:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1030:경부선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1031:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1032:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1033:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1034:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1035:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1036:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1037:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1039:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1040:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1041:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1042:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1043:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1045:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1047:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1048:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1049:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1050:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1051:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1052:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1053:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1054:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1151:전라선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1152:전라선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1153:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1154:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1155:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1156:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1157:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1158:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1159:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1160:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1161:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1162:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1163:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1164:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1165:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1166:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1167:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1168:전라선·경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1191:경부선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1192:경부선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1193:경부선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1194:경부선·동해선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1195:경부선·동해선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1196:경부선·동해선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1197:경부선·동해선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:1198:경부선·동해선·대구선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1261:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1262:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1263:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1264:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1265:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1266:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1267:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1268:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1269:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-마음:1270:교외선·경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1301:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1302:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1303:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1304:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1305:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1306:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1311:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1312:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1313:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1314:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1315:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1316:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1317:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1318:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1319:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1320:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1321:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1322:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1323:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1324:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1325:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1326:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1327:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "무궁화호:1328:경부선·세종세천선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1351:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1352:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1353:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1354:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1355:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1356:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1357:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1358:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1359:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1360:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1361:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1362:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1363:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1364:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1365:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1366:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1371:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1372:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1373:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1374:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1375:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1376:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1377:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1378:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1379:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1380:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1461:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1401:경부선·충북선·중앙선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "무궁화호:1402:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1462:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1403:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1463:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1404:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1464:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1405:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1465:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1406:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1466:경부선·장항선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1407:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1471:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1408:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1472:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1409:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1473:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1410:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1474:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1411:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1475:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1412:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1476:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1413:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1477:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1414:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1478:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1415:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1479:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1416:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1480:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1417:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1481:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1418:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1482:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1419:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1483:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1420:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1484:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1421:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1485:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1422:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1486:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1423:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1487:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1424:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1488:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1425:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1489:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1426:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "무궁화호:1490:경부선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "무궁화호:1427:경부선·충북선·중앙선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "무궁화호:1428:경부선·충북선·중앙선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "무궁화호:1429:경부선·충북선·중앙선",
+      "segmentIds": [],
+      "direction": "reverse",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
+    },
+    {
+      "trainServiceId": "무궁화호:1430:경부선·충북선·중앙선",
+      "segmentIds": [],
+      "direction": "forward",
+      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1491:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1492:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1493:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1494:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1495:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1496:경부선·호남선·경전선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1551:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1552:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1553:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1554:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1555:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1556:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1557:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1558:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1559:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1560:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1561:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1562:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1563:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1564:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1565:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1566:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1567:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1568:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1569:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1570:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1571:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1572:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1573:경부선·호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "무궁화호:1574:호남선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1891:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1901:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1892:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1902:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1893:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1903:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1894:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1904:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1895:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1905:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1896:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1906:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1897:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1907:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-새마을:1898:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1908:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1981:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1909:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1982:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1910:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1983:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1911:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1984:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1912:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1985:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1913:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1986:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1914:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1987:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1915:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1988:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1916:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1989:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1917:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
-      "trainServiceId": "ITX-마음:1990:경부선·태안선·장항선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "trainServiceId": "ITX-새마을:1918:동해선·태백선·충북선·경부선",
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1991:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1992:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1993:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1994:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1995:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1996:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1997:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "forward",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
-    },
-    {
-      "trainServiceId": "ITX-마음:1998:경부선·태안선·장항선·전라선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
-      "direction": "reverse",
-      "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2001:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2002:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2003:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2004:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2005:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2006:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2007:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2008:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2009:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2010:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2011:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2012:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2013:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2014:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2015:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2016:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2017:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2018:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2019:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2020:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2021:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2022:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2023:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2024:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2025:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2026:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2027:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2028:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2029:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2030:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2031:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2032:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2033:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2034:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2035:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2038:경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2051:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2052:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2053:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2054:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2055:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2056:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2057:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2058:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2059:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2060:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2061:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2062:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2063:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2064:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2065:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2066:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2067:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2068:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2069:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-청춘:2070:호남선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:5091:경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:5092:경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:5093:경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     },
     {
       "trainServiceId": "ITX-새마을:5094:경의선·경부선",
-      "segmentIds": [
-        "pilot:gyeongbu:pyeongtaek-cheonan"
-      ],
+      "segmentIds": [],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "partial"
+      "verificationStatus": "unavailable"
     }
   ],
   "validation": {
-    "coordinateCount": 61,
-    "lengthKm": 22.366465,
-    "directDistanceKm": 20.795801,
-    "lengthRatio": 1.075528,
-    "startOffsetMeters": 33.009,
-    "endOffsetMeters": 88.857,
+    "coordinateCount": 15,
+    "lengthKm": 11.605164,
+    "directDistanceKm": 11.547499,
+    "lengthRatio": 1.004994,
+    "startOffsetMeters": 0,
+    "endOffsetMeters": 0,
+    "branchNodeCount": 1,
     "discontinuityCount": 0,
     "maxDistanceFromOriginalMeters": 0,
-    "reusedByServiceCount": 279
+    "affectedServiceCount": 271,
+    "verifiedReusableServiceCount": 0
   }
 }

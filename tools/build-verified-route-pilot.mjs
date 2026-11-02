@@ -1,22 +1,20 @@
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import {runtimeSource,sourceRoot,appRoot} from './source.mjs';
 
-const context={console,setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},localStorage:{getItem:()=>null}};context.window=context;vm.createContext(context);vm.runInContext(runtimeSource(),context);
-const latest=context.RailData.latestMap,mainline=context.RailData.mainlineMap,route=mainline.routes.find(item=>item.id==='gyeongbu:0'),fromIndex=route.stations.findIndex(item=>item.name==='평택'),toIndex=route.stations.findIndex(item=>item.name==='천안');
-if(fromIndex<0||toIndex!==fromIndex+1||!route.segments[fromIndex])throw new Error('평택-천안 검증 구간을 찾지 못했습니다.');
-const sourcePaths=route.segmentSources[fromIndex],nodes=[],nodeByCoordinate=new Map(),links=[];
-const nodeId=coordinate=>{const key=coordinate.join(',');if(nodeByCoordinate.has(key))return nodeByCoordinate.get(key);const id=nodes.length;nodes.push(coordinate);links.push([]);nodeByCoordinate.set(key,id);return id;};
-const distance=(a,b)=>Math.hypot((b[0]-a[0])*Math.cos((a[1]+b[1])*Math.PI/360),b[1]-a[1])*111.195;
-for(const pathIndex of sourcePaths){const track=latest.tracks[pathIndex];for(let index=1;index<track.length;index++){const a=nodeId(track[index-1]),b=nodeId(track[index]),length=distance(nodes[a],nodes[b]);links[a].push([b,length]);links[b].push([a,length]);}}
-const nearest=station=>nodes.reduce((best,coordinate,id)=>{const value=distance([station.lon,station.lat],coordinate);return value<best.distance?{id,distance:value}:best;},{id:-1,distance:Infinity}),start=nearest(route.stations[fromIndex]),end=nearest(route.stations[toIndex]);
-const costs=new Float64Array(nodes.length),previous=new Int32Array(nodes.length),visited=new Uint8Array(nodes.length);costs.fill(Infinity);previous.fill(-1);costs[start.id]=0;
-for(let count=0;count<nodes.length;count++){let current=-1,best=Infinity;for(let id=0;id<nodes.length;id++)if(!visited[id]&&costs[id]<best){best=costs[id];current=id;}if(current<0||current===end.id)break;visited[current]=1;for(const [next,length] of links[current])if(costs[current]+length<costs[next]){costs[next]=costs[current]+length;previous[next]=current;}}
-if(!Number.isFinite(costs[end.id]))throw new Error('원본 참조 간선에서 평택-천안 경로가 연속되지 않습니다.');
-const ids=[];for(let id=end.id;id>=0;id=previous[id]){ids.push(id);if(id===start.id)break;}if(ids.at(-1)!==start.id)throw new Error('원본 경로 복원 실패');ids.reverse();const geometry=ids.map(id=>nodes[id]),stationRecord=name=>latest.stations.find(item=>item.name===name),sourceVersion=latest.source.sha256;
-const services=context.RailData.trains.flatMap(train=>{const names=train.stops.map(stop=>String(stop.s).replace(/역$/,'')),a=names.indexOf('평택'),b=names.indexOf('천안');return a>=0&&b>=0&&Math.abs(a-b)===1?[{trainServiceId:`${train.grade}:${train.no}:${train.line}`,segmentIds:['pilot:gyeongbu:pyeongtaek-cheonan'],direction:a<b?'forward':'reverse',sourceVersion,verificationStatus:'partial'}]:[];});
-const originalTrackIds=sourcePaths.map(lineIndex=>({sourceVersion,featureIndex:0,lineIndex,coordinateHash:crypto.createHash('sha256').update(JSON.stringify(latest.tracks[lineIndex])).digest('hex').slice(0,16)})),direct=distance([route.stations[fromIndex].lon,route.stations[fromIndex].lat],[route.stations[toIndex].lon,route.stations[toIndex].lat]);
-const payload={schemaVersion:1,purpose:'development-pilot-only',source:{...latest.source,dataFormat:'nimbyrails5-extracted-track-reference-graph'},rejectedCandidate:{stations:['서울','수원','천안'],reason:'서울-수원 및 수원-평택 구간은 현재 저장 파일 참조 그래프에서 단일 연결요소를 확정할 수 없음'},pilot:{stations:['평택','천안'],reason:'동일 경부선에서 원본 참조 간선의 단일 연속 경로가 확인된 가장 가까운 후보'},segments:[{id:'pilot:gyeongbu:pyeongtaek-cheonan',fromStationId:stationRecord('평택').id,toStationId:stationRecord('천안').id,geometry:{type:'LineString',coordinates:geometry},sourceVersion,verificationMethod:'game-topology',verificationStatus:'verified',trackVariantId:'gyeongbu-conventional-pilot',originalTrackIds}],trainRoutes:services,validation:{coordinateCount:geometry.length,lengthKm:+costs[end.id].toFixed(6),directDistanceKm:+direct.toFixed(6),lengthRatio:+(costs[end.id]/direct).toFixed(6),startOffsetMeters:+(start.distance*1000).toFixed(3),endOffsetMeters:+(end.distance*1000).toFixed(3),discontinuityCount:0,maxDistanceFromOriginalMeters:0,reusedByServiceCount:services.length}};
-const output=path.join(appRoot,'data/pilots/verified-route-pilot.json');fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(payload,null,2)+'\n');console.log(`시범 경로 생성: 평택-천안 ${geometry.length}개 원본 좌표, ${services.length}개 운행 재사용`);
+const analysis=JSON.parse(fs.readFileSync(path.join(sourceRoot,'data/nimbi_route_pilot_analysis.json'),'utf8'));
+const candidate=analysis.pilotCandidate;
+if(candidate.status!=='pending'||candidate.from!=='신탄진'||candidate.to!=='회덕역 / 대전차량기지')throw new Error('예상한 보류 시범 구간을 찾지 못했습니다.');
+const context={console,setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){},localStorage:{getItem:()=>null}};
+context.window=context;vm.createContext(context);vm.runInContext(runtimeSource(),context);
+const sourceVersion=analysis.source.sha256;
+const candidateTrainRoutes=context.RailData.trains.flatMap(train=>{
+ const names=train.stops.map(stop=>String(stop.s).replace(/역$/,''));
+ const from=names.indexOf('신탄진'),to=names.indexOf('회덕');
+ if(from<0||to<0||Math.abs(from-to)!==1)return [];
+ return [{trainServiceId:`${train.grade}:${train.no}:${train.line}`,segmentIds:[],direction:from<to?'forward':'reverse',sourceVersion,verificationStatus:'unavailable'}];
+});
+const segmentId='pilot:gyeongbu:sintanjin-hoedeok-depot';
+const payload={schemaVersion:2,purpose:'development-pilot-only',source:{...analysis.source,dataFormat:'nimbyrails5-line-entity-and-explicit-track-reference-graph'},lineEntity:{entityId:analysis.line.entityId,name:analysis.line.name,code:analysis.line.code,stationCount:analysis.line.route.length},rejectedCandidates:[{stations:['서울','수원','천안'],reason:'서울-수원, 수원-오산, 오산-평택, 평택-천안은 노선 엔티티의 실제 승강장 인접 선로 ID 사이에서 명시적 연결 경로가 확인되지 않음'},{stations:['평택','천안'],reason:'이전 시범 경로는 노선 엔티티의 실제 선로 ID가 아니라 역 주변의 일반 연결요소를 사용했으므로 검증 완료 판정을 철회함'}],pilotCandidate:{stations:[candidate.from,candidate.to],reason:'게임 노선 엔티티의 역 순서와 선로 ID, 명시적 참조 간선으로 연속 경로를 찾았지만 시작부에 선택 근거가 없는 분기 노드가 하나 있어 보류함'},segments:[{id:segmentId,fromStationId:candidate.fromStationId,toStationId:candidate.toStationId,geometry:{type:'LineString',coordinates:candidate.geometry},sourceVersion,verificationMethod:'game-route',verificationStatus:'pending',trackVariantId:`line:${analysis.line.entityId}`,originalTrackIds:candidate.trackPointIds}],trainRoutes:[],candidateTrainRoutes,validation:{coordinateCount:candidate.geometry.length,lengthKm:candidate.lengthKm,directDistanceKm:candidate.directDistanceKm,lengthRatio:candidate.lengthRatio,startOffsetMeters:0,endOffsetMeters:0,branchNodeCount:candidate.branchNodeCount,discontinuityCount:0,maxDistanceFromOriginalMeters:0,affectedServiceCount:candidateTrainRoutes.length,verifiedReusableServiceCount:0}};
+const output=path.join(appRoot,'data/pilots/verified-route-pilot.json');fs.mkdirSync(path.dirname(output),{recursive:true});fs.writeFileSync(output,JSON.stringify(payload,null,2)+'\n');console.log(`시범 후보 생성: 신탄진-회덕 ${candidate.geometry.length}개 원본 좌표, 분기 ${candidate.branchNodeCount}개, 검증 재사용 0개`);
