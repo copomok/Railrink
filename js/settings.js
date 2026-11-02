@@ -3,7 +3,7 @@ export const SETTINGS_VERSION=1;
 
 export const defaultSettings=()=>({
  version:SETTINGS_VERSION,
- search:{fromStationId:'',toStationId:'',timeMode:'current',fixedTime:'08:00',pax:1,cls:'general',family:'all',sort:'departure',showSoldOut:true,hideDeparted:true},
+ search:{fromStationId:'',toStationId:'',timeMode:'current',fixedTime:'08:00',pax:1,cls:'general',family:'all',routeMode:'both',sort:'departure',showSoldOut:true,hideDeparted:true},
  seat:{position:'none',direction:'none',adjacent:true,allowAlternative:true},
  transfer:{include:true,directFirst:true,minWait:15,maxWait:60,riskAlerts:true},
  notifications:{enabled:true,system:false,departure:[60,30,10],delay:true,cancel:true,platform:true,arrival:false,transferRisk:true},
@@ -26,7 +26,7 @@ export function sanitizeSettings(value,model){
   search:{
    fromStationId:stationId(search.fromStationId,model),toStationId:stationId(search.toStationId,model),
    timeMode:oneOf(search.timeMode,['current','fixed','any'],d.search.timeMode),fixedTime:/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(search.fixedTime||'')?search.fixedTime:d.search.fixedTime,
-   pax:integer(search.pax,1,6,d.search.pax),cls:oneOf(search.cls,Object.keys(model.data.classes),d.search.cls),family:oneOf(search.family,['all','ktx','chun','itx','mugunghwa'],d.search.family),
+   pax:integer(search.pax,1,6,d.search.pax),cls:oneOf(search.cls,Object.keys(model.data.classes),d.search.cls),family:oneOf(search.family,['all','ktx','chun','itx','mugunghwa'],d.search.family),routeMode:oneOf(search.routeMode,['both','direct','transfer'],transfer.include===false?'direct':d.search.routeMode),
    sort:oneOf(search.sort,['departure','departure-desc','arrival','duration','fare'],d.search.sort),showSoldOut:bool(search.showSoldOut,d.search.showSoldOut),hideDeparted:bool(search.hideDeparted,d.search.hideDeparted)
   },
   seat:{position:oneOf(seat.position,['none','window','aisle'],d.seat.position),direction:oneOf(seat.direction,['none','forward','reverse'],d.seat.direction),adjacent:bool(seat.adjacent,d.seat.adjacent),allowAlternative:bool(seat.allowAlternative,d.seat.allowAlternative)},
@@ -59,7 +59,7 @@ export function currentKstClock(now=new Date()){
 }
 export function queryFromSettings(settings,model,date,now=new Date()){
  const s=settings.search,t=settings.transfer;
- return {from:stationName(model,s.fromStationId),to:stationName(model,s.toStationId),date,pax:s.pax,cls:s.cls,grade:'all',family:s.family,sort:s.sort,after:s.timeMode==='current'?currentKstClock(now):s.timeMode==='fixed'?s.fixedTime:'',defaultTimeMode:s.timeMode,transfer:false,includeTransfer:t.include,minWait:t.minWait,maxWait:t.maxWait,transferLimit:20,showSoldOut:s.showSoldOut,hideDeparted:s.hideDeparted,directFirst:t.directFirst};
+ return {from:stationName(model,s.fromStationId),to:stationName(model,s.toStationId),date,pax:s.pax,cls:s.cls,grade:'all',family:s.family,sort:s.sort,after:s.timeMode==='current'?currentKstClock(now):s.timeMode==='fixed'?s.fixedTime:'',defaultTimeMode:s.timeMode,transfer:s.routeMode==='transfer',includeTransfer:s.routeMode==='both',minWait:t.minWait,maxWait:t.maxWait,transferLimit:20,showSoldOut:s.showSoldOut,hideDeparted:s.hideDeparted,directFirst:t.directFirst};
 }
 export function seatOptions(settings){return {position:settings.seat.position,direction:settings.seat.direction,adjacent:settings.seat.adjacent,allowAlternative:settings.seat.allowAlternative};}
 export function formatClock(value,mode='24'){

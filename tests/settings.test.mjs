@@ -10,11 +10,13 @@ test('settings persist with station IDs and create a search query from current K
  value.search.fromStationId='nimby:1';value.search.toStationId='nimby:2';value.search.pax=3;value.search.family='ktx';value.transfer.minWait=20;value.seat.position='window';store.save(value);
  const restored=createSettingsStore({model,storage}).get();assert.equal(restored.search.fromStationId,'nimby:1');assert.equal(restored.search.pax,3);
  const now=new Date('2026-11-01T06:17:00Z'),query=queryFromSettings(restored,model,'2026-11-01',now);assert.equal(query.from,'서울');assert.equal(query.to,'부산');assert.equal(query.after,'15:17');assert.equal(query.minWait,20);assert.equal(query.family,'ktx');assert.equal(seatOptions(restored).position,'window');
+ const direct=queryFromSettings({...restored,search:{...restored.search,routeMode:'direct'}},model,'2026-11-01',now);assert.equal(direct.transfer,false);assert.equal(direct.includeTransfer,false);
+ const transfer=queryFromSettings({...restored,search:{...restored.search,routeMode:'transfer'}},model,'2026-11-01',now);assert.equal(transfer.transfer,true);assert.equal(transfer.includeTransfer,false);
 });
 
 test('corrupt and stale settings recover without accepting invalid station IDs',()=>{
  const storage=memoryStorage();storage.values.set(SETTINGS_KEY,'broken');let store=createSettingsStore({model,storage});assert.equal(store.recovered,true);assert.deepEqual(store.get(),defaultSettings());
- storage.values.set(SETTINGS_KEY,JSON.stringify({version:1,search:{fromStationId:'removed',pax:99},appearance:{theme:'unknown'}}));store=createSettingsStore({model,storage});const value=store.get();assert.equal(value.search.fromStationId,'');assert.equal(value.search.pax,1);assert.equal(value.appearance.theme,'light');
+ storage.values.set(SETTINGS_KEY,JSON.stringify({version:1,search:{fromStationId:'removed',pax:99},transfer:{include:false},appearance:{theme:'unknown'}}));store=createSettingsStore({model,storage});const value=store.get();assert.equal(value.search.fromStationId,'');assert.equal(value.search.pax,1);assert.equal(value.search.routeMode,'direct');assert.equal(value.appearance.theme,'light');
 });
 
 test('storage failures are reported and time formatting is display-only',()=>{
