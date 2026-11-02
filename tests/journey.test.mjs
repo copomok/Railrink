@@ -17,6 +17,11 @@ test('in-progress journeys take precedence over future bookings and omit cancell
  assert.equal(journeyState({...overnight,departure:'broken'}).eligible,false);
  assert.equal(journeyState({...overnight,arr:'24:70'}).phase,'unknown');
 });
+test('mixed seated and standing segments appear as one same-train journey',()=>{
+ const first={...overnight,id:'mixed-1',key:'same-train',groupId:'mixed',groupType:'mixed',serviceDate:'2026-10-29',fromStn:'서울',toStn:'대전',arrival:'2026-10-29T15:00:00Z'};
+ const second={...first,id:'mixed-2',fromStn:'대전',toStn:'부산',dep:'00:02',arr:'00:20',departure:'2026-10-29T15:02:00Z',arrival:'2026-10-29T15:20:00Z'};
+ const rows=upcomingJourneys([first,second],new Date('2026-10-29T14:55:00Z'));assert.equal(rows.length,1);assert.equal(rows[0].ticket.fromStn,'서울');assert.equal(rows[0].ticket.toStn,'부산');assert.equal(rows[0].ticket.id,'mixed-1');
+});
 test('station search accepts Korean, partial names, initials and normalized whitespace',()=>{
  for(const query of ['서울','ㅅㅇ','ㅅ','서 울','서울'])assert.equal(matchesStation('서울',query),true);
  assert.equal(matchesStation('청량리','ㅊㄹㄹ'),true);

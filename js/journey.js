@@ -1,3 +1,5 @@
+import {combinedTicket,isSameTrainSeatJourney} from './ticket-journey.js';
+
 // Timetable-derived journey state, never a live railway position feed.
 export function minutes(clock) {
   const match = /^(\d{1,2}):([0-5]\d)$/.exec(String(clock));
@@ -17,7 +19,15 @@ export function journeyState(ticket, now = new Date()) {
 }
 export function upcomingJourneys(tickets, now = new Date()) {
   const rank = {riding:0,arriving:0,boarding:1,upcoming:2};
-  return tickets.map(ticket=>({ticket,state:journeyState(ticket,now)})).filter(item=>item.state.eligible)
+  const logical=[],seen=new Set();
+  for(const ticket of tickets){
+    if(ticket.groupType==='mixed'&&ticket.groupId){
+      if(seen.has(ticket.groupId))continue;seen.add(ticket.groupId);
+      const items=tickets.filter(item=>item.groupId===ticket.groupId).sort((a,b)=>Date.parse(a.departure)-Date.parse(b.departure));
+      logical.push(isSameTrainSeatJourney(items)?combinedTicket(items):ticket);
+    }else logical.push(ticket);
+  }
+  return logical.map(ticket=>({ticket,state:journeyState(ticket,now)})).filter(item=>item.state.eligible)
     .sort((a,b)=>rank[a.state.phase]-rank[b.state.phase] || a.state.departure-b.state.departure);
 }
 export function matchesStation(name, query) {

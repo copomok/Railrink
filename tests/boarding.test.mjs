@@ -44,6 +44,16 @@ test('ticket list keeps booked times and adds endpoint delay labels',()=>{
  const html=ticketsView({model,esc:String,grade:String,won:String,icon:()=>'',delayState:()=>({departureDelay:4,arrivalDelay:6,delayConfirmed:false})});
  assert.match(html,/>08:00<\/b><small class="ticket-delay">\(4분 지연 예상\)/);assert.match(html,/>10:00<\/b><small class="ticket-delay">\(6분 지연 예상\)/);
 });
+test('mixed seat segments render as one train and seat change guidance, never a transfer',()=>{
+ const firstTicket={...t,id:'mixed-1',groupId:'mixed',groupType:'mixed',sameTrain:true,toStn:'대전',arr:'09:00',arrival:new Date(at('09:00')).toISOString()};
+ const secondTicket={...firstTicket,id:'mixed-2',fromStn:'대전',toStn:'부산',dep:'09:10',arr:'10:00',departure:new Date(at('09:10')).toISOString(),arrival:new Date(at('10:00')).toISOString(),seatClass:'standing',seats:[]};
+ const first={...state('08:30'),ticket:firstTicket,arrival:at('09:00'),untilArrival:30},second={...state('07:00'),ticket:secondTicket,departure:at('09:10'),arrival:at('10:00')};
+ const model={byKey:new Map([[t.key,{no:'1',grade:'KTX'}]]),data:{colors:{KTX:'#123'},grades:{KTX:'KTX'},classes:{general:{label:'일반실'},standing:{label:'입석'}}}};
+ const html=boardingView({legs:[first,second],index:0,model,esc:String,icon:()=>'<svg></svg>',seatDescription:'5호차 12A',shareSupported:true});
+ assert.match(html,/같은 열차 좌석 이용 안내/);assert.match(html,/열차에서 내리지 마세요/);assert.doesNotMatch(html,/이 여정의 다음 열차|에서 환승/);assert.equal(transferGuidance([first,second],0).sameTrain,true);assert.equal(transferGuidance([first,second],0).risk,false);
+ const future=[firstTicket,secondTicket].map(item=>({...item,travelDate:'2099-10-30',departure:item.id==='mixed-1'?'2099-10-30T00:00:00Z':'2099-10-30T01:10:00Z',arrival:item.id==='mixed-1'?'2099-10-30T01:00:00Z':'2099-10-30T02:00:00Z'}));
+ const list=ticketsView({model:{read:()=>({tickets:future}),data:{colors:{KTX:'#123'}}},esc:String,grade:String,won:String,icon:()=>''});assert.match(list,/같은 열차에서 좌석 변경/);assert.equal((list.match(/KTX 1/g)||[]).length,1);
+});
 test('matching verified feeds, stale data, missing data and cancellations remain distinct',()=>{
  const report={verified:true,trainKey:t.key,serviceDate:t.serviceDate,updatedAt:at('09:59'),status:'arrived',arrivalStation:'부산'};
  assert.equal(state('10:00',{report}).arrived,true);

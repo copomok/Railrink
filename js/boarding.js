@@ -58,6 +58,8 @@ export function boardingState(ticket,snapshot,now=Date.now(),{report=null,offlin
 
 export function transferGuidance(legs,index,now=Date.now()){
  const current=legs[index],next=legs[index+1];if(!next)return null;
+ const sameTrain=current.ticket.groupType==='mixed'&&next.ticket.groupType==='mixed'&&current.ticket.key===next.ticket.key;
+ if(sameTrain)return {next,station:current.ticket.toStn,wait:0,remaining:null,sameStation:true,sameTrain:true,risk:false,message:'같은 열차에서 좌석 이용 방식만 바뀝니다.'};
  const sameStation=current.ticket.toStn===next.ticket.fromStn;
  const wait=current.hasTime&&next.hasTime?Math.floor((next.departure-current.arrival)/60000):null;
  const remaining=current.hasTime&&next.hasTime?Math.ceil((next.departure-Math.max(+now,current.arrival))/60000):null;
@@ -104,7 +106,11 @@ export function createBoardingService(model){
     const key=['transfer','mixed'].includes(t.groupType)?t.groupId||t.id:t.id;if(seen.has(key))continue;seen.add(key);
     const legs=this.journey(t.id,now,offline),index=activeLegIndex(legs,now),state=legs[index];
     if(!state||state.cancelled||!state.hasTime||legs.at(-1).arrival<=+now)continue;
-    journeys.push({ticket:state.ticket,state,legs,index});
+    const sameTrain=state.ticket.groupType==='mixed'&&legs.length>1&&legs.every(leg=>leg.ticket.key===legs[0].ticket.key);
+    if(sameTrain){
+      const first=legs[0],last=legs.at(-1),calculatedAt=state.calculatedAt??+now,departure=first.departure,arrival=last.arrival;
+      journeys.push({ticket:{...state.ticket,id:first.ticket.id,fromStn:first.ticket.fromStn,toStn:last.ticket.toStn,dep:first.ticket.dep,arr:last.ticket.arr,departure:first.ticket.departure,arrival:last.ticket.arrival},state:{...state,departure,arrival,untilDeparture:Math.ceil((departure-calculatedAt)/60000),untilArrival:Math.ceil((arrival-calculatedAt)/60000)},legs,index});
+    }else journeys.push({ticket:state.ticket,state,legs,index});
    }
    return journeys.sort((a,b)=>Number(b.state.stage==='ON_BOARD')-Number(a.state.stage==='ON_BOARD')||a.state.departure-b.state.departure);
   }

@@ -123,6 +123,12 @@ export function createModel(data, storage, now = () => new Date()) {
   function bookMany(drafts,options={}) {
     check(navigatorOnline(),'오프라인에서는 새 예약을 저장할 수 없습니다.');
     check(Array.isArray(drafts)&&drafts.length>0&&drafts.length<=60,'예약 구간을 확인하세요.');
+    if(options.type==='mixed'){
+      const first=drafts[0],train=byKey.get(first?.key),day=train&&serviceDate(train,first.q);
+      check(drafts.length>1&&train&&drafts.every(d=>d.key===first.key&&serviceDate(train,d.q)===day),'입석+좌석 승차권은 같은 열차의 연속 구간만 묶을 수 있습니다.');
+      check(drafts.every((d,i)=>i===0||drafts[i-1].q.to===d.q.from),'입석+좌석 이용 구간이 서로 이어져야 합니다.');
+      check(drafts.some(d=>d.q.cls==='standing')&&drafts.some(d=>d.q.cls!=='standing'),'입석 구간과 좌석 구간을 모두 확인하세요.');
+    }
     const state=read(),created=[];
     check(!options.replaceId||drafts.length===1,'여정 변경은 구간별 재예약 후 전체 확인이 필요합니다.');
     for(const draft of drafts){
@@ -132,7 +138,7 @@ export function createModel(data, storage, now = () => new Date()) {
       }
       created.push(ticket);
     }
-    if(created.length>1&&options.type!=='pass'){const groupId='J-'+crypto.randomUUID();created.forEach((t,i)=>Object.assign(t,{groupId,groupType:options.type||'journey',groupSequence:i,groupTotal:created.length}));}
+    if(created.length>1&&options.type!=='pass'){const groupId='J-'+crypto.randomUUID();created.forEach((t,i)=>Object.assign(t,{groupId,groupType:options.type||'journey',groupSequence:i,groupTotal:created.length,...(options.type==='mixed'?{sameTrain:true}:{})}));}
     if(options.pass){const id='P-'+crypto.randomUUID();state.passes=[...(state.passes||[]),{...options.pass,id,createdAt:now().toISOString()}];created.forEach(t=>t.passId=id);}
     const saved=save(state);return saved?.then?saved.then(()=>created):created;
   }
@@ -190,7 +196,7 @@ export function createModel(data, storage, now = () => new Date()) {
       if(prior&&prior.q.cls===cls&&availability(train,combined).available>=+q.pax){prior.q.to=to;}
       else runs.push({key:key(train),q:{...query,cls}});
     }
-    if(runs.length<2)return [];
+    if(runs.length<2||!runs.some(run=>run.q.cls==='standing')||!runs.some(run=>run.q.cls!=='standing'))return [];
     return runs;
   }
   function flexible(train,query){
