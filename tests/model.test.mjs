@@ -31,7 +31,7 @@ test('both apps consume the original files and one shared railway domain',()=>{
   assert.ok(sharedFiles().reduce((bytes,file)=>bytes+fs.statSync(path.join(sourceRoot,file)).size,0)<6*1024*1024);
   const network=buildRailNetwork(model);assert.equal(network.source.kind,'nimby-map-lines-exact-topology');assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.routeCount,56);assert.equal(network.source.rawTrackCount,12980);assert.equal(network.source.exactTrackGeometry,true);assert.equal(network.source.syntheticEdgeCount,0);assert.ok(network.source.verifiedSegments>90);assert.ok(network.source.unverifiedSegments>300);assert.equal(network.geometry.length,12980);
   assert.ok(context.RailData.mainlineMap.routes.every(route=>!/(도시철도|광주1호선|서울[1-9]호선)/.test(route.line)));
-  for(const number of ['2038','8039','1142','1198']){const train=model.trains.find(item=>String(item.no)===number),route=trainTrackRoute(model,train);assert.ok(route.paths.length>0,number);assert.ok(route.missingSegments>0,number);assert.equal(route.fallbackSegments,0,number);assert.equal(route.verified,false,number);}
+  for(const number of ['2038','8039','1142','1198']){const train=model.trains.find(item=>String(item.no)===number),route=trainTrackRoute(model,train);assert.ok(route.paths.length>0,number);assert.ok(route.missingSegments<=1,number);assert.ok(route.fallbackSegments>0,number);assert.equal(route.verified,false,number);}
   const html=fs.readFileSync(path.join(sourceRoot,'index.html'),'utf8');
   assert.match(html,/src="js\/shared\/nimbi_rail_domain.js/);
   const original=fs.readFileSync(path.join(sourceRoot,'js/nimbi_rail.js'),'utf8');
