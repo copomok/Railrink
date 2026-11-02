@@ -40,7 +40,7 @@ export function buildRailNetwork(model){
    if(!mainline&&previous&&previous!==station){const key=edgeKey(previous.name,station.name);let edge=edges.get(key);if(!edge){edge={a:previous,b:station,lines:new Set(),grades:new Set(),services:0,geometry:[previous.coord,station.coord]};edges.set(key,edge);}edge.lines.add(line);edge.grades.add(grade);edge.services++;}previous=station;
   }
  }
- const geometry=[];for(const route of mainline?.routes||[]){let current=[];for(const raw of route.segments||[]){const segment=(raw||[]).filter(([lon,lat])=>Number.isFinite(+lon)&&Number.isFinite(+lat));if(segment.length<2){if(current.length>1)geometry.push(current);current=[];continue;}const joined=current.length&&current.at(-1)[0]===segment[0][0]&&current.at(-1)[1]===segment[0][1];if(current.length&&!joined){geometry.push(current);current=[];}current.push(...(current.length?segment.slice(1):segment));}if(current.length>1)geometry.push(current);}
+ const geometry=[];for(const route of mainline?.routes||[]){let current=[];for(const raw of route.displaySegments||route.segments||[]){const segment=(raw||[]).filter(([lon,lat])=>Number.isFinite(+lon)&&Number.isFinite(+lat));if(segment.length<2){if(current.length>1)geometry.push(current);current=[];continue;}const joined=current.length&&current.at(-1)[0]===segment[0][0]&&current.at(-1)[1]===segment[0][1];if(current.length&&!joined){geometry.push(current);current=[];}current.push(...(current.length?segment.slice(1):segment));}if(current.length>1)geometry.push(current);}
  const result={stations:[...stations.values()],edges:[...edges.values()],geometry,stationByName:stations,
   lines:[...lineCounts].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'ko')).map(([name,services])=>({name,services})),
   source:mainline?.source?{...mainline.source,mainlineOnly:true,exactTrackGeometry:false,trainCount:model.trains.length,renderedStationCount:stations.size,linkedStationCount:[...stations.values()].filter(station=>!station.mapOnly).length}:{kind:'timetable-coordinate-topology',mainlineOnly:false,exactTrackGeometry:false,trainCount:model.trains.length,stationCount:stations.size,linkedStationCount:[...stations.values()].filter(station=>!station.mapOnly).length}
@@ -124,7 +124,7 @@ export function activeTrainMarkers(model,now=new Date(),grades=[]){
  for(const train of model.trains){
   if(allowed.size&&!allowed.has(train.grade))continue;
   const active=estimatedTrainSnapshot(model,train,now);if(!active)continue;
-  const coord=snapshotTrackCoordinate(model,train,active.snapshot);if(coord)markers.push({coord,train,query:active.query,snapshot:active.snapshot,color:model.data.colors?.[train.grade]||'#176cf4',label:`${train.grade} ${train.no}`});
+  const coord=snapshotTrackCoordinate(model,train,active.snapshot);markers.push({coord,train,query:active.query,snapshot:active.snapshot,color:model.data.colors?.[train.grade]||'#176cf4',label:`${train.grade} ${train.no}`,pathAvailable:Boolean(coord)});
  }
  return markers;
 }

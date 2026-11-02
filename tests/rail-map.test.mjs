@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createModel} from '../js/model.js';
-import {buildRailNetwork,estimatedTrainSnapshot,mercatorCoordinate,mercatorPoint,snapshotCoordinate,snapshotTrackCoordinate,stationServices,stationTimetable,trainGeoPath,trainSnapshotAt,trainTrackRoute} from '../js/rail-map.js';
+import {activeTrainMarkers,buildRailNetwork,estimatedTrainSnapshot,mercatorCoordinate,mercatorPoint,snapshotCoordinate,snapshotTrackCoordinate,stationServices,stationTimetable,trainGeoPath,trainSnapshotAt,trainTrackRoute} from '../js/rail-map.js';
 import {operationSnapshot} from '../js/operations.js';
 
 const trains=[
@@ -53,8 +53,8 @@ test('selected route follows MAP_LINES station order with one continuous simplif
 });
 
 test('a disconnected source segment remains unavailable without a direct or detour fallback',()=>{
- const train={no:'D1',grade:'ITX',line:'단절',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coords={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},mainlineMap={source:{kind:'nimby-map-lines-exact-topology',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1,verifiedSegments:0,unverifiedSegments:1,syntheticEdgeCount:0},routes:[{line:'단절',stations:[{name:'A',...coords.A},{name:'B',...coords.B}],segments:[null],segmentSources:[[]],unverifiedSegments:[0]}]},detourModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap},{getItem:()=>null}),route=trainTrackRoute(detourModel,train);
- assert.equal(route.paths.length,0);assert.equal(route.missingSegments,1);assert.equal(route.fallbackSegments,0);assert.equal(snapshotTrackCoordinate(detourModel,train,operationSnapshot(detourModel,train,{from:'A',to:'B',date:'2026-11-03'},new Date('2026-11-03T08:10:00+09:00'))),null);
+ const display=[[[127,37],[127.01,37.005],[127.02,37]]],train={no:'D1',grade:'ITX',line:'단절',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coords={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},mainlineMap={source:{kind:'nimby-map-lines-exact-topology',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1,displaySegments:1,verifiedSegments:0,unverifiedSegments:1,syntheticEdgeCount:0},routes:[{line:'단절',stations:[{name:'A',...coords.A},{name:'B',...coords.B}],displaySegments:display,segments:[null],segmentSources:[[]],unverifiedSegments:[0]}]},detourModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap},{getItem:()=>null}),route=trainTrackRoute(detourModel,train);
+ assert.deepEqual(buildRailNetwork(detourModel).geometry,display);assert.equal(route.paths.length,0);assert.equal(route.missingSegments,1);assert.equal(route.fallbackSegments,0);assert.equal(snapshotTrackCoordinate(detourModel,train,operationSnapshot(detourModel,train,{from:'A',to:'B',date:'2026-11-03'},new Date('2026-11-03T08:10:00+09:00'))),null);const running=activeTrainMarkers(detourModel,new Date('2026-11-03T08:10:00+09:00'));assert.equal(running.length,1);assert.equal(running[0].coord,null);assert.equal(running[0].pathAvailable,false);
 });
 
 test('nearby parallel alternatives are not merged or selected when their source sequences differ',()=>{

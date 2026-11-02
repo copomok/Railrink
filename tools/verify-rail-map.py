@@ -18,7 +18,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    page.wait_for_selector('a[href="#rail-map"]',timeout=60000);page.locator('a[href="#rail-map"]').click()
    page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=60000)
    assert page.locator('#rail-map-canvas .rail-source-track').count()==1
-   source_text=page.locator('.rail-live-source').inner_text();assert '원본 연결 확인 168개' in source_text;assert '확인 불가 303개' in source_text;assert '합성 연결 0개' in source_text
+   source_text=page.locator('.rail-live-source').inner_text();assert '전체 선로 471개 표시' in source_text;assert '열차 경로 확인 168개' in source_text;assert '합성 연결 0개' in source_text
    canvas=page.locator('#rail-map-canvas').bounding_box();assert canvas['width']>=480 and canvas['height']>=950
    assert not page.locator('.navigation').is_visible();assert page.locator('.rail-live-header').is_visible()
    page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill('2038');page.locator('#rail-map-search button[type="submit"]').click()
