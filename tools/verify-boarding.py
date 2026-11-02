@@ -18,9 +18,13 @@ with tempfile.TemporaryDirectory(prefix='raillink-boarding-') as directory:
    def search(transfer=False):
     for field,station in [('from','서울'),('to','부산')]:
      page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
-    page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click()
+    page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click()
     if transfer:
-     page.locator('[data-query-open=route]').click();page.locator('[name=route][value=transfer]').check();page.locator('#query-options-form [type=submit]').click();page.wait_for_selector('[data-action=book-transfer]:enabled');page.locator('[data-action=book-transfer]:enabled').first.click()
+     page.locator('[data-query-open=route]').click();page.locator('[name=route][value=transfer]').check();page.locator('#query-options-form [type=submit]').click();page.wait_for_selector('[data-action=book-transfer]:enabled');
+     for candidate in page.locator('[data-action=book-transfer]:enabled').all():
+      candidate.click()
+      if page.locator('#quick-book').is_enabled():break
+      page.locator('#close-dialog').click()
     else:page.wait_for_selector('[data-action=book]:enabled');page.locator('[data-action=book]:enabled').first.click()
     page.locator('#quick-book').click();page.locator('#passenger-form [type=submit]').click();page.locator('#confirm-form [type=checkbox]').check();page.locator('#confirm-form [type=submit]').click();page.wait_for_url('**/#complete')
    def saved():return page.evaluate("JSON.parse(localStorage.getItem('raillink.v1')).tickets")

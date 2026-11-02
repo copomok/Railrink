@@ -22,7 +22,12 @@ with tempfile.TemporaryDirectory(prefix='raillink-storage-') as directory:
     page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
    page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click()
    page.locator('[data-query-open=route]').click();page.locator('[name=route][value=transfer]').check();page.locator('#query-options-form [type=submit]').click()
-   page.wait_for_selector('[data-action=book-transfer]:enabled');page.locator('[data-action=book-transfer]:enabled').first.click();page.locator('#quick-book').click()
+   page.wait_for_selector('[data-action=book-transfer]:enabled');
+   for candidate in page.locator('[data-action=book-transfer]:enabled').all():
+    candidate.click()
+    if page.locator('#quick-book').is_enabled():break
+    page.locator('#close-dialog').click()
+   page.locator('#quick-book').click()
    page.locator('#passenger-form [type=submit]').click();page.locator('#confirm-form [type=checkbox]').check();page.locator('#confirm-form [type=submit]').click();page.wait_for_url('**/#complete')
    def stored():
     return page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('raillink-bookings',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return await new Promise(resolve=>{const r=db.transaction('state').objectStore('state').get('raillink.v1');r.onsuccess=()=>{db.close();resolve(JSON.parse(r.result));};});}""")
@@ -31,7 +36,7 @@ with tempfile.TemporaryDirectory(prefix='raillink-storage-') as directory:
    # Reopening and refunding the full journey must use the durable store too.
    page.locator('[data-action=cancel]').click();page.locator('#confirm-cancel').click();page.wait_for_selector('.ticket-group',state='detached');assert all(t['status']=='cancelled' for t in stored()['tickets'])
    page.reload();page.locator('[data-ticket-filter=history]').click();page.wait_for_selector('.ticket-group');assert '환불 완료' in page.locator('.ticket-group').inner_text();assert page.evaluate("localStorage.getItem('quota-fixture').length>1000000")
-   page.locator('[data-nav=my]').click()
+   page.locator('[data-nav=my]').click();page.locator('a[href="#settings"]').click();page.locator('a[href="#settings-privacy"]').click()
    with page.expect_download() as download_info:page.locator('[data-action=export]').click()
    exported=json.loads(Path(download_info.value.path()).read_text());assert len(exported['tickets'])==2
    page.locator('[data-action=reset]').click();page.locator('#confirm-reset').click();page.wait_for_selector('dialog[open]',state='detached');page.reload();page.locator('[data-nav=tickets]').click();page.wait_for_selector('#ticket-list .empty');assert stored() is None

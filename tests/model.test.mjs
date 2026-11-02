@@ -41,6 +41,8 @@ test('search respects direction, timed service stops, grade and sort',()=>{
   const results=model.search(q);assert.ok(results.length>0);
   for(const r of results) {assert.ok(r.seg.fi<r.seg.ti);assert.equal(r.seg.stops[r.seg.fi].s,q.from);assert.equal(r.seg.stops[r.seg.ti].s,q.to);}
   const fares=Array.from(model.search({...q,sort:'fare'}),r=>r.fare);assert.deepEqual(fares,[...fares].sort((a,b)=>a-b));
+  const late=Array.from(model.search({...q,sort:'departure-desc'}),r=>r.departure);assert.deepEqual(late,[...late].sort((a,b)=>b-a));
+  const arrivals=Array.from(model.search({...q,sort:'arrival'}),r=>r.arrival);assert.deepEqual(arrivals,[...arrivals].sort((a,b)=>a-b));
   assert.ok(model.search({...q,grade:'SRT'}).every(r=>r.train.grade==='SRT'));
   assert.equal(model.segment({stops:[{s:'A',dep:'08:00'},{s:'B',arr:'08:20',dep:null},{s:'C',arr:'09:00'}]},'A','B'),null);
 });
@@ -83,6 +85,7 @@ test('wait records do not create tickets or imaginary queue positions',()=>{
 test('same-day search excludes departures at or before the Korean current instant',()=>{
  reset();const r=model.search(q)[0],fixed=new Date(`${q.date}T${r.seg.dep.padStart(5,'0')}:00+09:00`),atDeparture=createModel(context.RailData,storage,()=>fixed);
  const rows=atDeparture.search(q);assert.ok(rows.length>0);assert.ok(rows.every(x=>atDeparture.departure(x.seg,q.date)>fixed));assert.ok(!rows.some(x=>x.key===r.key));
+ const withDeparted=atDeparture.search({...q,hideDeparted:false});assert.ok(withDeparted.some(x=>x.key===r.key&&x.departed));
  const tomorrow={...q,date:addDays(q.date,1)};assert.ok(atDeparture.search(tomorrow).some(x=>x.key===r.key));
  const justBefore=createModel(context.RailData,storage,()=>new Date(+fixed-1000));assert.ok(justBefore.search(q).some(x=>x.key===r.key));
 });

@@ -70,11 +70,11 @@ export function createModel(data, storage, now = () => new Date()) {
       if(!supportsClass(t,q.cls))return [];
       const seg=segment(t,q.from,q.to);if(!seg)return [];
       const departureTime=+departure(seg,q.date),departed=departureTime<=currentTime;
-      if(departed)return [];
+      if(departed&&q.hideDeparted!==false)return [];
       const depMinute=minuteOf(seg.dep),after=minuteOf(q.after),before=minuteOf(q.before);
       if(after!==null&&before!==null?(after<=before?(depMinute<after||depMinute>before):(depMinute<after&&depMinute>before)):after!==null?depMinute<after:before!==null&&depMinute>before)return [];
-      return [{key:key(t),train:t,seg,departed,departure:departureTime,fare:quoteFare(t,q.from,q.to,q.cls),duration:seg.duration}];
-    }).sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='duration'?a.duration-b.duration:a.departure-b.departure);
+      return [{key:key(t),train:t,seg,departed,departure:departureTime,arrival:departureTime+seg.duration*60000,fare:quoteFare(t,q.from,q.to,q.cls),duration:seg.duration}];
+    }).sort((a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='duration'?a.duration-b.duration:q.sort==='arrival'?a.arrival-b.arrival:q.sort==='departure-desc'?b.departure-a.departure:a.departure-b.departure);
   }
   function serviceDate(t,q) {
     const seg=segment(t,q.from,q.to);
@@ -152,23 +152,30 @@ export function createModel(data, storage, now = () => new Date()) {
     state.tickets=state.tickets.filter(t=>!items.includes(t));return save(state);
   }
   function autoAssign(train,q,preference='together'){
-    const cars=seats(train,q),count=+q.pax;
-    const match=(s,c)=>preference==='window'?s.col===c.cols[0]||s.col===c.cols.at(-1):preference==='aisle'?s.col!==c.cols[0]&&s.col!==c.cols.at(-1):preference==='forward'?!s.reverse:preference==='reverse'?s.reverse:true;
+    const cars=seats(train,q),count=+q.pax,legacy=typeof preference==='string';
+    const options=legacy?{position:['window','aisle'].includes(preference)?preference:'none',direction:['forward','reverse'].includes(preference)?preference:'none',adjacent:true,allowAlternative:true,random:preference==='random'}:{position:preference?.position||'none',direction:preference?.direction||'none',adjacent:preference?.adjacent!==false,allowAlternative:preference?.allowAlternative!==false,random:false};
+    const match=(s,c)=>{
+      const position=options.position==='none'||(options.position==='window'?(s.col===c.cols[0]||s.col===c.cols.at(-1)):(s.col!==c.cols[0]&&s.col!==c.cols.at(-1)));
+      const direction=options.direction==='none'||(options.direction==='forward'?!s.reverse:s.reverse);
+      return position&&direction;
+    };
     const candidates=cars.flatMap(c=>c.seats.filter(s=>!s.blocked).map(s=>({...s,car:c.car,preferred:match(s,c)})));
     const groups=[];
-    for(const car of cars)for(let row=1;row<=car.rows;row++){
+    if(options.adjacent)for(const car of cars)for(let row=1;row<=car.rows;row++){
       const same=candidates.filter(s=>s.car===car.car&&s.row===row&&s.preferred);
       for(let i=0;i<=same.length-count;i++)groups.push(same.slice(i,i+count));
     }
     if(groups.length){
-      const group=groups[preference==='random'?Math.floor(Math.random()*groups.length):0];
+      const group=groups[options.random?Math.floor(Math.random()*groups.length):0];
       return {seats:group.map(s=>s.id),split:false,preferenceMet:true};
     }
     const sorted=[...candidates].sort((a,b)=>Number(b.preferred)-Number(a.preferred));
     check(sorted.length>=count,'자동 배정할 좌석이 부족합니다.');
-    if(preference==='random')for(let i=sorted.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sorted[i],sorted[j]]=[sorted[j],sorted[i]];}
+    if(options.random)for(let i=sorted.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[sorted[i],sorted[j]]=[sorted[j],sorted[i]];}
     const chosen=sorted.slice(0,count);
-    return {seats:chosen.map(s=>s.id),split:count>1,preferenceMet:chosen.every(s=>s.preferred)};
+    const preferenceMet=chosen.every(s=>s.preferred)&&(!options.adjacent||count<2);
+    check(options.allowAlternative||preferenceMet,'선호 조건에 맞는 좌석이 없습니다. 좌석을 직접 선택하거나 대안 허용을 켜 주세요.');
+    return {seats:chosen.map(s=>s.id),split:options.adjacent&&count>1,preferenceMet};
   }
   function mixed(train,q){
     validateQuery(q);const seg=segment(train,q.from,q.to);check(seg,'선택 구간을 찾을 수 없습니다.');

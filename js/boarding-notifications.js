@@ -5,7 +5,7 @@ export function boardingEvents(legs,now=Date.now(),previous=new Map()){
  const events=[];
  legs.forEach((s,index)=>{
   const t=s.ticket,base={id:t.id,title:`${t.grade} ${t.trainNo}`,body:''};
-  const add=(kind,body,version='')=>events.push({...base,key:`${t.id}:${kind}:${version}`,body});
+  const add=(kind,body,version='')=>events.push({...base,kind,key:`${t.id}:${kind}:${version}`,body});
   if(s.cancelled){add('cancel','운휴·취소 정보를 확인하세요.');return;}
   if(!s.hasTime)return;
   if(s.untilDeparture>0&&s.untilDeparture<=60){const threshold=s.untilDeparture<=10?10:s.untilDeparture<=30?30:60;add('departure-'+threshold,`출발까지 약 ${s.untilDeparture}분 · 승차권과 탑승 정보를 확인하세요.`,s.departure);}
@@ -22,18 +22,19 @@ export function boardingEvents(legs,now=Date.now(),previous=new Map()){
  });
  return events;
 }
-export function createBoardingAlerts({service,model,notify,open,storage=globalThis.localStorage}){
+export function createBoardingAlerts({service,model,settings,notify,open,storage=globalThis.localStorage}){
  const key='raillink.boarding.alerts',previous=new Map();let seen=[];
  try{const saved=JSON.parse(storage.getItem(key)||'[]');if(Array.isArray(saved))seen=saved.filter(s=>typeof s==='string').slice(-250);}catch{}
  async function check(){
-  if(document.visibilityState!=='visible'||!model.read().notifications)return;
-  const journeys=service.upcoming(Date.now(),!navigator.onLine),events=journeys.flatMap(j=>boardingEvents(j.legs,Date.now(),previous));
+  const preferences=settings?.().notifications;if(document.visibilityState!=='visible'||preferences?.enabled===false||(!preferences&&!model.read().notifications))return;
+  const allowed=event=>{if(!preferences)return true;if(event.kind.startsWith('departure-'))return preferences.departure.includes(+event.kind.split('-')[1]);if(event.kind.startsWith('arrival-'))return preferences.arrival;if(event.kind==='delay'||event.kind==='changed-time')return preferences.delay;if(event.kind==='cancel')return preferences.cancel;if(event.kind==='platform')return preferences.platform;if(event.kind==='transfer')return preferences.transferRisk;return true;};
+  const journeys=service.upcoming(Date.now(),!navigator.onLine),events=journeys.flatMap(j=>boardingEvents(j.legs,Date.now(),previous)).filter(allowed);
   for(const event of events){
    if(seen.includes(event.key))continue;seen.push(event.key);seen=seen.slice(-250);
    try{storage.setItem(key,JSON.stringify(seen));}catch{}
    const body=`${event.title} · ${event.body}`;notify(body);
    try{
-    if(storage.getItem('raillink.systemAlerts')!=='1'||!('Notification' in window)||Notification.permission!=='granted')continue;
+    if((preferences?!preferences.system:storage.getItem('raillink.systemAlerts')!=='1')||!('Notification' in window)||Notification.permission!=='granted')continue;
     const registration=await navigator.serviceWorker?.getRegistration();
     if(registration?.active)await registration.showNotification('레일링크 탑승 안내',{body,tag:event.key,data:{boardingId:event.id}});
     else{const notification=new Notification('레일링크 탑승 안내',{body,tag:event.key});notification.onclick=()=>{window.focus();notification.close();open(event.id);};}

@@ -30,7 +30,7 @@ export function findTransfers(model,q,now) {
  }
  first.sort((a,b)=>a.dep-b.dep);for(const entries of byStation.values())entries.sort((a,b)=>a.minute-b.minute);
  const paths=[],seen=new Set(),lowerBound=(items,value)=>{let low=0,high=items.length;while(low<high){const mid=(low+high)>>1;if(items[mid].minute<value)low=mid+1;else high=mid;}return low;};
- const compare=(a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='departure'?a.departure-b.departure||a.duration-b.duration:a.duration-b.duration;
+ const compare=(a,b)=>q.sort==='fare'?a.fare-b.fare:q.sort==='arrival'?a.arrival-b.arrival:q.sort==='departure-desc'?b.departure-a.departure:q.sort==='departure'?a.departure-b.departure||a.duration-b.duration:a.duration-b.duration;
  const addPath=path=>{let low=0,high=paths.length;while(low<high){const mid=(low+high)>>1;if(compare(paths[mid],path)<=0)low=mid+1;else high=mid;}paths.splice(low,0,path);if(paths.length>limit)paths.pop();};
  for(const a of first){
   if(q.sort==='departure'&&paths.length===limit&&a.dep>paths.at(-1).departure)break;

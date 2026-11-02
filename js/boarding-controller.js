@@ -1,7 +1,7 @@
 import {createBoardingService,activeLegIndex,ticketQuery,safeJourneyText,calendarFile} from './boarding.js';
 import {boardingView} from './boarding-view.js';
 
-export function createBoardingController({model,main,esc,icon,go,notify,ticket,operation,receipt,rebook,alerts,history}){
+export function createBoardingController({model,main,esc,icon,go,notify,settings,clock,ticket,operation,receipt,rebook,alerts,history}){
  const service=createBoardingService(model),key='raillink.boarding.selected';
  let selected='',origin='tickets';
  try{selected=sessionStorage.getItem(key)||'';}catch{}
@@ -17,7 +17,7 @@ export function createBoardingController({model,main,esc,icon,go,notify,ticket,o
   // Keep focus and scroll while updating the minute-based display.
   const focused=main.contains(document.activeElement)?document.activeElement:null;
   const selector=focused?.dataset.boardingAction?`[data-boarding-action="${focused.dataset.boardingAction}"]`:focused?.id==="boarding-panel"?'#boarding-panel':null;
-  main.innerHTML=boardingView({legs,index,model,esc,icon,seatDescription:service.seatDescription(legs[index].ticket),shareSupported:legs[index].hasTime&&(!!navigator.share||!!navigator.clipboard?.writeText)});
+  main.innerHTML=boardingView({legs,index,model,esc,icon,preferences:settings?.().boarding,clock,seatDescription:service.seatDescription(legs[index].ticket),shareSupported:legs[index].hasTime&&(!!navigator.share||!!navigator.clipboard?.writeText)});
   if(selector)main.querySelector(selector)?.focus({preventScroll:true});
  }
  function open(id){
