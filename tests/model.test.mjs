@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {runtimeSource,sharedFiles,sourceRoot,tokenSource,ticketExcludedFiles} from '../tools/source.mjs';
 import {createModel,kstDate,addDays,STORE_KEY} from '../js/model.js';
+import {buildRailNetwork,trainTrackRoute} from '../js/rail-map.js';
 const memory=new Map();
 const storage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v)};
 const context={console,localStorage:storage,setTimeout:()=>0,clearTimeout(){},setInterval:()=>0,clearInterval(){}};
@@ -24,9 +25,13 @@ test('both apps consume the original files and one shared railway domain',()=>{
   assert.ok(sharedFiles().includes('data/nimbi_global_schedule_revision.js'));
   assert.ok(ticketExcludedFiles.every(file=>!sharedFiles().includes(file)));
   assert.ok(sharedFiles().length<30);
-  assert.ok(sharedFiles().includes('data/nimbi_latest_map.js'));
-  assert.ok(fs.statSync(path.join(sourceRoot,'data/nimbi_latest_map.js')).size<1.5*1024*1024);
+  assert.ok(sharedFiles().includes('data/nimbi_mainline_map.js'));
+  assert.ok(!sharedFiles().includes('data/nimbi_latest_map.js'));
+  assert.ok(fs.statSync(path.join(sourceRoot,'data/nimbi_mainline_map.js')).size<64*1024);
   assert.ok(sharedFiles().reduce((bytes,file)=>bytes+fs.statSync(path.join(sourceRoot,file)).size,0)<4*1024*1024);
+  const network=buildRailNetwork(model);assert.equal(network.source.kind,'nimby-map-lines');assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.routeCount,56);assert.equal(network.source.edgeCount,465);
+  assert.ok(context.RailData.mainlineMap.routes.every(route=>!/(도시철도|광주1호선|서울[1-9]호선)/.test(route.line)));
+  for(const number of ['2038','8039','1142','1198']){const train=model.trains.find(item=>String(item.no)===number),route=trainTrackRoute(model,train);assert.equal(route.paths.length,1,number);assert.equal(route.missingSegments,0,number);assert.equal(route.fallbackSegments,0,number);assert.ok(route.paths[0].length>=30,number);}
   const html=fs.readFileSync(path.join(sourceRoot,'index.html'),'utf8');
   assert.match(html,/src="js\/shared\/nimbi_rail_domain.js/);
   const original=fs.readFileSync(path.join(sourceRoot,'js/nimbi_rail.js'),'utf8');

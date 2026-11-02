@@ -20,12 +20,13 @@ test('network uses verified timetable order, including coordinate pass points, w
  assert.equal(trainGeoPath(model,trains[0]).length,3);
 });
 
-test('network prefers exact save-file geometry and exposes map-only stations without inventing timetable service',()=>{
- const latestMap={source:{exactTrackGeometry:true,saveName:'Mysterious Enterprise.nimbyrails5',parsedStationCount:2,edgeCount:1},tracks:[[[126.9,37.5],[127.1,37.4]]],stations:[{id:'raw-a',name:'가',lat:37.5,lon:126.9},{id:'raw-x',name:'원본전용',lat:37.4,lon:127.1}]};
- const exactModel=createModel({...data,latestMap},{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00')),network=buildRailNetwork(exactModel),station=network.stations.find(item=>item.name==='가'),mapOnly=network.stations.find(item=>item.name==='원본전용');
- assert.equal(network.source.exactTrackGeometry,true);assert.equal(network.source.kind,'nimbyrails5-track-geometry');assert.deepEqual(network.geometry,latestMap.tracks);
- assert.deepEqual(station.coord,{lat:37.5,lon:126.9});assert.equal(station.sourceId,'raw-a');assert.equal(station.mapOnly,false);
- assert.equal(mapOnly.mapOnly,true);assert.equal(mapOnly.stopping,false);assert.equal(network.source.linkedStationCount,1);
+test('network uses the original MAP_LINES mainline routes and ignores detailed save geometry',()=>{
+ const mainlineMap={source:{kind:'nimby-map-lines',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1},routes:[{id:'main:0',line:'본선',stations:[{name:'가',lat:37.5,lon:126.9},{name:'원본전용',lat:37.4,lon:127.1}]}]};
+ const latestMap={source:{exactTrackGeometry:true},tracks:[[[128,35],[129,36]]],stations:[{name:'전철역',lat:35,lon:128}]};
+ const mainlineModel=createModel({...data,mainlineMap,latestMap},{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00')),network=buildRailNetwork(mainlineModel),station=network.stations.find(item=>item.name==='가'),mapOnly=network.stations.find(item=>item.name==='원본전용');
+ assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.kind,'nimby-map-lines');assert.deepEqual(network.geometry,[[[126.9,37.5],[127.1,37.4]]]);
+ assert.deepEqual(station.coord,{lat:37.5,lon:126.9});assert.equal(station.mapOnly,false);assert.equal(mapOnly.mapOnly,true);assert.equal(mapOnly.stopping,false);
+ assert.equal(network.stations.some(item=>item.name==='전철'),false);
 });
 
 test('timetable estimate follows an overnight train and returns its geographic position',()=>{
@@ -45,13 +46,13 @@ test('selected overnight train keeps the running service instance across midnigh
  const morning={...overnight,no:'500',stops:[{s:'영덕',dep:'5:00'},{s:'서울',arr:'7:00'}]},morningModel=createModel({...nightData,trains:[morning]},{getItem:()=>null}),future=trainSnapshotAt(morningModel,morning,new Date('2026-11-03T00:10:00+09:00'));assert.equal(future.snapshot.trainPhase,'before');assert.equal(future.snapshot.serviceDate,'2026-11-03');
 });
 
-test('selected route follows source track intermediate coordinates and never substitutes a station-to-station chord',()=>{
- const curve={no:'C1',grade:'ITX',line:'곡선',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},curveData={trains:[curve],stationDB:{A역:{lat:37,lon:127},B역:{lat:37,lon:127.02}},stops:train=>train.stops,coordinate:name=>({A:{lat:37,lon:127},B:{lat:37,lon:127.02}}[name]),isPass:()=>false,latestMap:{source:{exactTrackGeometry:true,parsedStationCount:2,edgeCount:2},stations:[{id:'a',name:'A',lat:37,lon:127},{id:'b',name:'B',lat:37,lon:127.02}],tracks:[[[127,37],[127.01,37.01],[127.02,37]]]}},curveModel=createModel(curveData,{getItem:()=>null}),route=trainTrackRoute(curveModel,curve);
- assert.equal(route.missingSegments,0);assert.equal(route.paths.length,1);assert.ok(route.paths[0].some(point=>point.coord.lat===37.01));
+test('selected route follows MAP_LINES station order with one continuous simplified path',()=>{
+ const curve={no:'C1',grade:'ITX',line:'곡선',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coordinates={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},mainlineMap={source:{kind:'nimby-map-lines',mainlineOnly:true,routeCount:1,stationCount:3,edgeCount:2},routes:[{line:'곡선',stations:[{name:'A',...coordinates.A},{name:'C',lat:37.01,lon:127.01},{name:'B',...coordinates.B}]}]},curveData={trains:[curve],stationDB:{A역:coordinates.A,B역:coordinates.B},stops:train=>train.stops,coordinate:name=>coordinates[name],isPass:()=>false,mainlineMap},curveModel=createModel(curveData,{getItem:()=>null}),route=trainTrackRoute(curveModel,curve);
+ assert.equal(route.missingSegments,0);assert.equal(route.paths.length,1);assert.equal(route.fallbackSegments,0);assert.ok(route.paths[0].some(point=>point.coord.lat===37.01));
  const snapshot=operationSnapshot(curveModel,curve,{from:'A',to:'B',date:'2026-11-03'},new Date('2026-11-03T08:10:00+09:00')),position=snapshotTrackCoordinate(curveModel,curve,snapshot);assert.ok(position.lat>37.009);assert.ok(position.lon>127.009&&position.lon<127.011);
 });
 
-test('route matching rejects a connected but geographically implausible detour around a broken segment',()=>{
- const train={no:'D1',grade:'ITX',line:'단절',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coords={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},latestMap={source:{exactTrackGeometry:true,parsedStationCount:2,edgeCount:3},stations:[{id:'a',name:'A',lat:37,lon:127},{id:'b',name:'B',lat:37,lon:127.02}],tracks:[[[127,37],[127,37.1],[127.02,37.1],[127.02,37]]]},detourModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,latestMap},{getItem:()=>null}),route=trainTrackRoute(detourModel,train);
- assert.equal(route.paths.length,0);assert.equal(route.missingSegments,1);
+test('disconnected source routes use one direct interstation fallback instead of dropping the segment',()=>{
+ const train={no:'D1',grade:'ITX',line:'단절',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},coords={A:{lat:37,lon:127},B:{lat:37,lon:127.02}},mainlineMap={source:{kind:'nimby-map-lines',mainlineOnly:true,routeCount:2,stationCount:4,edgeCount:2},routes:[{line:'서쪽',stations:[{name:'A',...coords.A},{name:'X',lat:37.01,lon:126.99}]},{line:'동쪽',stations:[{name:'B',...coords.B},{name:'Y',lat:37.01,lon:127.03}]}]},detourModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap},{getItem:()=>null}),route=trainTrackRoute(detourModel,train);
+ assert.equal(route.paths.length,1);assert.equal(route.missingSegments,0);assert.equal(route.fallbackSegments,1);assert.deepEqual(route.paths[0].map(point=>point.coord),[coords.A,coords.B]);
 });
