@@ -15,9 +15,12 @@ export function ticketTimes(t){
 export function boardingTickets(tickets,id){
  const ticket=tickets.find(t=>t.id===id&&t.status==='active');
  if(!ticket)return [];
- if(ticket.groupType==='mixed'&&Array.isArray(ticket.seatSegments))return seatSegments(ticket).map((segment,index)=>({...ticket,...segment,id:`${ticket.id}:seat:${index}`,parentTicketId:ticket.id,seatSegmentIndex:index}));
  return (ticket.groupId&&['transfer','mixed'].includes(ticket.groupType)?tickets.filter(t=>t.groupId===ticket.groupId&&t.status==='active'):[ticket])
   .sort((a,b)=>Date.parse(a.departure)-Date.parse(b.departure));
+}
+export function currentSeatSegment(ticket,now=Date.now()){
+ const sections=Array.isArray(ticket?.seatSegments)?seatSegments(ticket):[];if(!sections.length)return ticket;
+ const timestamp=+now;return sections.find(section=>timestamp<Date.parse(section.arrival))||sections.at(-1);
 }
 // Optional future verified feed contract. No current upstream simulation is a verified feed.
 function verifiedReport(report,t,now){
@@ -91,12 +94,12 @@ export function createBoardingService(model){
   return boardingState(ticket,snapshot,now,{offline});
  }
  return {
-  seatDescription(ticket){
-   if(!ticket.seats?.length)return '지정 좌석 없음';
-   const key=JSON.stringify([ticket.key,ticket.seatClass,ticket.seats]);
+  seatDescription(ticket,now=Date.now()){
+   const usage=currentSeatSegment(ticket,now);if(!usage?.seats?.length)return '지정 좌석 없음';
+   const key=JSON.stringify([usage.key,usage.seatClass,usage.seats]);
    if(!seatCache.has(key)){
-    let seats=[];try{const train=model.byKey.get(ticket.key);if(train)seats=model.seats(train,ticketQuery(ticket)).flatMap(c=>c.seats);}catch{}
-    seatCache.set(key,ticket.seats.join(' · '));
+    let seats=[];try{const train=model.byKey.get(usage.key);if(train)seats=model.seats(train,ticketQuery(usage)).flatMap(c=>c.seats);}catch{}
+    seatCache.set(key,usage.seats.join(' · '));
    }
    return seatCache.get(key);
   },

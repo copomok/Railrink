@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createModel} from '../js/model.js';
-import {boardingState,boardingTickets,ticketTimes,activeLegIndex,transferGuidance,createBoardingService,calendarFile,safeJourneyText} from '../js/boarding.js';
+import {boardingState,boardingTickets,ticketTimes,activeLegIndex,transferGuidance,createBoardingService,calendarFile,safeJourneyText,currentSeatSegment} from '../js/boarding.js';
 import {boardingEvents} from '../js/boarding-notifications.js';
 import {boardingView} from '../js/boarding-view.js';
 import {ticketsView} from '../js/tickets.js';
@@ -81,8 +81,8 @@ test('local ticket identity, cancellation, transfer grouping and roundtrip isola
  assert.equal(boardingTickets([first,{...second,status:'cancelled'}],'second').length,0);
  assert.equal(boardingTickets([{...first,groupType:'roundtrip'},second],first.id).length,1);
  assert.equal(boardingTickets([first,{...second,status:'cancelled'}],first.id).length,1);
- const mixed={...t,groupType:'mixed',sameTrain:true,seatSegments:[{...t,fromStn:'서울',toStn:'대전',arr:'09:00',arrival:new Date(at('09:00')).toISOString()},{...t,fromStn:'대전',toStn:'부산',dep:'09:10',seatClass:'standing',seats:[]}]};
- const sections=boardingTickets([mixed],mixed.id);assert.equal(sections.length,2);assert.equal(sections[0].parentTicketId,mixed.id);assert.equal(sections[1].seatClass,'standing');assert.notEqual(sections[0].id,sections[1].id);
+ const mixed={...t,groupType:'mixed',sameTrain:true,seatSegments:[{...t,fromStn:'서울',toStn:'대전',arr:'09:00',arrival:new Date(at('09:00')).toISOString()},{...t,fromStn:'대전',toStn:'부산',dep:'09:10',departure:new Date(at('09:10')).toISOString(),seatClass:'standing',seats:[]}]};
+ const journey=boardingTickets([mixed],mixed.id);assert.equal(journey.length,1);assert.equal(journey[0].id,mixed.id);assert.equal(journey[0].fromStn,'서울');assert.equal(journey[0].toStn,'부산');assert.equal(currentSeatSegment(mixed,at('08:30')).seatClass,'general');assert.equal(currentSeatSegment(mixed,at('09:05')).seatClass,'standing');
 });
 test('transfer wait uses revised absolute arrival/departure and switches during the wait',()=>{
  const first=state('09:00'),second={...first,ticket:{...t,id:'second',fromStn:'부산'},departure:at('10:20'),arrival:at('12:00')};
