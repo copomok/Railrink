@@ -6,15 +6,15 @@
 
 - 원본 기하: `Mysterious Enterprise.nimbyrails5`에서 추출한 70,281개 유효 선로점과 58,927개 명시적 참조 간선이다. 이 계층에는 단순화를 적용하지 않는다. 원본 SHA-256은 `9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530`이다.
 - 운행 가능 위상: 원본 레코드의 참조 간선과 좌표가 완전히 같은 정점만 연결한다. 가까운 끝점, 평면 교차, 나란한 복선은 연결 근거로 사용하지 않는다.
-- 표시 기하: 위상 경로가 하나로 확인된 뒤에만 Douglas-Peucker 방식으로 25m 허용 오차를 적용한다. 분기 정점은 보호하며, 단순화된 점을 운행 연결 근거로 다시 사용하지 않는다.
+- 표시 기하: 전체 지도는 저장 파일에서 추출한 원본 선로 12,980개를 좌표 그대로 표시한다. 선택 열차 경로만 위상 경로가 하나로 확인된 뒤 25m 허용 오차를 적용한다.
 
-`tools/extract_nimbyrails5_map.py`가 저장 파일을 `data/nimbi_latest_map.js`로 추출하고, `tools/build_mainline_map.mjs`가 `MAP_LINES`의 일반철도 역 순서와 위상 그래프를 대조해 `data/nimbi_mainline_map.js`를 만든다. `METRO_LINES`는 생성 및 RailLink 실행 묶음에서 제외한다.
+`tools/extract_nimbyrails5_map.py`가 저장 파일을 `data/nimbi_latest_map.js`로 추출하고 RailLink가 이 파일의 모든 원본 선로를 로드한다. `tools/build_mainline_map.mjs`가 만든 일반철도 위상 데이터는 선택 열차 경로 검증에만 사용한다.
 
 ```sh
 cd NIMBYRAILTABLE
 python3 tools/extract_nimbyrails5_map.py \
-  --input '../attachments/a5e1cb33-55b5-4569-84ed-8ed793039994/Mysterious Enterprise.nimbyrails5' \
-  --output data/nimbi_latest_map.js
+  '../attachments/a5e1cb33-55b5-4569-84ed-8ed793039994/Mysterious Enterprise.nimbyrails5' \
+  data/nimbi_latest_map.js
 node tools/build_mainline_map.mjs
 ```
 
@@ -24,7 +24,7 @@ node tools/build_mainline_map.mjs
 
 현재 56개 일반철도 경로의 471개 역간 정의 가운데 168개는 원본 연결이 하나로 확인됐고 303개는 확인 불가로 남았다. 합성 연결은 0개다. 확인 불가의 주원인은 병렬 선로가 여러 독립 연결요소로 저장되어 어느 선로가 해당 열차 노선인지 판별할 track ID가 일반 열차 데이터에 없기 때문이다. 선택 경로는 확인된 구간만 분리해서 표시한다. 운행 열차 목록은 경로 확인 결과와 독립적으로 유지하며, 위치를 계산할 수 없는 열차는 지도 아이콘 대신 `지도 경로 확인 불가` 상태로 표시한다.
 
-전체 철도망 표시는 이 검증 결과와 분리한다. 직전 정상 버전의 `MAP_LINES` 일반철도 표시 Geometry 471개를 `data/nimbi_mainline_display_baseline.js`에 보존하고 모두 렌더링한다. 열차 경로 계산만 엄격한 `segments`를 사용하므로 경로 확인 실패가 전체 철도망을 숨기지 않는다.
+전체 철도망 표시는 이 검증 결과와 분리한다. `nimbi_latest_map.js`의 원본 선로 12,980개와 70,281개 좌표를 그대로 렌더링한다. 열차 경로 계산만 엄격한 `segments`를 사용하므로 경로 확인 실패가 전체 철도망을 숨기지 않는다.
 
 선택 열차 경로도 같은 `segmentSources` 원본 식별자 열을 사용한다. 동일한 두 역 사이에 서로 다른 원본 식별자 열이 둘 이상 존재하면 하나를 임의 선택하지 않는다. 분기점에서 별도 연결 간선이 없는 평면 교차도 환승 가능한 연결로 보지 않는다.
 
@@ -50,3 +50,11 @@ Node 회귀 테스트는 다음을 검사한다.
 ## 남은 데이터 제약
 
 현재 일반 열차 시간표에는 저장 파일의 선로 entity ID 또는 방향별 track ID 대응 정보가 없다. 따라서 서울·대전·울산과 복선 구간의 여러 독립 원본 선로 중 실제 운행 선로를 완전히 판별할 수 없다. 저장 파일의 노선 entity와 일반 열차 운행 데이터를 안정적으로 매핑하는 자료가 추가되면, 보류된 구간을 같은 검증 절차로 늘릴 수 있다. 근거가 생기기 전까지는 불완전한 표시가 잘못된 연결과 대규모 우회보다 안전한 결과다.
+
+## 검증 경로 시범 데이터
+
+운영 지도와 분리된 `data/pilots/verified-route-pilot.json`에 공통 구간 구조를 시범 구현했다. 우선 후보였던 서울–수원–천안은 서울–수원과 수원–평택의 단일 연결요소를 저장 파일 참조만으로 확정할 수 없어 확장하지 않았다. 대신 같은 경부선의 평택–천안 구간을 선정했다.
+
+이 구간은 저장 파일의 명시적 참조 간선 9개 원본 path를 따라 61개 원본 좌표로 연속된다. 길이는 22.366km, 직선거리 대비 1.076배이며 불연속과 원본 선로 이탈은 0이다. 평택과 천안의 저장 파일 station ID, 원본 SHA-256, 각 path의 좌표 해시를 함께 기록했다. 시간표상 이 구간을 연속 이용하는 279개 운행은 하나의 segment ID를 정·역방향으로 재사용하며, 전체 노선이 검증된 것은 아니므로 상태는 `partial`이다.
+
+`tools/build-verified-route-pilot.mjs`가 시범 데이터를 재생성한다. `tests/pilot-route.test.mjs`는 시범 Geometry의 모든 인접 좌표가 실제 저장 파일 참조 간선인지, 원본 해시가 일치하는지, 서울 후보가 보류됐는지, 공통 구간이 양방향 운행에서 재사용되는지 확인한다. 이 시범 데이터는 아직 운영 열차 경로에 연결하지 않는다.

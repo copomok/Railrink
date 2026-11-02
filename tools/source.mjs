@@ -7,7 +7,6 @@ export const sourceRoot = path.resolve(process.env.RAIL_SOURCE || path.join(appR
 // history and notice payloads added more than 4 MiB without contributing to search,
 // fares, tickets or boarding guidance.
 export const ticketExcludedFiles = Object.freeze([
-  'data/nimbi_latest_map.js',
   'data/nimbi_metro.js',
   'data/nimbi_metro_sched.js',
   'data/nimbi_metro_schedule_updates.js',
@@ -35,7 +34,7 @@ export function sharedFiles() {
   if (files.some(f => !/^(data|js)\/[\w/.-]+\.js$/.test(f) || f.includes('..'))) throw new Error('Invalid shared file path');
   return files;
 }
-export function railDataSource(){return `window.RailData=Object.freeze({trains:ALL_TRAINS,grades:GL,colors:GRADE_COLORS,classes:SEAT_CLASSES,discounts:DISCOUNTS,stops:NIMBI_Demand.getStops,fare:calcFare,discount:applyDiscount,formation:getFormationType,cars:getCarComposition,classCars:getCarsForClass,seatId,inventory:getSeatInventoryState,forecast:_delayForecast,platform:_realPlatform,virtualSeats:generateVirtualBookings,bookedSeats:getBookedSeats,invalidate:invalidateCongestion,duration:durMin,coordinate:_stnCoord,isPass:isPassStop,distance:routeDistanceKm,stationDB:STATION_DB,mainlineMap:globalThis.NIMBI_MAINLINE_MAP||null,setSimulation:enabled=>{_simDelayOn=!!enabled;},delayState:_simState,delayAt:_simDelayAtStop,delayPair:_simDelayPairAtStop});`;}
+export function railDataSource(){return `window.RailData=Object.freeze({trains:ALL_TRAINS,grades:GL,colors:GRADE_COLORS,classes:SEAT_CLASSES,discounts:DISCOUNTS,stops:NIMBI_Demand.getStops,fare:calcFare,discount:applyDiscount,formation:getFormationType,cars:getCarComposition,classCars:getCarsForClass,seatId,inventory:getSeatInventoryState,forecast:_delayForecast,platform:_realPlatform,virtualSeats:generateVirtualBookings,bookedSeats:getBookedSeats,invalidate:invalidateCongestion,duration:durMin,coordinate:_stnCoord,isPass:isPassStop,distance:routeDistanceKm,stationDB:STATION_DB,mainlineMap:globalThis.NIMBI_MAINLINE_MAP||null,latestMap:globalThis.NIMBI_LATEST_MAP||null,setSimulation:enabled=>{_simDelayOn=!!enabled;},delayState:_simState,delayAt:_simDelayAtStop,delayPair:_simDelayPairAtStop});`;}
 export function runtimeSource() {
   return 'window.NIMBI_DISABLE_WEATHER = true;\n' + sharedFiles().map(f => `\n// Source: NIMBYRAILTABLE/${f}\n${fs.readFileSync(path.join(sourceRoot, f), 'utf8')}\n;`).join('\n') + railDataSource();
 }
