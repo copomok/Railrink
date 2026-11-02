@@ -24,3 +24,10 @@ test('storage failures are reported and time formatting is display-only',()=>{
  const storage={getItem:()=>null,setItem(){const error=Error('full');error.name='QuotaExceededError';throw error;}};const store=createSettingsStore({model,storage});assert.throws(()=>store.save(store.get()),/공간/);
  assert.equal(currentKstClock(new Date('2026-11-01T15:05:00Z')),'00:05');assert.equal(formatClock('16:25','12'),'오후 4:25');assert.equal(formatClock('00:05','12'),'오전 12:05');assert.equal(formatClock('16:25','24'),'16:25');assert.equal(store.get().appearance.dateFormat,'korean');
 });
+
+test('durable async settings save succeeds when compatibility localStorage is full',async()=>{
+ let raw=null,release;const storage={getItem:()=>raw,setItem:(key,value)=>new Promise(resolve=>{release=()=>{raw=value;resolve();};})};
+ const quota=()=>{const error=Error('full');error.name='QuotaExceededError';throw error;},legacyStorage={getItem:()=>null,setItem:quota};
+ const store=createSettingsStore({model,storage,legacyStorage}),next=store.get();next.search.routeOrder='transfer';const saving=store.save(next);
+ assert.equal(store.get().search.routeOrder,'direct');release();await saving;assert.equal(store.get().search.routeOrder,'transfer');assert.equal(JSON.parse(raw).search.routeOrder,'transfer');
+});

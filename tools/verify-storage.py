@@ -18,6 +18,10 @@ with tempfile.TemporaryDirectory(prefix='raillink-storage-') as directory:
    page.reload();page.wait_for_selector('#open-date')
    full=page.evaluate("""()=>{let value='';for(let step=2**23;step>=1;step=Math.floor(step/2)){try{localStorage.setItem('quota-fixture',value+'x'.repeat(step));value+='x'.repeat(step);}catch{}}try{localStorage.setItem('quota-check','x'.repeat(5000));return false;}catch(e){return e.name==='QuotaExceededError';}}""")
    assert full
+   # Settings must use the durable store even when the localStorage mirror is full.
+   page.locator('[data-nav=my]').click();page.locator('a[href="#settings"]').click();page.locator('a[href="#settings-search"]').click();page.locator('[name=routeOrder]').select_option('transfer');page.locator('#settings-search-form [type=submit]').click();page.wait_for_url('**/#settings');assert '저장했습니다' in page.locator('#message').inner_text()
+   saved_setting=page.evaluate("""async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('raillink-bookings',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});return await new Promise(resolve=>{const r=db.transaction('state').objectStore('state').get('raillink.settings.v1');r.onsuccess=()=>{db.close();resolve(JSON.parse(r.result));};});}""")
+   assert saved_setting['search']['routeOrder']=='transfer';page.reload();page.wait_for_selector('a[href="#settings-search"]');page.locator('a[href="#settings-search"]').click();assert page.locator('[name=routeOrder]').input_value()=='transfer';page.evaluate("location.hash='search'");page.wait_for_selector('#search-form')
    for field,station in [('from','서울'),('to','부산')]:
     page.locator('[data-station='+field+']').click();page.locator('#station-query').fill(station);page.locator('[data-st="'+station+'"]').click()
    page.locator('#open-date').click();page.get_by_role('button',name='내일',exact=True).click();page.locator('[name=after]').fill('10:00');page.locator('#date-form [type=submit]').click();page.locator('#search-form [type=submit]').click()

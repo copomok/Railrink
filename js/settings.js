@@ -37,17 +37,19 @@ export function sanitizeSettings(value,model){
  };
 }
 
-export function createSettingsStore({model,storage=globalThis.localStorage}={}){
+export function createSettingsStore({model,storage=globalThis.localStorage,legacyStorage=globalThis.localStorage}={}){
  let recovered=false,current;
  try{
   const raw=storage.getItem(SETTINGS_KEY);
   if(raw){const parsed=JSON.parse(raw);recovered=parsed?.version!==SETTINGS_VERSION;current=sanitizeSettings(parsed,model);}
-  else {current=defaultSettings();const theme=storage.getItem('raillink.theme');if(['system','light','dark'].includes(theme))current.appearance.theme=theme;current.notifications.system=storage.getItem('raillink.systemAlerts')==='1';current=sanitizeSettings(current,model);}
+  else {current=defaultSettings();const theme=legacyStorage?.getItem?.('raillink.theme');if(['system','light','dark'].includes(theme))current.appearance.theme=theme;current.notifications.system=legacyStorage?.getItem?.('raillink.systemAlerts')==='1';current=sanitizeSettings(current,model);}
  }catch{current=sanitizeSettings(defaultSettings(),model);recovered=true;}
  const write=value=>{
   const next=sanitizeSettings(value,model);if(next.transfer.maxWait<next.transfer.minWait)throw Error('최대 환승 대기시간은 최소 대기시간 이상이어야 합니다.');
-  try{storage.setItem(SETTINGS_KEY,JSON.stringify(next));storage.setItem('raillink.theme',next.appearance.theme);storage.setItem('raillink.systemAlerts',next.notifications.system?'1':'0');}catch(error){throw new Error(error?.name==='QuotaExceededError'?'설정 저장 공간이 부족합니다.':'설정을 저장하지 못했습니다. 브라우저 저장 권한을 확인하세요.',{cause:error});}
-  current=next;return clone(current);
+  const failed=error=>{throw new Error(error?.name==='QuotaExceededError'?'설정 저장 공간이 부족합니다.':'설정을 저장하지 못했습니다. 브라우저 저장 권한을 확인하세요.',{cause:error});};
+  const saved=()=>{current=next;try{legacyStorage?.setItem?.('raillink.theme',next.appearance.theme);legacyStorage?.setItem?.('raillink.systemAlerts',next.notifications.system?'1':'0');}catch{}return clone(current);};
+  let result;try{result=storage.setItem(SETTINGS_KEY,JSON.stringify(next));}catch(error){return failed(error);}
+  return result?.then?result.then(saved,failed):saved();
  };
  return {get:()=>clone(current),save:write,reset:()=>write(defaultSettings()),get recovered(){return recovered;}};
 }

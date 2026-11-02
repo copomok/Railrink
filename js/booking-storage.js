@@ -1,6 +1,6 @@
-// Keep bookings in a transactional store; localStorage is a compatibility mirror.
+// Keep app state in a transactional store; localStorage is a compatibility mirror.
 // Railway caches and other apps on this origin share localStorage's small quota.
-export async function openBookingStorage(key){
+export async function openAppStorage(key){
  let database=null,current=null;
  const legacy=()=>{try{return localStorage.getItem(key);}catch{return null;}};
  try{
@@ -17,7 +17,7 @@ export async function openBookingStorage(key){
  });
  async function refresh(){const stored=database?await transaction('readonly',store=>store.get(key)):undefined;current=stored===undefined?legacy():stored;return current;}
  await refresh();
- const channel=typeof BroadcastChannel==='function'?new BroadcastChannel('raillink-bookings'):null;
+ const channel=typeof BroadcastChannel==='function'?new BroadcastChannel(`raillink-storage:${key}`):null;
  const listeners=new Set();channel?.addEventListener('message',async()=>{await refresh();listeners.forEach(fn=>fn());});
  return {
   getItem:()=>database?current:legacy(),refresh,
@@ -38,3 +38,5 @@ export async function openBookingStorage(key){
   onChange:fn=>listeners.add(fn)
  };
 }
+
+export const openBookingStorage=openAppStorage;
