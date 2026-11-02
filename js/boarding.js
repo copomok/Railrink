@@ -1,5 +1,6 @@
 import {operationSnapshot,operationPosition} from './operations.js';
 import {clockAt,dateAt,minuteOf} from './railway-time.js';
+import {seatSegments} from './ticket-journey.js';
 
 export const STAGES=['BEFORE_BOARDING','ON_BOARD','AFTER_ARRIVAL'];
 export const stageNames=['탑승 전','탑승 중','도착 후'];
@@ -14,6 +15,7 @@ export function ticketTimes(t){
 export function boardingTickets(tickets,id){
  const ticket=tickets.find(t=>t.id===id&&t.status==='active');
  if(!ticket)return [];
+ if(ticket.groupType==='mixed'&&Array.isArray(ticket.seatSegments))return seatSegments(ticket).map((segment,index)=>({...ticket,...segment,id:`${ticket.id}:seat:${index}`,parentTicketId:ticket.id,seatSegmentIndex:index}));
  return (ticket.groupId&&['transfer','mixed'].includes(ticket.groupType)?tickets.filter(t=>t.groupId===ticket.groupId&&t.status==='active'):[ticket])
   .sort((a,b)=>Date.parse(a.departure)-Date.parse(b.departure));
 }
@@ -77,13 +79,13 @@ export function createBoardingService(model){
  function leg(ticket,now,offline){
   const train=model.byKey.get(ticket.key);let snapshot=null;
   if(train){
-   const previous=cache.get(ticket.id);
+   const cacheKey=ticket.parentTicketId?`${ticket.parentTicketId}:${ticket.seatSegmentIndex}`:ticket.id,previous=cache.get(cacheKey);
    try{
     // Completed runs do not keep querying the simulation. Active runs refresh once/minute.
     const reuse=previous&&(previous.arrival<=+now||Math.floor(previous.now/60000)===Math.floor(+now/60000));
     snapshot=reuse?previous:operationSnapshot(model,train,ticketQuery(ticket),new Date(now));
     snapshot={...snapshot,nodes:snapshot.nodes.map(n=>({...n,platform:model.data.platform?.(train.no,n.s)??null}))};
-    cache.set(ticket.id,snapshot);
+    cache.set(cacheKey,snapshot);
    }catch{snapshot=previous?{...previous,error:'시간표 갱신 실패 · 마지막 시간표로 계산합니다.'}:null;}
   }
   return boardingState(ticket,snapshot,now,{offline});
@@ -109,7 +111,7 @@ export function createBoardingService(model){
     const sameTrain=state.ticket.groupType==='mixed'&&legs.length>1&&legs.every(leg=>leg.ticket.key===legs[0].ticket.key);
     if(sameTrain){
       const first=legs[0],last=legs.at(-1),calculatedAt=state.calculatedAt??+now,departure=first.departure,arrival=last.arrival;
-      journeys.push({ticket:{...state.ticket,id:first.ticket.id,fromStn:first.ticket.fromStn,toStn:last.ticket.toStn,dep:first.ticket.dep,arr:last.ticket.arr,departure:first.ticket.departure,arrival:last.ticket.arrival},state:{...state,departure,arrival,untilDeparture:Math.ceil((departure-calculatedAt)/60000),untilArrival:Math.ceil((arrival-calculatedAt)/60000)},legs,index});
+      journeys.push({ticket:{...state.ticket,id:first.ticket.parentTicketId||first.ticket.id,fromStn:first.ticket.fromStn,toStn:last.ticket.toStn,dep:first.ticket.dep,arr:last.ticket.arr,departure:first.ticket.departure,arrival:last.ticket.arrival},state:{...state,departure,arrival,untilDeparture:Math.ceil((departure-calculatedAt)/60000),untilArrival:Math.ceil((arrival-calculatedAt)/60000)},legs,index});
     }else journeys.push({ticket:state.ticket,state,legs,index});
    }
    return journeys.sort((a,b)=>Number(b.state.stage==='ON_BOARD')-Number(a.state.stage==='ON_BOARD')||a.state.departure-b.state.departure);

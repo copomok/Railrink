@@ -1,4 +1,5 @@
 import {addDays,kstDate} from './model.js';
+import {seatSegments} from './ticket-journey.js';
 export async function previewPass(model,config){
  if(typeof navigator!=='undefined'&&!navigator.onLine)throw Error('오프라인에서는 새 반복 일정을 조회할 수 없습니다.');
  model.validateQuery({...config,date:config.start});
@@ -19,5 +20,5 @@ export async function previewPass(model,config){
 }
 export function travelBoard(tickets,model,esc){
  const sorted=tickets.filter(t=>t.status==='active').sort((a,b)=>Date.parse(a.departure)-Date.parse(b.departure));let day='';
- return `<section class="travel-board"><h2>내 여행 일정</h2>${sorted.length?sorted.map(t=>{const header=t.travelDate!==day?`<h3>${esc(t.travelDate)}${day?' · 다음 여행일':''}</h3>`:'';day=t.travelDate;const platform=model.data.platform(t.trainNo,t.fromStn);return `${header}<article><b>${esc(t.dep)} ${esc(t.fromStn)} 출발</b><p>${esc(t.grade)} ${esc(t.trainNo)} · ${t.seats.map(esc).join(', ')||'입석'}</p><p>${esc(t.arr)} ${esc(t.toStn)} 도착 · ${platform==null?'승강장 미등록':esc(platform)+'번 승강장'}</p><button data-action="qr" data-value="${esc(t.id)}"> 승차권</button></article>`;}).join(''):'<p class="empty">예정된 여행이 없습니다.</p>'}</section>`;
+ return `<section class="travel-board"><h2>내 여행 일정</h2>${sorted.length?sorted.map(t=>{const header=t.travelDate!==day?`<h3>${esc(t.travelDate)}${day?' · 다음 여행일':''}</h3>`:'';day=t.travelDate;const platform=model.data.platform(t.trainNo,t.fromStn),segments=Array.isArray(t.seatSegments)?seatSegments(t):null,seatText=segments?segments.map(segment=>`${segment.fromStn}→${segment.toStn} ${segment.seats.join(', ')||'입석'}`).join(' · '):t.seats.map(esc).join(', ')||'입석';return `${header}<article><b>${esc(t.dep)} ${esc(t.fromStn)} 출발</b><p>${esc(t.grade)} ${esc(t.trainNo)} · ${esc(seatText)}</p><p>${esc(t.arr)} ${esc(t.toStn)} 도착 · ${platform==null?'승강장 미등록':esc(platform)+'번 승강장'}</p><button data-action="qr" data-value="${esc(t.id)}"> 승차권</button></article>`;}).join(''):'<p class="empty">예정된 여행이 없습니다.</p>'}</section>`;
 }

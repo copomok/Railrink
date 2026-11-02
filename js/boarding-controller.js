@@ -35,11 +35,11 @@ export function createBoardingController({model,main,esc,icon,go,notify,settings
    const t=state.ticket,train=model.byKey.get(t.key);
    switch(control.dataset.boardingAction){
     case 'refresh':render();break;
-    case 'ticket':ticket(t.id);break;
+    case 'ticket':ticket(t.parentTicketId||t.id);break;
     case 'operation':if(train)operation(train,ticketQuery(t));break;
-    case 'receipt':receipt(t.id);break;
+    case 'receipt':receipt(t.parentTicketId||t.id);break;
     case 'history':history();break;
-    case 'rebook':rebook(t);break;
+    case 'rebook':rebook(model.read().tickets.find(item=>item.id===(t.parentTicketId||t.id))||t);break;
     case 'alerts':alerts();break;
     case 'share':{
      const text=safeJourneyText(state);

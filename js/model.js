@@ -1,6 +1,7 @@
 import {matchesFamily} from './train-families.js';
 import {serviceTimeline,minuteOf,stationId} from './railway-time.js';
 import {findTransfers} from './routing.js';
+import {combinedTicket,normalizeMixedTickets} from './ticket-journey.js';
 // Booking state belongs to RailLink; all railway rules are injected from NIMBY Rail.
 export const STORE_KEY = 'raillink.v1';
 export const kstDate = (now = new Date()) => new Intl.DateTimeFormat('sv-SE', {timeZone:'Asia/Seoul', year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
@@ -8,6 +9,7 @@ const dayMs = 86400000;
 export const addDays = (date, days) => new Date(Date.parse(date+'T12:00:00+09:00') + days*dayMs).toISOString().slice(0,10);
 const check = (ok, message) => {if(!ok) throw new Error(message);};
 export function createModel(data, storage, now = () => new Date()) {
+  let mixedTicketMigrationNeeded=false;
   const trains = data.trains;
   const stopCache=new WeakMap(),timetableCache=new WeakMap(),classCache=new WeakMap();
   const stopsFor=train=>{let stops=stopCache.get(train);if(!stops){stops=data.stops(train);stopCache.set(train,stops);}return stops;};
@@ -34,6 +36,7 @@ export function createModel(data, storage, now = () => new Date()) {
     let value;
     try {value=JSON.parse(raw);} catch {throw new Error('저장한 예약 정보를 읽을 수 없습니다. 마이 화면에서 데이터를 내보낸 후 초기화해 주세요.');}
     check(value?.version===1 && ['tickets','watches','routes'].every(k=>Array.isArray(value[k])), '저장 정보 형식이 올바르지 않습니다. 기존 데이터는 보존했습니다.');
+    const normalized=normalizeMixedTickets(value.tickets);value.tickets=normalized.tickets;if(normalized.changed)mixedTicketMigrationNeeded=true;
     return value;
   }
   function save(value) {
@@ -43,6 +46,10 @@ export function createModel(data, storage, now = () => new Date()) {
     let result;try{result=storage.setItem(STORE_KEY,raw);}catch(error){return failed(error);}
     if(result?.then)return result.then(()=>data.invalidate(),failed);
     data.invalidate();
+  }
+  function migrateStoredTickets(){
+    const state=read();if(!mixedTicketMigrationNeeded)return false;
+    const saved=save(state),done=()=>{mixedTicketMigrationNeeded=false;return true;};return saved?.then?saved.then(done):done();
   }
   function segment(train, from, to) {
     const {stops,timeline}=timetable(train);
@@ -138,7 +145,10 @@ export function createModel(data, storage, now = () => new Date()) {
       }
       created.push(ticket);
     }
-    if(created.length>1&&options.type!=='pass'){const groupId='J-'+crypto.randomUUID();created.forEach((t,i)=>Object.assign(t,{groupId,groupType:options.type||'journey',groupSequence:i,groupTotal:created.length,...(options.type==='mixed'?{sameTrain:true}:{})}));}
+    if(created.length>1&&options.type==='mixed'){
+      const ticket=combinedTicket(created.map(t=>({...t,groupType:'mixed'})));
+      state.tickets=state.tickets.filter(t=>!created.includes(t));state.tickets.push(ticket);created.splice(0,created.length,ticket);
+    }else if(created.length>1&&options.type!=='pass'){const groupId='J-'+crypto.randomUUID();created.forEach((t,i)=>Object.assign(t,{groupId,groupType:options.type||'journey',groupSequence:i,groupTotal:created.length}));}
     if(options.pass){const id='P-'+crypto.randomUUID();state.passes=[...(state.passes||[]),{...options.pass,id,createdAt:now().toISOString()}];created.forEach(t=>t.passId=id);}
     const saved=save(state);return saved?.then?saved.then(()=>created):created;
   }
@@ -219,7 +229,7 @@ export function createModel(data, storage, now = () => new Date()) {
     if(!state.watches.some(w=>w.key===trainKey&&JSON.stringify(w.q)===JSON.stringify(q))) state.watches.push({id:crypto.randomUUID(),key:trainKey,q:{...q}});
     return save(state);
   }
-  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,search,segment,timetable,supportsClass,quoteFare,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,flexible,watch,departure,validateQuery};
+  const model={conflictingTicket,data,trains,stations,stationRecords,key,byKey,read,save,migrateStoredTickets,search,segment,timetable,supportsClass,quoteFare,serviceDate,availability,seats,book,bookMany,cancel,cancelGroup,removeHistory,autoAssign,mixed,flexible,watch,departure,validateQuery};
   model.transfers=q=>{validateQuery(q);return findTransfers(model,q,now());};
   return model;
 }

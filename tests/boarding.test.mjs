@@ -81,6 +81,8 @@ test('local ticket identity, cancellation, transfer grouping and roundtrip isola
  assert.equal(boardingTickets([first,{...second,status:'cancelled'}],'second').length,0);
  assert.equal(boardingTickets([{...first,groupType:'roundtrip'},second],first.id).length,1);
  assert.equal(boardingTickets([first,{...second,status:'cancelled'}],first.id).length,1);
+ const mixed={...t,groupType:'mixed',sameTrain:true,seatSegments:[{...t,fromStn:'서울',toStn:'대전',arr:'09:00',arrival:new Date(at('09:00')).toISOString()},{...t,fromStn:'대전',toStn:'부산',dep:'09:10',seatClass:'standing',seats:[]}]};
+ const sections=boardingTickets([mixed],mixed.id);assert.equal(sections.length,2);assert.equal(sections[0].parentTicketId,mixed.id);assert.equal(sections[1].seatClass,'standing');assert.notEqual(sections[0].id,sections[1].id);
 });
 test('transfer wait uses revised absolute arrival/departure and switches during the wait',()=>{
  const first=state('09:00'),second={...first,ticket:{...t,id:'second',fromStn:'부산'},departure:at('10:20'),arrival:at('12:00')};

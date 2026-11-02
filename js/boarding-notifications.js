@@ -4,13 +4,13 @@ import {transferGuidance} from './boarding.js';
 export function boardingEvents(legs,now=Date.now(),previous=new Map()){
  const events=[],sameTrain=legs.length>1&&legs.every(leg=>leg.ticket.groupType==='mixed'&&leg.ticket.key===legs[0].ticket.key);
  legs.forEach((s,index)=>{
-  const t=s.ticket,base={id:t.id,title:`${t.grade} ${t.trainNo}`,body:''};
-  const add=(kind,body,version='')=>events.push({...base,kind,key:`${t.id}:${kind}:${version}`,body});
+  const t=s.ticket,documentId=t.parentTicketId||t.id,segmentKey=t.parentTicketId?`:seat-${t.seatSegmentIndex}`:'',base={id:documentId,title:`${t.grade} ${t.trainNo}`,body:''};
+  const add=(kind,body,version='')=>events.push({...base,kind,key:`${documentId}${segmentKey}:${kind}:${version}`,body});
   if(s.cancelled){if(!sameTrain||index===0)add('cancel','운휴·취소 정보를 확인하세요.');return;}
   if(!s.hasTime)return;
   if((!sameTrain||index===0)&&s.untilDeparture>0&&s.untilDeparture<=60){const threshold=s.untilDeparture<=10?10:s.untilDeparture<=30?30:60;add('departure-'+threshold,`출발까지 약 ${s.untilDeparture}분 · 승차권과 탑승 정보를 확인하세요.`,s.departure);}
   if((!sameTrain||index===legs.length-1)&&s.stage==='ON_BOARD'&&s.untilArrival>0&&s.untilArrival<=30){const threshold=s.untilArrival<=5?5:s.untilArrival<=10?10:30;add('arrival-'+threshold,`목적지 도착까지 약 ${s.untilArrival}분 · 하차를 준비하세요.`,s.arrival);}
-  const old=previous.get(t.id);
+  const old=previous.get(documentId+segmentKey);
   if(old&&s.stage!=='AFTER_ARRIVAL'){
    if(old.departure!==s.departure)add('changed-time','출발 예정 시각이 변경되었습니다.',s.departure);
    if(s.platform!=null&&old.platform!==s.platform)add('platform',`승강장 정보가 ${s.platform}번으로 변경되었습니다.`,s.platform);
@@ -18,7 +18,7 @@ export function boardingEvents(legs,now=Date.now(),previous=new Map()){
   }
   const transfer=transferGuidance(legs,index,now);
   if(transfer?.risk&&s.untilArrival<=30&&transfer.next.departure>+now)add('transfer','환승 여유가 부족할 수 있습니다. 다음 열차를 확인하세요.',`${s.arrival}:${transfer.next.departure}`);
-  previous.set(t.id,{departure:s.departure,platform:s.platform,delay:s.delay});
+  previous.set(documentId+segmentKey,{departure:s.departure,platform:s.platform,delay:s.delay});
  });
  return events;
 }

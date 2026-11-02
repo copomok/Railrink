@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {journeyState,upcomingJourneys,matchesStation} from '../js/journey.js';
+import {normalizeMixedTickets,seatSegments} from '../js/ticket-journey.js';
 const overnight={id:'night',status:'active',departure:'2026-10-29T14:50:00Z',dep:'23:50',arr:'0:20'};
 test('overnight journeys remain active until arrival, including exact boundaries',()=>{
  for(const [now,phase] of [['2026-10-29T14:39:00Z','upcoming'],['2026-10-29T14:40:00Z','boarding'],['2026-10-29T14:50:00Z','riding'],['2026-10-29T15:15:00Z','arriving'],['2026-10-29T15:20:00Z','completed']]){
@@ -21,6 +22,11 @@ test('mixed seated and standing segments appear as one same-train journey',()=>{
  const first={...overnight,id:'mixed-1',key:'same-train',groupId:'mixed',groupType:'mixed',serviceDate:'2026-10-29',fromStn:'서울',toStn:'대전',arrival:'2026-10-29T15:00:00Z'};
  const second={...first,id:'mixed-2',fromStn:'대전',toStn:'부산',dep:'00:02',arr:'00:20',departure:'2026-10-29T15:02:00Z',arrival:'2026-10-29T15:20:00Z'};
  const rows=upcomingJourneys([first,second],new Date('2026-10-29T14:55:00Z'));assert.equal(rows.length,1);assert.equal(rows[0].ticket.fromStn,'서울');assert.equal(rows[0].ticket.toStn,'부산');assert.equal(rows[0].ticket.id,'mixed-1');
+});
+test('legacy mixed records migrate into one ticket with seat-use sections',()=>{
+ const first={...overnight,id:'mixed-1',key:'same-train',groupId:'mixed',groupType:'mixed',serviceDate:'2026-10-29',fromStn:'서울',toStn:'대전',arrival:'2026-10-29T15:00:00Z',seatClass:'general',seats:['1호차 1A'],totalFare:1000,baseFare:1000};
+ const second={...first,id:'mixed-2',fromStn:'대전',toStn:'부산',dep:'00:02',arr:'00:20',departure:'2026-10-29T15:02:00Z',arrival:'2026-10-29T15:20:00Z',seatClass:'standing',seats:[],totalFare:500,baseFare:500};
+ const migrated=normalizeMixedTickets([first,second]);assert.equal(migrated.changed,true);assert.equal(migrated.tickets.length,1);assert.equal(migrated.tickets[0].id,'mixed-1');assert.equal(migrated.tickets[0].groupId,undefined);assert.equal(migrated.tickets[0].toStn,'부산');assert.equal(migrated.tickets[0].totalFare,1500);assert.deepEqual(seatSegments(migrated.tickets[0]).map(s=>s.seatClass),['general','standing']);
 });
 test('station search accepts Korean, partial names, initials and normalized whitespace',()=>{
  for(const query of ['서울','ㅅㅇ','ㅅ','서 울','서울'])assert.equal(matchesStation('서울',query),true);
