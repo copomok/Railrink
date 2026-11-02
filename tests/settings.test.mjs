@@ -7,9 +7,9 @@ const memoryStorage=()=>{const values=new Map();return {values,getItem:key=>valu
 
 test('settings persist with station IDs and create a search query from current KST time',()=>{
  const storage=memoryStorage(),store=createSettingsStore({model,storage}),value=store.get();
- value.search.fromStationId='nimby:1';value.search.toStationId='nimby:2';value.search.pax=3;value.search.family='ktx';value.transfer.minWait=20;value.seat.position='window';store.save(value);
+ value.search.fromStationId='nimby:1';value.search.toStationId='nimby:2';value.search.pax=3;value.search.family='ktx';value.transfer.minWait=20;value.seat.position='window';value.map.background=false;store.save(value);
  const restored=createSettingsStore({model,storage}).get();assert.equal(restored.search.fromStationId,'nimby:1');assert.equal(restored.search.pax,3);
- const now=new Date('2026-11-01T06:17:00Z'),query=queryFromSettings(restored,model,'2026-11-01',now);assert.equal(query.from,'서울');assert.equal(query.to,'부산');assert.equal(query.after,'15:17');assert.equal(query.minWait,20);assert.equal(query.family,'ktx');assert.equal(seatOptions(restored).position,'window');
+ const now=new Date('2026-11-01T06:17:00Z'),query=queryFromSettings(restored,model,'2026-11-01',now);assert.equal(query.from,'서울');assert.equal(query.to,'부산');assert.equal(query.after,'15:17');assert.equal(query.minWait,20);assert.equal(query.family,'ktx');assert.equal(seatOptions(restored).position,'window');assert.equal(restored.map.background,false);
  const direct=queryFromSettings({...restored,search:{...restored.search,routeMode:'direct'}},model,'2026-11-01',now);assert.equal(direct.transfer,false);assert.equal(direct.includeTransfer,false);
  const transfer=queryFromSettings({...restored,search:{...restored.search,routeMode:'transfer'}},model,'2026-11-01',now);assert.equal(transfer.transfer,true);assert.equal(transfer.includeTransfer,false);
  const transferFirst=queryFromSettings({...restored,search:{...restored.search,routeMode:'both',routeOrder:'transfer'}},model,'2026-11-01',now);assert.equal(transferFirst.includeTransfer,true);assert.equal(transferFirst.directFirst,false);

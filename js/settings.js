@@ -8,6 +8,7 @@ export const defaultSettings=()=>({
  transfer:{include:true,directFirst:true,minWait:15,maxWait:60,riskAlerts:true},
  notifications:{enabled:true,system:false,departure:[60,30,10],delay:true,cancel:true,platform:true,arrival:false,transferRisk:true},
  boarding:{countdown:true,nextStop:true,arrivalTime:true,platform:true},
+ map:{tracks:true,stationNames:true,allTrains:false,selectedTrain:true,background:true,grades:[]},
  appearance:{theme:'light',fontSize:'medium',highContrast:false,reduceMotion:false,timeFormat:'24',dateFormat:'korean',duration:true,delayHighlight:true}
 });
 
@@ -19,8 +20,9 @@ const stationId=(value,model)=>typeof value==='string'&&model.stationRecords.som
 
 export function sanitizeSettings(value,model){
  const d=defaultSettings(),v=value&&typeof value==='object'?value:{};
- const search=v.search||{},seat=v.seat||{},transfer=v.transfer||{},notifications=v.notifications||{},boarding=v.boarding||{},appearance=v.appearance||{};
+ const search=v.search||{},seat=v.seat||{},transfer=v.transfer||{},notifications=v.notifications||{},boarding=v.boarding||{},map=v.map||{},appearance=v.appearance||{};
  const departure=Array.isArray(notifications.departure)?[...new Set(notifications.departure.map(Number).filter(n=>[60,30,10].includes(n)))].sort((a,b)=>b-a):d.notifications.departure;
+ const trainGrades=new Set((model.trains||model.data.trains||[]).map(train=>train.grade));
  return {
   version:SETTINGS_VERSION,
   search:{
@@ -33,6 +35,7 @@ export function sanitizeSettings(value,model){
   transfer:{include:bool(transfer.include,d.transfer.include),directFirst:bool(transfer.directFirst,d.transfer.directFirst),minWait:integer(transfer.minWait,3,180,d.transfer.minWait),maxWait:integer(transfer.maxWait,3,180,d.transfer.maxWait),riskAlerts:bool(transfer.riskAlerts,d.transfer.riskAlerts)},
   notifications:{enabled:bool(notifications.enabled,d.notifications.enabled),system:bool(notifications.system,d.notifications.system),departure,delay:bool(notifications.delay,d.notifications.delay),cancel:bool(notifications.cancel,d.notifications.cancel),platform:bool(notifications.platform,d.notifications.platform),arrival:bool(notifications.arrival,d.notifications.arrival),transferRisk:bool(notifications.transferRisk,d.notifications.transferRisk)},
   boarding:{countdown:bool(boarding.countdown,d.boarding.countdown),nextStop:bool(boarding.nextStop,d.boarding.nextStop),arrivalTime:bool(boarding.arrivalTime,d.boarding.arrivalTime),platform:bool(boarding.platform,d.boarding.platform)},
+  map:{tracks:bool(map.tracks,d.map.tracks),stationNames:bool(map.stationNames,d.map.stationNames),allTrains:bool(map.allTrains,d.map.allTrains),selectedTrain:bool(map.selectedTrain,d.map.selectedTrain),background:bool(map.background,d.map.background),grades:Array.isArray(map.grades)?[...new Set(map.grades.filter(grade=>trainGrades.has(grade)))]:[]},
   appearance:{theme:oneOf(appearance.theme,['system','light','dark'],d.appearance.theme),fontSize:oneOf(appearance.fontSize,['small','medium','large'],d.appearance.fontSize),highContrast:bool(appearance.highContrast,d.appearance.highContrast),reduceMotion:bool(appearance.reduceMotion,d.appearance.reduceMotion),timeFormat:oneOf(appearance.timeFormat,['12','24'],d.appearance.timeFormat),dateFormat:oneOf(appearance.dateFormat,['korean','dot','iso'],d.appearance.dateFormat),duration:bool(appearance.duration,d.appearance.duration),delayHighlight:bool(appearance.delayHighlight,d.appearance.delayHighlight)}
  };
 }
