@@ -25,6 +25,11 @@ export function sharedFiles() {
   const features = new Set(['nimbi_demand.js', 'nimbi_booking_dynamics.js', 'nimbi_inventory.js', 'nimbi_delay.js', 'nimbi_congestion.js']);
   const files = [...html.matchAll(/<script\s+src="([^"?]+)(?:\?[^"]*)?"/g)].map(m => m[1])
     .filter(f => (f.startsWith('data/') || f.startsWith('js/core/') || f === 'js/shared/nimbi_rail_domain.js' || features.has(path.basename(f))) && !ticketExcludedFiles.includes(f));
+  // The homonym migration rebuilds the optional station index when it already exists.
+  // Put that index immediately before the migration so the concatenated dev runtime
+  // does not see a later top-level const in its temporal dead zone.
+  const indexFile='js/core/nimbi_rail_index.js',migration='data/nimbi_homonyms.js',index=files.indexOf(indexFile),migrationIndex=files.indexOf(migration);
+  if(index>migrationIndex&&migrationIndex>=0){files.splice(index,1);files.splice(migrationIndex,0,indexFile);}
   if (!files.includes('js/shared/nimbi_rail_domain.js')) throw new Error('NIMBY Rail의 공통 도메인 모듈이 필요합니다. README의 연결 절차를 확인하세요.');
   if (files.some(f => !/^(data|js)\/[\w/.-]+\.js$/.test(f) || f.includes('..'))) throw new Error('Invalid shared file path');
   return files;
