@@ -33,7 +33,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    other=page.locator('#rail-map-canvas .rail-train-marker:not([aria-label*="2038"])').first
    if other.count():
     before=page.locator('.rail-sheet-primary h3').inner_text();other.evaluate("element=>element.dispatchEvent(new MouseEvent('click',{bubbles:true}))");page.wait_for_function("before=>document.querySelector('.rail-sheet-primary h3')?.textContent!==before",arg=before)
-   for train_number in ['2038','8039','1142','1198']:
+   for train_number in ['2038','8039','1142','1198','701']:
     page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill(train_number);page.locator('#rail-map-search button[type="submit"]').click();page.wait_for_function("number=>document.querySelector('.rail-sheet-primary h3')?.textContent.includes(number)",arg=train_number);assert page.locator('#rail-map-canvas .rail-selected-path').count()>0;assert '확인 불가' in page.locator('#rail-train-sheet').text_content()
    while page.locator('#rail-train-sheet').get_attribute('data-level')!='compact':page.locator('[data-sheet-level]').click()
    page.screenshot(path=str(out/'01-fullscreen-train-map.png'),full_page=False)
@@ -43,7 +43,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    for width in [320,390,480,600,720]:
     page.set_viewport_size({'width':width,'height':1040});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
    assert not errors,errors
-   print('PASS: continuous exact/representative mainline routes for 2038/8039/1142/1198, no synthetic links, persistent full-screen map/settings, responsive layout, zero browser errors.')
+   print('PASS: continuous exact/representative mainline routes for 2038/8039/1142/1198/701, no synthetic links, persistent full-screen map/settings, responsive layout, zero browser errors.')
    browser.close()
  finally:
   server.terminate();server.wait()

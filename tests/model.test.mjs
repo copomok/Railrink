@@ -39,6 +39,7 @@ test('both apps consume the original files and one shared railway domain',()=>{
   const daegu=routePoints('1117');assert.ok(has(daegu,128.963829,35.806281));assert.ok(!has(daegu,128.979131,35.834494));
   const pyeongchang=routePoints('698');assert.ok(has(pyeongchang,128.462296,37.464555));assert.ok(!has(pyeongchang,128.460107,37.495142));
   const seoulCity=routePoints('501'),hangangOrigin=routePoints('221');assert.ok(has(seoulCity,126.917462,37.501305));assert.ok(!has(seoulCity,126.87936,37.498845));assert.ok(has(hangangOrigin,126.87936,37.498845));assert.ok(!has(hangangOrigin,126.917462,37.501305));
+  const mapoSeoul=routePoints('701');assert.ok(has(mapoSeoul,126.9714,37.557301));assert.ok(has(mapoSeoul,126.971424,37.540727));assert.ok(has(mapoSeoul,126.979654,37.535017));assert.ok(!has(mapoSeoul,126.973871,37.556136));assert.ok(!has(mapoSeoul,126.980917,37.554249));
   for(const train of model.trains){const route=trainTrackRoute(model,train);assert.equal(route.paths.length,1,`${train.grade} ${train.no}`);assert.equal(route.missingSegments,0,`${train.grade} ${train.no}`);}
   const html=fs.readFileSync(path.join(sourceRoot,'index.html'),'utf8');
   assert.match(html,/src="js\/shared\/nimbi_rail_domain.js/);
