@@ -25,13 +25,18 @@ test('network uses verified timetable order, including coordinate pass points, w
  assert.equal(trainGeoPath(model,trains[0]).length,3);
 });
 
-test('network renders only intercity mainline geometry even when raw metro tracks are loaded',()=>{
+test('network restores every raw track while selected train routing stays intercity-only',()=>{
  const mainlineGeometry=[[126.91,37.49],[127,37.46],[127.09,37.41]],mainlineMap={source:{kind:'nimby-map-lines-exact-topology',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1,verifiedSegments:1,representativeSegments:0,unverifiedSegments:0,syntheticEdgeCount:0},routes:[{id:'main:0',line:'본선',stations:[{name:'가',lat:37.5,lon:126.9},{name:'원본전용',lat:37.4,lon:127.1}],displaySegments:[mainlineGeometry],segments:[mainlineGeometry],representativeKinds:['exact'],segmentSources:[[7]]}]};
  const latestMap={source:{exactTrackGeometry:true},tracks:[[[128,35],[129,36]]],stations:[{name:'전철역',lat:35,lon:128}]};
  const mainlineModel=createModel({...data,mainlineMap,latestMap},{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00')),network=buildRailNetwork(mainlineModel),station=network.stations.find(item=>item.name==='가'),mapOnly=network.stations.find(item=>item.name==='원본전용');
- assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.kind,'nimby-map-lines-exact-topology');assert.equal(network.source.syntheticEdgeCount,0);assert.equal(network.source.exactTrackGeometry,false);assert.equal(network.source.rawTrackCount,0);assert.deepEqual(network.geometry,[mainlineGeometry]);assert.notDeepEqual(network.geometry,latestMap.tracks);
+ assert.equal(network.source.mainlineOnly,false);assert.equal(network.source.routeSelectionMainlineOnly,true);assert.equal(network.source.kind,'nimby-map-lines-exact-topology');assert.equal(network.source.syntheticEdgeCount,0);assert.equal(network.source.exactTrackGeometry,true);assert.equal(network.source.rawTrackCount,1);assert.deepEqual(network.geometry,latestMap.tracks);assert.notDeepEqual(network.geometry,[mainlineGeometry]);
  assert.deepEqual(station.coord,{lat:37.5,lon:126.9});assert.equal(station.mapOnly,false);assert.equal(mapOnly.mapOnly,true);assert.equal(mapOnly.stopping,false);
  assert.equal(network.stations.some(item=>item.name==='전철'),false);
+});
+
+test('representative train route erases a station-throat loop without altering raw base tracks',()=>{
+ const coords={A:{lat:37,lon:127},B:{lat:37,lon:127.05}},loop=[[127,37],[127.03,37],[127.049,37],[127.035,37.01],[127.048,37.001],[127.05,37]],train={no:'L1',grade:'ITX',line:'본선',stops:[{s:'A',dep:'8:00'},{s:'B',arr:'8:20'}]},mainlineMap={source:{kind:'nimby-map-lines-exact-topology'},routes:[{line:'본선',stations:[{name:'A',...coords.A},{name:'B',...coords.B}],displaySegments:[loop],segments:[null],representativeKinds:['representative'],segmentSources:[[]]}]},latestMap={tracks:[loop],stations:[]},loopModel=createModel({trains:[train],stationDB:{A역:coords.A,B역:coords.B},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap,latestMap},{getItem:()=>null}),network=buildRailNetwork(loopModel),route=trainTrackRoute(loopModel,train);
+ assert.deepEqual(network.geometry,[loop]);assert.equal(route.paths.length,1);assert.equal(route.paths[0].length,4);assert.deepEqual(route.paths[0].map(point=>[point.coord.lon,point.coord.lat]),[loop[0],loop[1],loop[2],loop.at(-1)]);
 });
 
 test('timetable estimate follows an overnight train and returns its geographic position',()=>{
