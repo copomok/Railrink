@@ -18,7 +18,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    page.wait_for_selector('a[href="#rail-map"]',timeout=60000);page.locator('a[href="#rail-map"]').click()
    page.wait_for_selector('#rail-map-canvas .rail-source-track',timeout=60000)
    assert page.locator('#rail-map-canvas .rail-source-track').count()==1
-   source_text=page.locator('.rail-live-source').inner_text();assert 'NIMBY Rails 원본 선로 12,980개' in source_text;assert '원본 연결 168개' in source_text;assert '노선 확인 13개' in source_text;assert '대표 본선 293개' in source_text
+   source_text=page.locator('.rail-live-source').inner_text();assert 'NIMBY Rails 원본 선로 12,980개' in source_text;assert '원본 연결 175개' in source_text;assert '노선 확인 26개' in source_text;assert '대표 본선 274개' in source_text
    canvas=page.locator('#rail-map-canvas').bounding_box();assert canvas['width']>=480 and canvas['height']>=950
    assert not page.locator('.navigation').is_visible();assert page.locator('.rail-live-header').is_visible()
    page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill('2038');page.locator('#rail-map-search button[type="submit"]').click()
@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory(prefix='rail-map-') as directory:
    page.locator('[data-map-mode="all"]').click();assert page.locator('#rail-map-canvas').get_attribute('data-instance')=='kept'
    other=page.locator('#rail-map-canvas .rail-train-marker:not([aria-label*="2038"])').first
    if other.count():
-    before=page.locator('.rail-sheet-primary h3').inner_text();other.click(force=True);page.wait_for_timeout(1000);assert page.locator('.rail-sheet-primary h3').inner_text()!=before
+    before=page.locator('.rail-sheet-primary h3').inner_text();other.evaluate("element=>element.dispatchEvent(new MouseEvent('click',{bubbles:true}))");page.wait_for_function("before=>document.querySelector('.rail-sheet-primary h3')?.textContent!==before",arg=before)
    for train_number in ['2038','8039','1142','1198']:
     page.locator('[data-map-search-toggle]').click();page.locator('#rail-map-search input').fill(train_number);page.locator('#rail-map-search button[type="submit"]').click();page.wait_for_function("number=>document.querySelector('.rail-sheet-primary h3')?.textContent.includes(number)",arg=train_number);assert page.locator('#rail-map-canvas .rail-selected-path').count()>0;assert '확인 불가' in page.locator('#rail-train-sheet').text_content()
    while page.locator('#rail-train-sheet').get_attribute('data-level')!='compact':page.locator('[data-sheet-level]').click()

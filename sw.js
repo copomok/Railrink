@@ -1,4 +1,4 @@
-const CACHE='raillink-20261029-booking-storage-4';
+const CACHE='raillink-20261103-route-topology-1';
 const SHELL=['./','./index.html',/* APP_ASSETS */];
 const allowed=url=>url.origin===self.location.origin&&(url.pathname.startsWith(new URL('./',self.location).pathname)||url.pathname.startsWith('/NIMBYRAILTABLE/'));
 self.addEventListener('notificationclick',event=>{
