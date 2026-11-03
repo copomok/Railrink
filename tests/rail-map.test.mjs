@@ -25,11 +25,11 @@ test('network uses verified timetable order, including coordinate pass points, w
  assert.equal(trainGeoPath(model,trains[0]).length,3);
 });
 
-test('network renders every original save track while keeping verified route topology separate',()=>{
- const mainlineMap={source:{kind:'nimby-map-lines-exact-topology',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1,verifiedSegments:1,unverifiedSegments:0,syntheticEdgeCount:0},routes:[{id:'main:0',line:'본선',stations:[{name:'가',lat:37.5,lon:126.9},{name:'원본전용',lat:37.4,lon:127.1}],segments:[[[126.91,37.49],[127,37.46],[127.09,37.41]]],segmentSources:[[7]]}]};
+test('network renders only intercity mainline geometry even when raw metro tracks are loaded',()=>{
+ const mainlineGeometry=[[126.91,37.49],[127,37.46],[127.09,37.41]],mainlineMap={source:{kind:'nimby-map-lines-exact-topology',mainlineOnly:true,routeCount:1,stationCount:2,edgeCount:1,verifiedSegments:1,representativeSegments:0,unverifiedSegments:0,syntheticEdgeCount:0},routes:[{id:'main:0',line:'본선',stations:[{name:'가',lat:37.5,lon:126.9},{name:'원본전용',lat:37.4,lon:127.1}],displaySegments:[mainlineGeometry],segments:[mainlineGeometry],representativeKinds:['exact'],segmentSources:[[7]]}]};
  const latestMap={source:{exactTrackGeometry:true},tracks:[[[128,35],[129,36]]],stations:[{name:'전철역',lat:35,lon:128}]};
  const mainlineModel=createModel({...data,mainlineMap,latestMap},{getItem:()=>null},()=>new Date('2026-11-01T00:00:00+09:00')),network=buildRailNetwork(mainlineModel),station=network.stations.find(item=>item.name==='가'),mapOnly=network.stations.find(item=>item.name==='원본전용');
- assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.kind,'nimby-map-lines-exact-topology');assert.equal(network.source.syntheticEdgeCount,0);assert.equal(network.source.exactTrackGeometry,true);assert.equal(network.source.rawTrackCount,1);assert.deepEqual(network.geometry,latestMap.tracks);
+ assert.equal(network.source.mainlineOnly,true);assert.equal(network.source.kind,'nimby-map-lines-exact-topology');assert.equal(network.source.syntheticEdgeCount,0);assert.equal(network.source.exactTrackGeometry,false);assert.equal(network.source.rawTrackCount,0);assert.deepEqual(network.geometry,[mainlineGeometry]);assert.notDeepEqual(network.geometry,latestMap.tracks);
  assert.deepEqual(station.coord,{lat:37.5,lon:126.9});assert.equal(station.mapOnly,false);assert.equal(mapOnly.mapOnly,true);assert.equal(mapOnly.stopping,false);
  assert.equal(network.stations.some(item=>item.name==='전철'),false);
 });

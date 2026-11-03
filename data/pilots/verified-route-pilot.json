@@ -22,15 +22,7 @@
     "fullyIsolatedWithoutLineReference": "exclude-after-parser-validation",
     "stationTrackDetail": "collapse-to-mainline-representative"
   },
-  "rejectedCandidates": [
-    {
-      "stations": [
-        "남금호",
-        "서울"
-      ],
-      "reason": "게임 노선 엔티티의 선로 ID 사이 경로가 확인되지 않아 기존 일반 그래프가 선택한 전철 선형을 거부함"
-    }
-  ],
+  "rejectedCandidates": [],
   "pilot": {
     "stations": [
       "남안양",
