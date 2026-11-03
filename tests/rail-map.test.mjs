@@ -44,6 +44,12 @@ test('save-route-confirmed geometry wins over an exact candidate from the wrong 
  assert.equal(route.missingSegments,0);assert.equal(route.fallbackSegments,0);assert.equal(route.confirmedSegments,1);assert.equal(route.verified,true);assert.deepEqual(route.paths[0].map(point=>[point.coord.lon,point.coord.lat]),confirmed);
 });
 
+test('grade-specific shared rail corridor wins for SRT without changing other trains',()=>{
+ const coords={잠실:{lat:37.513113,lon:127.100263},동탄:{lat:37.194706,lon:127.088108}},defaultGeometry=[[127.100263,37.513113],[127.25,37.35],[127.088108,37.194706]],srtGeometry=[[127.100263,37.513113],[127.129725,37.332295],[127.088108,37.194706]],srt={no:'S1',grade:'SRT',line:'경부고속선',stops:[{s:'잠실',dep:'8:00'},{s:'동탄',arr:'8:20'}]},ktx={...srt,no:'K1',grade:'KTX'},mainlineMap={source:{kind:'nimby-map-lines-exact-topology'},routeVariants:[{grade:'SRT',from:'잠실',to:'동탄',geometry:srtGeometry,sourceVersion:'save-1',lineEntityIds:['line-1']}],routes:[{id:'gyeongbuhs:0',line:'경부고속선',stations:[{name:'잠실',...coords.잠실},{name:'동탄',...coords.동탄}],displaySegments:[defaultGeometry],routeSegments:[defaultGeometry],segments:[null],representativeKinds:['route-confirmed'],segmentSources:[[]]}]},variantModel=createModel({trains:[srt,ktx],stationDB:{잠실역:coords.잠실,동탄역:coords.동탄},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap},{getItem:()=>null});
+ assert.deepEqual(trainTrackRoute(variantModel,srt).paths[0].map(point=>[point.coord.lon,point.coord.lat]),srtGeometry);
+ assert.deepEqual(trainTrackRoute(variantModel,ktx).paths[0].map(point=>[point.coord.lon,point.coord.lat]),defaultGeometry);
+});
+
 test('timetable estimate follows an overnight train and returns its geographic position',()=>{
  const active=estimatedTrainSnapshot(model,trains[0],new Date('2026-11-02T00:05:00+09:00'));assert.ok(active);assert.equal(active.query.date,'2026-11-01');
  const coord=snapshotCoordinate(active.snapshot);assert.ok(coord.lon>127.3&&coord.lon<128);assert.ok(coord.lat<36.8&&coord.lat>36.5);
