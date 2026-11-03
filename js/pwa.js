@@ -9,16 +9,11 @@ export async function installApp(showDialog){
 }
 export function initPWA(notify){
  if(!('serviceWorker' in navigator)||!window.isSecureContext)return;
- let refresh=false;
- navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refresh)location.reload();});
+ const controlled=Boolean(navigator.serviceWorker.controller);let refreshing=false;
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(controlled&&!refreshing){refreshing=true;location.reload();}});
  navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(async registration=>{
-  const update=()=>{
-   if(!navigator.serviceWorker.controller||!registration.waiting||document.querySelector('#pwa-update'))return;
-   const banner=document.createElement('aside');banner.id='pwa-update';banner.setAttribute('aria-label','앱 업데이트');
-   banner.innerHTML='<span>새 버전이 준비되었습니다. 예매를 마친 뒤 업데이트하세요.</span><button type="button">업데이트</button>';
-   banner.querySelector('button').onclick=()=>{refresh=true;registration.waiting?.postMessage({type:'activate-update'});};document.body.append(banner);
-  };
-  update();registration.addEventListener('updatefound',()=>registration.installing?.addEventListener('statechange',update));
+  const activate=()=>registration.waiting?.postMessage({type:'activate-update'});
+  activate();registration.addEventListener('updatefound',()=>registration.installing?.addEventListener('statechange',activate));
   const ready=await navigator.serviceWorker.ready;
   const urls=new Set([...document.querySelectorAll('script[src],link[rel=stylesheet]')].map(e=>e.src||e.href));for(const url of window.RailSourceURLs||[])urls.add(url);urls.add(new URL('/NIMBYRAILTABLE/index.html',location.href).href);
   ready.active?.postMessage({type:'cache-sources',urls:[...urls]});

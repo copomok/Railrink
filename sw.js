@@ -20,7 +20,7 @@ self.addEventListener('notificationclick',event=>{
   else await self.clients.openWindow(new URL(saved?'./#boarding':'./#tickets',self.location).href);
  })());
 });
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)));});
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const name of await caches.keys())if(name.startsWith('raillink-')&&name!==CACHE)await caches.delete(name);await self.clients.claim();})());});
 self.addEventListener('message',event=>{
  if(event.data?.type==='activate-update'){event.waitUntil(self.skipWaiting());return;}

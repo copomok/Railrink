@@ -10,7 +10,7 @@ const latest=context.NIMBI_LATEST_MAP,mainline=context.NIMBI_MAINLINE_MAP,segmen
 
 test('pilot uses the save-route-confirmed shared mainline',()=>{
  assert.equal(pilot.purpose,'development-pilot-only');assert.equal(segment.sourceVersion,latest.source.sha256);assert.equal(segment.sourceVersion,analysis.source.sha256);
- assert.equal(segment.verificationMethod,'game-route-shared-mainline');assert.equal(segment.verificationStatus,'verified');assert.equal(route.representativeKinds[index],'route-confirmed');
+ assert.equal(segment.verificationMethod,'game-save-raw-track-topology');assert.equal(segment.verificationStatus,'verified');assert.equal(route.representativeKinds[index],'route-confirmed');
  assert.equal(JSON.stringify(segment.geometry.coordinates),JSON.stringify(route.routeSegments[index]));assert.deepEqual(segment.originalTrackIds,[]);assert.equal(pilot.validation.discontinuityCount,0);
 });
 
