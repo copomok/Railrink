@@ -39,6 +39,11 @@ test('representative train route erases a station-throat loop without altering r
  assert.deepEqual(network.geometry,[loop]);assert.equal(route.paths.length,1);assert.equal(route.paths[0].length,4);assert.deepEqual(route.paths[0].map(point=>[point.coord.lon,point.coord.lat]),[loop[0],loop[1],loop[2],loop.at(-1)]);
 });
 
+test('save-route-confirmed geometry wins over an exact candidate from the wrong corridor',()=>{
+ const coords={청도:{lat:35.64,lon:128.74},부산:{lat:35.12,lon:129.04}},wrong=[[128.74,35.64],[128.76,35.50],[129.04,35.12]],confirmed=[[128.74,35.64],[129.01,35.40],[129.04,35.12]],train={no:'S1',grade:'SRT',line:'경부고속선',stops:[{s:'청도',dep:'8:00'},{s:'부산',arr:'8:30'}]},mainlineMap={source:{kind:'nimby-map-lines-exact-topology',routeConfirmedSegments:1},routes:[{id:'gyeongbuhs:0',line:'경부고속선',stations:[{name:'청도',...coords.청도},{name:'부산',...coords.부산}],displaySegments:[confirmed],routeSegments:[confirmed],segments:[wrong],representativeKinds:['route-confirmed'],segmentSources:[[1]]}]},confirmedModel=createModel({trains:[train],stationDB:{청도역:coords.청도,부산역:coords.부산},stops:item=>item.stops,coordinate:name=>coords[name],isPass:()=>false,mainlineMap},{getItem:()=>null}),route=trainTrackRoute(confirmedModel,train);
+ assert.equal(route.missingSegments,0);assert.equal(route.fallbackSegments,0);assert.equal(route.confirmedSegments,1);assert.equal(route.verified,true);assert.deepEqual(route.paths[0].map(point=>[point.coord.lon,point.coord.lat]),confirmed);
+});
+
 test('timetable estimate follows an overnight train and returns its geographic position',()=>{
  const active=estimatedTrainSnapshot(model,trains[0],new Date('2026-11-02T00:05:00+09:00'));assert.ok(active);assert.equal(active.query.date,'2026-11-01');
  const coord=snapshotCoordinate(active.snapshot);assert.ok(coord.lon>127.3&&coord.lon<128);assert.ok(coord.lat<36.8&&coord.lat>36.5);

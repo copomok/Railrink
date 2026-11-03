@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "purpose": "development-pilot-only",
   "source": {
     "saveName": "Mysterious Enterprise.nimbyrails5",
@@ -13,7 +13,7 @@
     "declaredLineCount": 360,
     "parsedLineCount": 358,
     "lineSectionOffset": 13982590,
-    "dataFormat": "line-scoped-mainline-representative"
+    "dataFormat": "save-route-confirmed-shared-mainline"
   },
   "displayPolicy": {
     "connectedDeadEnd": "include",
@@ -29,7 +29,7 @@
       "수원"
     ],
     "grades": "all-intercity",
-    "reason": "승강장과 등급별 복선 세부를 생략하고 경부선 표시 선형에서 대표 본선 한 줄을 사용"
+    "reason": "저장 파일 경부선 운행 순서와 공용 경부선 선형을 함께 확인하고 승강장별 복선 세부는 대표 본선 한 줄로 통합"
   },
   "depotConnector": {
     "stations": [
@@ -52,30 +52,31 @@
             37.378651
           ],
           [
-            126.948867,
-            37.354127
+            126.948381,
+            37.353564
           ],
           [
-            126.94808,
-            37.334644
+            126.947338,
+            37.320972
           ],
           [
-            126.957146,
-            37.317814
+            126.97122,
+            37.300437
           ],
           [
-            126.972691,
-            37.305746
+            126.988969,
+            37.285657
           ],
           [
-            127.000172,
+            127.000173,
             37.266938
           ]
         ]
       },
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationMethod": "line-scoped-mainline-representative",
-      "verificationStatus": "representative",
+      "verificationMethod": "game-route-shared-mainline",
+      "verificationStatus": "verified",
+      "verificationSource": "경부선 L-170900",
       "trackVariantId": "gyeongbu:0",
       "originalTrackIds": []
     }
@@ -88,7 +89,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1002:경부선",
@@ -97,7 +98,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1003:경부선",
@@ -106,7 +107,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1004:경부선",
@@ -115,7 +116,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1005:경부선",
@@ -124,7 +125,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1006:경부선",
@@ -133,7 +134,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1007:경부선",
@@ -142,7 +143,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1008:경부선",
@@ -151,7 +152,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1009:경부선",
@@ -160,7 +161,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1010:경부선",
@@ -169,7 +170,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1011:경부선",
@@ -178,7 +179,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1012:경부선",
@@ -187,7 +188,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1013:경부선",
@@ -196,7 +197,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1014:경부선",
@@ -205,7 +206,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1015:경부선",
@@ -214,7 +215,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1016:경부선",
@@ -223,7 +224,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1017:경부선",
@@ -232,7 +233,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1018:경부선",
@@ -241,7 +242,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1019:경부선",
@@ -250,7 +251,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1020:경부선",
@@ -259,7 +260,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1021:경부선·경전선",
@@ -268,7 +269,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1022:경부선·경전선",
@@ -277,7 +278,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1023:경부선·경전선",
@@ -286,7 +287,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1024:경부선·경전선",
@@ -295,7 +296,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1025:경부선·경전선",
@@ -304,7 +305,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1026:경부선·경전선",
@@ -313,7 +314,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1027:경부선·경전선",
@@ -322,7 +323,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1028:경부선·경전선",
@@ -331,7 +332,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1029:경부선·경전선",
@@ -340,7 +341,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1030:경부선·경전선",
@@ -349,7 +350,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1031:경부선·호남선",
@@ -358,7 +359,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1032:호남선·경부선",
@@ -367,7 +368,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1033:경부선·호남선",
@@ -376,7 +377,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1034:호남선·경부선",
@@ -385,7 +386,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1035:경부선·호남선",
@@ -394,7 +395,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1036:호남선·경부선",
@@ -403,7 +404,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1037:경부선·호남선",
@@ -412,7 +413,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1039:경부선·호남선",
@@ -421,7 +422,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1040:호남선·경부선",
@@ -430,7 +431,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1041:경부선·호남선",
@@ -439,7 +440,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1042:호남선·경부선",
@@ -448,7 +449,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1043:경부선·호남선",
@@ -457,7 +458,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1045:경부선·호남선",
@@ -466,7 +467,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1047:경부선·호남선",
@@ -475,7 +476,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1048:호남선·경부선",
@@ -484,7 +485,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1049:경부선·호남선",
@@ -493,7 +494,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1050:호남선·경부선",
@@ -502,7 +503,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1051:경부선·호남선",
@@ -511,7 +512,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1052:호남선·경부선",
@@ -520,7 +521,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1053:경부선·호남선",
@@ -529,7 +530,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1054:호남선·경부선",
@@ -538,7 +539,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1101:경부선·중부내륙선·동해선·대구선",
@@ -547,7 +548,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1102:경부선·중부내륙선·동해선·대구선",
@@ -556,7 +557,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1103:경부선·중부내륙선·동해선·대구선",
@@ -565,7 +566,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1104:경부선·중부내륙선·동해선·대구선",
@@ -574,7 +575,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1105:경부선·중부내륙선·동해선·대구선",
@@ -583,7 +584,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1106:경부선·중부내륙선·동해선·대구선",
@@ -592,7 +593,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1107:경부선·중부내륙선·동해선·대구선",
@@ -601,7 +602,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1108:경부선·중부내륙선·동해선·대구선",
@@ -610,7 +611,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1109:경부선·중부내륙선·동해선·대구선",
@@ -619,7 +620,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1110:경부선·중부내륙선·동해선·대구선",
@@ -628,7 +629,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1111:경부선·중부내륙선·동해선·대구선",
@@ -637,7 +638,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1112:경부선·중부내륙선·동해선·대구선",
@@ -646,7 +647,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1113:경부선·중부내륙선·동해선·대구선",
@@ -655,7 +656,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1114:경부선·중부내륙선·동해선·대구선",
@@ -664,7 +665,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1115:경부선·중부내륙선·동해선·대구선",
@@ -673,7 +674,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1116:경부선·중부내륙선·동해선·대구선",
@@ -682,7 +683,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1117:경부선·중부내륙선·동해선·대구선",
@@ -691,7 +692,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1118:경부선·중부내륙선·동해선·대구선",
@@ -700,7 +701,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1119:경부선·중부내륙선·동해선·대구선",
@@ -709,7 +710,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1120:경부선·중부내륙선·동해선·대구선",
@@ -718,7 +719,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1121:경부선·중부내륙선·동해선·대구선",
@@ -727,7 +728,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1122:경부선·중부내륙선·동해선·대구선",
@@ -736,7 +737,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1151:전라선·경부선",
@@ -745,7 +746,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1152:전라선·경부선",
@@ -754,7 +755,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1153:전라선·경부선·호남선",
@@ -763,7 +764,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1154:전라선·경부선·호남선",
@@ -772,7 +773,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1155:전라선·경부선·호남선",
@@ -781,7 +782,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1156:전라선·경부선·호남선",
@@ -790,7 +791,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1157:전라선·경부선·호남선",
@@ -799,7 +800,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1158:전라선·경부선·호남선",
@@ -808,7 +809,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1159:전라선·경부선·호남선",
@@ -817,7 +818,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1160:전라선·경부선·호남선",
@@ -826,7 +827,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1161:전라선·경부선·호남선",
@@ -835,7 +836,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1162:전라선·경부선·호남선",
@@ -844,7 +845,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1163:전라선·경부선·호남선",
@@ -853,7 +854,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1164:전라선·경부선·호남선",
@@ -862,7 +863,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1165:전라선·경부선·호남선",
@@ -871,7 +872,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1166:전라선·경부선·호남선",
@@ -880,7 +881,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1167:전라선·경부선·호남선",
@@ -889,7 +890,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1168:전라선·경부선·호남선",
@@ -898,7 +899,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1191:경부선·대구선",
@@ -907,7 +908,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1192:경부선·대구선",
@@ -916,7 +917,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1193:경부선·대구선",
@@ -925,7 +926,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1194:경부선·동해선·대구선",
@@ -934,7 +935,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1195:경부선·동해선·대구선",
@@ -943,7 +944,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1196:경부선·동해선·대구선",
@@ -952,7 +953,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1197:경부선·동해선·대구선",
@@ -961,7 +962,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1198:경부선·동해선·대구선",
@@ -970,7 +971,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1261:교외선·경의선·경부선",
@@ -979,7 +980,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1262:교외선·경의선·경부선",
@@ -988,7 +989,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1263:교외선·경의선·경부선",
@@ -997,7 +998,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1264:교외선·경의선·경부선",
@@ -1006,7 +1007,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1265:교외선·경의선·경부선",
@@ -1015,7 +1016,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1266:교외선·경의선·경부선",
@@ -1024,7 +1025,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1267:교외선·경의선·경부선",
@@ -1033,7 +1034,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1268:교외선·경의선·경부선",
@@ -1042,7 +1043,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1269:교외선·경의선·경부선",
@@ -1051,7 +1052,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1270:교외선·경의선·경부선",
@@ -1060,7 +1061,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1301:경부선",
@@ -1069,7 +1070,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1302:경부선",
@@ -1078,7 +1079,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1303:경부선",
@@ -1087,7 +1088,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1304:경부선",
@@ -1096,7 +1097,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1305:경부선",
@@ -1105,7 +1106,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1306:경부선",
@@ -1114,7 +1115,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1311:경부선·세종세천선",
@@ -1123,7 +1124,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1312:경부선·세종세천선",
@@ -1132,7 +1133,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1313:경부선·세종세천선",
@@ -1141,7 +1142,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1314:경부선·세종세천선",
@@ -1150,7 +1151,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1315:경부선·세종세천선",
@@ -1159,7 +1160,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1316:경부선·세종세천선",
@@ -1168,7 +1169,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1317:경부선·세종세천선",
@@ -1177,7 +1178,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1318:경부선·세종세천선",
@@ -1186,7 +1187,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1319:경부선·세종세천선",
@@ -1195,7 +1196,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1320:경부선·세종세천선",
@@ -1204,7 +1205,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1321:경부선·세종세천선",
@@ -1213,7 +1214,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1322:경부선·세종세천선",
@@ -1222,7 +1223,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1323:경부선·세종세천선",
@@ -1231,7 +1232,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1324:경부선·세종세천선",
@@ -1240,7 +1241,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1325:경부선·세종세천선",
@@ -1249,7 +1250,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1326:경부선·세종세천선",
@@ -1258,7 +1259,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1327:경부선·세종세천선",
@@ -1267,7 +1268,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1328:경부선·세종세천선",
@@ -1276,7 +1277,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1351:경부선",
@@ -1285,7 +1286,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1352:경부선",
@@ -1294,7 +1295,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1353:경부선",
@@ -1303,7 +1304,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1354:경부선",
@@ -1312,7 +1313,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1355:경부선",
@@ -1321,7 +1322,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1356:경부선",
@@ -1330,7 +1331,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1357:경부선",
@@ -1339,7 +1340,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1358:경부선",
@@ -1348,7 +1349,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1359:경부선",
@@ -1357,7 +1358,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1360:경부선",
@@ -1366,7 +1367,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1361:경부선",
@@ -1375,7 +1376,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1362:경부선",
@@ -1384,7 +1385,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1363:경부선",
@@ -1393,7 +1394,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1364:경부선",
@@ -1402,7 +1403,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1365:경부선",
@@ -1411,7 +1412,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1366:경부선",
@@ -1420,7 +1421,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1371:경부선",
@@ -1429,7 +1430,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1372:경부선",
@@ -1438,7 +1439,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1373:경부선",
@@ -1447,7 +1448,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1374:경부선",
@@ -1456,7 +1457,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1375:경부선",
@@ -1465,7 +1466,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1376:경부선",
@@ -1474,7 +1475,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1377:경부선",
@@ -1483,7 +1484,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1378:경부선",
@@ -1492,7 +1493,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1379:경부선",
@@ -1501,7 +1502,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1380:경부선",
@@ -1510,7 +1511,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1461:경부선·장항선·호남선",
@@ -1519,7 +1520,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1462:경부선·장항선·호남선",
@@ -1528,7 +1529,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1463:경부선·장항선·호남선",
@@ -1537,7 +1538,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1464:경부선·장항선·호남선",
@@ -1546,7 +1547,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1465:경부선·장항선·호남선",
@@ -1555,7 +1556,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1466:경부선·장항선·호남선",
@@ -1564,7 +1565,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1471:경부선·장항선",
@@ -1573,7 +1574,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1472:경부선·장항선",
@@ -1582,7 +1583,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1473:경부선·장항선",
@@ -1591,7 +1592,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1474:경부선·장항선",
@@ -1600,7 +1601,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1475:경부선·장항선",
@@ -1609,7 +1610,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1476:경부선·장항선",
@@ -1618,7 +1619,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1477:경부선·장항선",
@@ -1627,7 +1628,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1478:경부선·장항선",
@@ -1636,7 +1637,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1479:경부선·장항선",
@@ -1645,7 +1646,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1480:경부선·장항선",
@@ -1654,7 +1655,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1481:경부선·장항선",
@@ -1663,7 +1664,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1482:경부선·장항선",
@@ -1672,7 +1673,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1483:경부선·장항선",
@@ -1681,7 +1682,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1484:경부선·장항선",
@@ -1690,7 +1691,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1485:경부선·장항선",
@@ -1699,7 +1700,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1486:경부선·장항선",
@@ -1708,7 +1709,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1487:경부선·장항선",
@@ -1717,7 +1718,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1488:경부선·장항선",
@@ -1726,7 +1727,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1489:경부선·장항선",
@@ -1735,7 +1736,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1490:경부선·장항선",
@@ -1744,7 +1745,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1491:경부선·호남선·경전선",
@@ -1753,7 +1754,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1492:경부선·호남선·경전선",
@@ -1762,7 +1763,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1493:경부선·호남선·경전선",
@@ -1771,7 +1772,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1494:경부선·호남선·경전선",
@@ -1780,7 +1781,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1495:경부선·호남선·경전선",
@@ -1789,7 +1790,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1496:경부선·호남선·경전선",
@@ -1798,7 +1799,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1551:경부선·호남선",
@@ -1807,7 +1808,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1552:호남선·경부선",
@@ -1816,7 +1817,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1553:경부선·호남선",
@@ -1825,7 +1826,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1554:호남선·경부선",
@@ -1834,7 +1835,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1555:경부선·호남선",
@@ -1843,7 +1844,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1556:호남선·경부선",
@@ -1852,7 +1853,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1557:경부선·호남선",
@@ -1861,7 +1862,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1558:호남선·경부선",
@@ -1870,7 +1871,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1559:경부선·호남선",
@@ -1879,7 +1880,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1560:호남선·경부선",
@@ -1888,7 +1889,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1561:경부선·호남선",
@@ -1897,7 +1898,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1562:호남선·경부선",
@@ -1906,7 +1907,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1563:경부선·호남선",
@@ -1915,7 +1916,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1564:호남선·경부선",
@@ -1924,7 +1925,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1565:경부선·호남선",
@@ -1933,7 +1934,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1566:호남선·경부선",
@@ -1942,7 +1943,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1567:경부선·호남선",
@@ -1951,7 +1952,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1568:호남선·경부선",
@@ -1960,7 +1961,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1569:경부선·호남선",
@@ -1969,7 +1970,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1570:호남선·경부선",
@@ -1978,7 +1979,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1571:경부선·호남선",
@@ -1987,7 +1988,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1572:호남선·경부선",
@@ -1996,7 +1997,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1573:경부선·호남선",
@@ -2005,7 +2006,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1574:호남선·경부선",
@@ -2014,7 +2015,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1721:중부내륙선·경부선",
@@ -2023,7 +2024,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1723:중부내륙선·경부선",
@@ -2032,7 +2033,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1724:중부내륙선·경부선",
@@ -2041,7 +2042,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1725:중부내륙선·경부선",
@@ -2050,7 +2051,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1726:중부내륙선·경부선",
@@ -2059,7 +2060,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1727:중부내륙선·경부선",
@@ -2068,7 +2069,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1728:중부내륙선·경부선",
@@ -2077,7 +2078,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1729:중부내륙선·경부선",
@@ -2086,7 +2087,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1730:중부내륙선·경부선",
@@ -2095,7 +2096,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1731:중부내륙선·경부선",
@@ -2104,7 +2105,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1732:중부내륙선·경부선",
@@ -2113,7 +2114,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1733:중부내륙선·경부선",
@@ -2122,7 +2123,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1734:중부내륙선·경부선",
@@ -2131,7 +2132,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1735:중부내륙선·경부선",
@@ -2140,7 +2141,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1736:중부내륙선·경부선",
@@ -2149,7 +2150,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1737:중부내륙선·경부선",
@@ -2158,7 +2159,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1738:중부내륙선·경부선",
@@ -2167,7 +2168,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1739:중부내륙선·경부선",
@@ -2176,7 +2177,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1740:중부내륙선·경부선",
@@ -2185,7 +2186,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1741:중부내륙선·경부선",
@@ -2194,7 +2195,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1742:중부내륙선·경부선",
@@ -2203,7 +2204,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1743:중부내륙선·경부선",
@@ -2212,7 +2213,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1744:중부내륙선·경부선",
@@ -2221,7 +2222,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1745:중부내륙선·경부선",
@@ -2230,7 +2231,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1746:중부내륙선·경부선",
@@ -2239,7 +2240,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1747:중부내륙선·경부선",
@@ -2248,7 +2249,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1748:중부내륙선·경부선",
@@ -2257,7 +2258,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1761:경부선·중부내륙선·경강선·강릉선",
@@ -2266,7 +2267,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1762:강릉선·경강선·중부내륙선·경부선",
@@ -2275,7 +2276,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1763:경부선·중부내륙선·경강선·강릉선",
@@ -2284,7 +2285,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1764:강릉선·경강선·중부내륙선·경부선",
@@ -2293,7 +2294,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1765:경부선·중부내륙선·경강선·강릉선",
@@ -2302,7 +2303,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1766:강릉선·경강선·중부내륙선·경부선",
@@ -2311,7 +2312,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1767:경부선·중부내륙선·경강선·강릉선",
@@ -2320,7 +2321,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1768:강릉선·경강선·중부내륙선·경부선",
@@ -2329,7 +2330,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1769:경부선·중부내륙선·경강선·강릉선",
@@ -2338,7 +2339,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1770:강릉선·경강선·중부내륙선·경부선",
@@ -2347,7 +2348,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1771:경부선·중부내륙선·경강선·강릉선",
@@ -2356,7 +2357,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1772:강릉선·경강선·중부내륙선·경부선",
@@ -2365,7 +2366,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1773:경부선·중부내륙선·경강선·강릉선",
@@ -2374,7 +2375,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1774:강릉선·경강선·중부내륙선·경부선",
@@ -2383,7 +2384,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1775:경부선·중부내륙선·경강선·강릉선",
@@ -2392,7 +2393,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "무궁화호:1776:강릉선·경강선·중부내륙선·경부선",
@@ -2401,7 +2402,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1881:중부내륙선·경부선",
@@ -2410,7 +2411,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1882:경부선·중부내륙선",
@@ -2419,7 +2420,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1883:중부내륙선·경부선",
@@ -2428,7 +2429,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1884:경부선·중부내륙선",
@@ -2437,7 +2438,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1891:경부선",
@@ -2446,7 +2447,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1892:경부선",
@@ -2455,7 +2456,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1893:경부선",
@@ -2464,7 +2465,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1894:경부선",
@@ -2473,7 +2474,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1895:경부선",
@@ -2482,7 +2483,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1896:경부선",
@@ -2491,7 +2492,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1897:경부선",
@@ -2500,7 +2501,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:1898:경부선",
@@ -2509,7 +2510,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1981:경부선·태안선·장항선",
@@ -2518,7 +2519,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1982:경부선·태안선·장항선",
@@ -2527,7 +2528,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1983:경부선·태안선·장항선",
@@ -2536,7 +2537,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1984:경부선·태안선·장항선",
@@ -2545,7 +2546,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1985:경부선·태안선·장항선",
@@ -2554,7 +2555,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1986:경부선·태안선·장항선",
@@ -2563,7 +2564,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1987:경부선·태안선·장항선",
@@ -2572,7 +2573,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1988:경부선·태안선·장항선",
@@ -2581,7 +2582,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1989:경부선·태안선·장항선",
@@ -2590,7 +2591,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1990:경부선·태안선·장항선",
@@ -2599,7 +2600,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1991:경부선·태안선·장항선·전라선",
@@ -2608,7 +2609,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1992:경부선·태안선·장항선·전라선",
@@ -2617,7 +2618,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1993:경부선·태안선·장항선·전라선",
@@ -2626,7 +2627,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1994:경부선·태안선·장항선·전라선",
@@ -2635,7 +2636,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1995:경부선·태안선·장항선·전라선",
@@ -2644,7 +2645,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1996:경부선·태안선·장항선·전라선",
@@ -2653,7 +2654,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1997:경부선·태안선·장항선·전라선",
@@ -2662,7 +2663,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-마음:1998:경부선·태안선·장항선·전라선",
@@ -2671,7 +2672,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2001:경부선",
@@ -2680,7 +2681,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2002:경부선",
@@ -2689,7 +2690,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2003:경부선",
@@ -2698,7 +2699,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2004:경부선",
@@ -2707,7 +2708,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2005:경부선",
@@ -2716,7 +2717,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2006:경부선",
@@ -2725,7 +2726,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2007:경부선",
@@ -2734,7 +2735,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2008:경부선",
@@ -2743,7 +2744,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2009:경부선",
@@ -2752,7 +2753,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2011:경부선",
@@ -2761,7 +2762,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2012:경부선",
@@ -2770,7 +2771,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2013:경부선",
@@ -2779,7 +2780,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2014:경부선",
@@ -2788,7 +2789,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2015:경부선",
@@ -2797,7 +2798,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2016:경부선",
@@ -2806,7 +2807,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2017:경부선",
@@ -2815,7 +2816,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2018:경부선",
@@ -2824,7 +2825,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2019:경부선",
@@ -2833,7 +2834,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2020:경부선",
@@ -2842,7 +2843,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2021:경부선",
@@ -2851,7 +2852,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2022:경부선",
@@ -2860,7 +2861,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2023:경부선",
@@ -2869,7 +2870,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2024:경부선",
@@ -2878,7 +2879,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2025:경부선",
@@ -2887,7 +2888,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2026:경부선",
@@ -2896,7 +2897,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2027:경부선",
@@ -2905,7 +2906,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2028:경부선",
@@ -2914,7 +2915,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2029:경부선",
@@ -2923,7 +2924,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2030:경부선",
@@ -2932,7 +2933,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2031:경부선",
@@ -2941,7 +2942,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2032:경부선",
@@ -2950,7 +2951,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2033:경부선",
@@ -2959,7 +2960,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2034:경부선",
@@ -2968,7 +2969,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2035:경부선",
@@ -2977,7 +2978,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-청춘:2038:경부선",
@@ -2986,7 +2987,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:5091:경의선·경부선",
@@ -2995,7 +2996,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:5092:경의선·경부선",
@@ -3004,7 +3005,7 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:5093:경의선·경부선",
@@ -3013,7 +3014,7 @@
       ],
       "direction": "forward",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     },
     {
       "trainServiceId": "ITX-새마을:5094:경의선·경부선",
@@ -3022,14 +3023,14 @@
       ],
       "direction": "reverse",
       "sourceVersion": "9ef9cd8bec9a773e43830e11d07ea7a2f3b1206f4faa7b374e5e08adbbf61530",
-      "verificationStatus": "representative"
+      "verificationStatus": "verified"
     }
   ],
   "validation": {
     "coordinateCount": 6,
-    "lengthKm": 13.926919,
-    "directDistanceKm": 13.530376,
-    "lengthRatio": 1.029308,
+    "lengthKm": 14.211543,
+    "directDistanceKm": 13.530412,
+    "lengthRatio": 1.050341,
     "discontinuityCount": 0,
     "reusedByServiceCount": 327,
     "grades": [
